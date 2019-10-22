@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.edu.zucc.advancejava.dao.LyricsMapper">
+  <resultMap id="BaseResultMap" type="cn.edu.zucc.advancejava.model.Lyrics">
+    <id column="music_id" jdbcType="BIGINT" property="musicId" />
+  </resultMap>
+  <resultMap extends="BaseResultMap" id="ResultMapWithBLOBs" type="cn.edu.zucc.advancejava.model.Lyrics">
+    <result column="lyric" jdbcType="LONGVARCHAR" property="lyric" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    music_id
+  </sql>
+  <sql id="Blob_Column_List">
+    lyric
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="ResultMapWithBLOBs">
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from lyrics
+    where music_id = #{musicId,jdbcType=BIGINT}
+  </select>
+  <select id="selectAllLyrics"  resultMap="ResultMapWithBLOBs">
+    select
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from lyrics
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from lyrics
+    where music_id = #{musicId,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="cn.edu.zucc.advancejava.model.Lyrics">
+    insert into lyrics (music_id, lyric)
+    values (#{musicId,jdbcType=BIGINT}, #{lyric,jdbcType=LONGVARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="cn.edu.zucc.advancejava.model.Lyrics">
+    insert into lyrics
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="musicId != null">
+        music_id,
+      </if>
+      <if test="lyric != null">
+        lyric,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="musicId != null">
+        #{musicId,jdbcType=BIGINT},
+      </if>
+      <if test="lyric != null">
+        #{lyric,jdbcType=LONGVARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="cn.edu.zucc.advancejava.model.Lyrics">
+    update lyrics
+    <set>
+      <if test="lyric != null">
+        lyric = #{lyric,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where music_id = #{musicId,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="cn.edu.zucc.advancejava.model.Lyrics">
+    update lyrics
+    set lyric = #{lyric,jdbcType=LONGVARCHAR}
+    where music_id = #{musicId,jdbcType=BIGINT}
+  </update>
+</mapper>
