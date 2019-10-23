@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.edu.zucc.advancejava.dao.DynamicMapper">
+  <resultMap id="BaseResultMap" type="cn.edu.zucc.advancejava.model.Dynamic">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="dynamic_id" jdbcType="INTEGER" property="dynamicId" />
+    <result column="introduction" jdbcType="VARCHAR" property="introduction" />
+    <result column="photo_id" jdbcType="VARCHAR" property="photoId" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="user_id" jdbcType="VARCHAR" property="userId" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, dynamic_id, introduction, photo_id, create_time, user_id
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from dynamic
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from dynamic
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="cn.edu.zucc.advancejava.model.Dynamic">
+    insert into dynamic (id, dynamic_id, introduction, 
+      photo_id, create_time, user_id
+      )
+    values (#{id,jdbcType=INTEGER}, #{dynamicId,jdbcType=INTEGER}, #{introduction,jdbcType=VARCHAR}, 
+      #{photoId,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{userId,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="cn.edu.zucc.advancejava.model.Dynamic">
+    insert into dynamic
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="dynamicId != null">
+        dynamic_id,
+      </if>
+      <if test="introduction != null">
+        introduction,
+      </if>
+      <if test="photoId != null">
+        photo_id,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="userId != null">
+        user_id,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="dynamicId != null">
+        #{dynamicId,jdbcType=INTEGER},
+      </if>
+      <if test="introduction != null">
+        #{introduction,jdbcType=VARCHAR},
+      </if>
+      <if test="photoId != null">
+        #{photoId,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="userId != null">
+        #{userId,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="cn.edu.zucc.advancejava.model.Dynamic">
+    update dynamic
+    <set>
+      <if test="dynamicId != null">
+        dynamic_id = #{dynamicId,jdbcType=INTEGER},
+      </if>
+      <if test="introduction != null">
+        introduction = #{introduction,jdbcType=VARCHAR},
+      </if>
+      <if test="photoId != null">
+        photo_id = #{photoId,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="userId != null">
+        user_id = #{userId,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="cn.edu.zucc.advancejava.model.Dynamic">
+    update dynamic
+    set dynamic_id = #{dynamicId,jdbcType=INTEGER},
+      introduction = #{introduction,jdbcType=VARCHAR},
+      photo_id = #{photoId,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      user_id = #{userId,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>
