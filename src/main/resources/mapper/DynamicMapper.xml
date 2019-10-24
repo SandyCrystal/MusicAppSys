@@ -5,12 +5,12 @@
     <id column="id" jdbcType="INTEGER" property="id" />
     <result column="dynamic_id" jdbcType="INTEGER" property="dynamicId" />
     <result column="introduction" jdbcType="VARCHAR" property="introduction" />
-    <result column="photo_id" jdbcType="VARCHAR" property="photoId" />
+    <result column="dynamic_path" jdbcType="VARCHAR" property="dynamicPath" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
     <result column="user_id" jdbcType="VARCHAR" property="userId" />
   </resultMap>
   <sql id="Base_Column_List">
-    id, dynamic_id, introduction, photo_id, create_time, user_id
+    id, dynamic_id, introduction, dynamic_path, create_time, user_id
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
     select 
@@ -24,10 +24,10 @@
   </delete>
   <insert id="insert" parameterType="cn.edu.zucc.advancejava.model.Dynamic">
     insert into dynamic (id, dynamic_id, introduction, 
-      photo_id, create_time, user_id
+      dynamic_path, create_time, user_id
       )
     values (#{id,jdbcType=INTEGER}, #{dynamicId,jdbcType=INTEGER}, #{introduction,jdbcType=VARCHAR}, 
-      #{photoId,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{userId,jdbcType=VARCHAR}
+      #{dynamicPath,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{userId,jdbcType=VARCHAR}
       )
   </insert>
   <insert id="insertSelective" parameterType="cn.edu.zucc.advancejava.model.Dynamic">
@@ -42,8 +42,8 @@
       <if test="introduction != null">
         introduction,
       </if>
-      <if test="photoId != null">
-        photo_id,
+      <if test="dynamicPath != null">
+        dynamic_path,
       </if>
       <if test="createTime != null">
         create_time,
@@ -62,8 +62,8 @@
       <if test="introduction != null">
         #{introduction,jdbcType=VARCHAR},
       </if>
-      <if test="photoId != null">
-        #{photoId,jdbcType=VARCHAR},
+      <if test="dynamicPath != null">
+        #{dynamicPath,jdbcType=VARCHAR},
       </if>
       <if test="createTime != null">
         #{createTime,jdbcType=TIMESTAMP},
@@ -82,8 +82,8 @@
       <if test="introduction != null">
         introduction = #{introduction,jdbcType=VARCHAR},
       </if>
-      <if test="photoId != null">
-        photo_id = #{photoId,jdbcType=VARCHAR},
+      <if test="dynamicPath != null">
+        dynamic_path = #{dynamicPath,jdbcType=VARCHAR},
       </if>
       <if test="createTime != null">
         create_time = #{createTime,jdbcType=TIMESTAMP},
@@ -98,7 +98,7 @@
     update dynamic
     set dynamic_id = #{dynamicId,jdbcType=INTEGER},
       introduction = #{introduction,jdbcType=VARCHAR},
-      photo_id = #{photoId,jdbcType=VARCHAR},
+      dynamic_path = #{dynamicPath,jdbcType=VARCHAR},
       create_time = #{createTime,jdbcType=TIMESTAMP},
       user_id = #{userId,jdbcType=VARCHAR}
     where id = #{id,jdbcType=INTEGER}

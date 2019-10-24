@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="cn.edu.zucc.advancejava.dao.SongMapper">
-  <resultMap id="BaseResultMap" type="cn.edu.zucc.advancejava.model.Song">
+<mapper namespace="cn.edu.zucc.music.dao.SongMapper">
+  <resultMap id="BaseResultMap" type="cn.edu.zucc.music.model.Song">
     <id column="id" jdbcType="INTEGER" property="id" />
     <result column="song_id" jdbcType="INTEGER" property="songId" />
     <result column="song_name" jdbcType="VARCHAR" property="songName" />
@@ -11,7 +11,7 @@
     <result column="url" jdbcType="VARCHAR" property="url" />
     <result column="path" jdbcType="VARCHAR" property="path" />
   </resultMap>
-  <resultMap extends="BaseResultMap" id="ResultMapWithBLOBs" type="cn.edu.zucc.advancejava.model.Song">
+  <resultMap extends="BaseResultMap" id="ResultMapWithBLOBs" type="cn.edu.zucc.music.model.Song">
     <result column="content" jdbcType="LONGVARCHAR" property="content" />
   </resultMap>
   <sql id="Base_Column_List">
@@ -21,7 +21,7 @@
     content
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="ResultMapWithBLOBs">
-    select 
+    select
     <include refid="Base_Column_List" />
     ,
     <include refid="Blob_Column_List" />
@@ -32,17 +32,17 @@
     delete from song
     where id = #{id,jdbcType=INTEGER}
   </delete>
-  <insert id="insert" parameterType="cn.edu.zucc.advancejava.model.Song">
-    insert into song (id, song_id, song_name, 
-      comment_id, album_id, user_id, 
+  <insert id="insert" parameterType="cn.edu.zucc.music.model.Song">
+    insert into song (id, song_id, song_name,
+      comment_id, album_id, user_id,
       url, path, content
       )
-    values (#{id,jdbcType=INTEGER}, #{songId,jdbcType=INTEGER}, #{songName,jdbcType=VARCHAR}, 
-      #{commentId,jdbcType=INTEGER}, #{albumId,jdbcType=INTEGER}, #{userId,jdbcType=VARCHAR}, 
+    values (#{id,jdbcType=INTEGER}, #{songId,jdbcType=INTEGER}, #{songName,jdbcType=VARCHAR},
+      #{commentId,jdbcType=INTEGER}, #{albumId,jdbcType=INTEGER}, #{userId,jdbcType=VARCHAR},
       #{url,jdbcType=VARCHAR}, #{path,jdbcType=VARCHAR}, #{content,jdbcType=LONGVARCHAR}
       )
   </insert>
-  <insert id="insertSelective" parameterType="cn.edu.zucc.advancejava.model.Song">
+  <insert id="insertSelective" parameterType="cn.edu.zucc.music.model.Song">
     insert into song
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="id != null">
@@ -103,7 +103,7 @@
       </if>
     </trim>
   </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="cn.edu.zucc.advancejava.model.Song">
+  <update id="updateByPrimaryKeySelective" parameterType="cn.edu.zucc.music.model.Song">
     update song
     <set>
       <if test="songId != null">
@@ -133,7 +133,7 @@
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
-  <update id="updateByPrimaryKeyWithBLOBs" parameterType="cn.edu.zucc.advancejava.model.Song">
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="cn.edu.zucc.music.model.Song">
     update song
     set song_id = #{songId,jdbcType=INTEGER},
       song_name = #{songName,jdbcType=VARCHAR},
@@ -145,7 +145,7 @@
       content = #{content,jdbcType=LONGVARCHAR}
     where id = #{id,jdbcType=INTEGER}
   </update>
-  <update id="updateByPrimaryKey" parameterType="cn.edu.zucc.advancejava.model.Song">
+  <update id="updateByPrimaryKey" parameterType="cn.edu.zucc.music.model.Song">
     update song
     set song_id = #{songId,jdbcType=INTEGER},
       song_name = #{songName,jdbcType=VARCHAR},
