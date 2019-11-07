@@ -7,13 +7,34 @@ import cn.edu.zucc.music.service.SheetService;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.List;
 
 @Service(value = "SheetService")
 public class SheetServiceImpl implements SheetService {
     @Resource
     SheetMapper sheetMapper;
     @Override
-    public Sheet getById(int id) {
-        return sheetMapper.selectByPrimaryKey(id) ;
+    public int addSheet(Sheet sheet) {
+        return sheetMapper.insert(sheet);
+    }
+
+    @Override
+    public int deleteSheet(Sheet sheet) {
+        return 0;
+    }
+
+    @Override
+    public int updateSheet(Sheet sheet) {
+        return 0;
+    }
+
+    @Override
+    public Sheet findById(int id) {
+        return sheetMapper.selectByPrimaryKey(id);
+    }
+
+    @Override
+    public List<Sheet> findAll() {
+        return null;
     }
 }

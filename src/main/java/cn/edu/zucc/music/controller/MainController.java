@@ -1,33 +1,29 @@
 package cn.edu.zucc.music.controller;
 
-
-import cn.edu.zucc.music.model.AlbumComment;
-import cn.edu.zucc.music.model.Sheet;
-import cn.edu.zucc.music.model.Song;
-import cn.edu.zucc.music.model.User;
-import cn.edu.zucc.music.service.AlbumCommentService;
-import cn.edu.zucc.music.service.SheetService;
-import cn.edu.zucc.music.service.SongService;
 import cn.edu.zucc.music.service.UserService;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import javax.annotation.Resource;
-
-
 @Controller
 public class MainController {
-    @Resource
-    private SongService userService;
-    @CrossOrigin
-    @GetMapping(value = "api/getSongs")
+
+    private UserService login;
+    private UserService logup;
+
+    // 登录
+    @GetMapping(value = "/api/login")
     @ResponseBody
-    public void getSongs(){
-        Song a=userService.findById(1);
-        if (a==null)
-        System.out.println("a");
+    public String getLogin() {
+        return "还没做";
     }
+
+    // 注册
+    @GetMapping(value = "/api/logup")
+    @ResponseBody
+    public String getLogup() {
+        return "还没做";
+    }
+
 
 }
