@@ -1,6 +1,9 @@
 package cn.edu.zucc.music.model;
 
-public class User {
+import java.io.Serializable;
+import java.util.Date;
+
+public class User implements Serializable {
     private String userId;
 
     private String userName;
@@ -9,15 +12,13 @@ public class User {
 
     private String introduction;
 
-    private Integer photoId;
-
-    private Integer dynamicId;
+    private String picUrl;
 
     private Integer userType;
 
-    private Integer songId;
+    private Date createTime;
 
-    private Integer albumId;
+    private static final long serialVersionUID = 1L;
 
     public String getUserId() {
         return userId;
@@ -51,20 +52,12 @@ public class User {
         this.introduction = introduction == null ? null : introduction.trim();
     }
 
-    public Integer getPhotoId() {
-        return photoId;
+    public String getPicUrl() {
+        return picUrl;
     }
 
-    public void setPhotoId(Integer photoId) {
-        this.photoId = photoId;
-    }
-
-    public Integer getDynamicId() {
-        return dynamicId;
-    }
-
-    public void setDynamicId(Integer dynamicId) {
-        this.dynamicId = dynamicId;
+    public void setPicUrl(String picUrl) {
+        this.picUrl = picUrl == null ? null : picUrl.trim();
     }
 
     public Integer getUserType() {
@@ -75,19 +68,29 @@ public class User {
         this.userType = userType;
     }
 
-    public Integer getSongId() {
-        return songId;
+    public Date getCreateTime() {
+        return createTime;
     }
 
-    public void setSongId(Integer songId) {
-        this.songId = songId;
+    public void setCreateTime(Date createTime) {
+        this.createTime = createTime;
     }
 
-    public Integer getAlbumId() {
-        return albumId;
-    }
-
-    public void setAlbumId(Integer albumId) {
-        this.albumId = albumId;
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append(getClass().getSimpleName());
+        sb.append(" [");
+        sb.append("Hash = ").append(hashCode());
+        sb.append(", userId=").append(userId);
+        sb.append(", userName=").append(userName);
+        sb.append(", userPwd=").append(userPwd);
+        sb.append(", introduction=").append(introduction);
+        sb.append(", picUrl=").append(picUrl);
+        sb.append(", userType=").append(userType);
+        sb.append(", createTime=").append(createTime);
+        sb.append(", serialVersionUID=").append(serialVersionUID);
+        sb.append("]");
+        return sb.toString();
     }
 }

@@ -31,17 +31,17 @@ public class SheetController {
         System.out.println(a);
         return new Result<>(ResultStatus.SUCCESS);
     }
-    @CrossOrigin
-    @GetMapping(value = "/api/addSong")
-    @ResponseBody
-    public Result<String > addSong(int sheetid,int songid){
-        SheetSong sheetSong=new SheetSong();
-        sheetSong.setSheetid(sheetid);
-        sheetSong.setSongid(songid);
-        if (1==sheetSongService.addSheet(sheetSong))
-        return new Result<>(ResultStatus.SUCCESS);
-        else
-            return new Result<>(ResultStatus.ERROR);
-    }
+//    @CrossOrigin
+//    @GetMapping(value = "/api/addSong")
+//    @ResponseBody
+//    public Result<String > addSong(int sheetid,int songid){
+//        SheetSong sheetSong=new SheetSong();
+//        sheetSong.setSheetid(sheetid);
+//        sheetSong.setSongid(songid);
+//        if (1==sheetSongService.addSheet(sheetSong))
+//        return new Result<>(ResultStatus.SUCCESS);
+//        else
+//            return new Result<>(ResultStatus.ERROR);
+//    }
 
 }

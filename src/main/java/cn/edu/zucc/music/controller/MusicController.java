@@ -1,25 +1,28 @@
 package cn.edu.zucc.music.controller;
 
+import cn.edu.zucc.music.Until.Result;
+import cn.edu.zucc.music.Until.ResultStatus;
+import cn.edu.zucc.music.model.Sheet;
 import cn.edu.zucc.music.service.AlbumService;
 import cn.edu.zucc.music.service.CommentService;
 import cn.edu.zucc.music.service.SheetService;
 import cn.edu.zucc.music.service.SongService;
+import org.apache.ibatis.annotations.Param;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.util.List;
+@Controller
 public class MusicController {
-    public SheetService addSheet;
-    public SheetService delSheet;
-    public SheetService getSheetBySheetId;
-    public SheetService getSheetByUserId;
-    public SheetService getSheetByType;
-    public SheetService getSheetByRecommand;
+    @Autowired
+    public SheetService sheetService;
 
-    public SongService addSong;
-    public SongService delSong;
-    public SongService getSong;
-
-    public AlbumService getAlbum;
+    @Autowired
+    public SongService songService;
+    @Autowired
+    public AlbumService albumService;
 
     // 创建歌单
     @GetMapping(value = "/api/addSheet")
@@ -73,8 +76,10 @@ public class MusicController {
     // 获取个人歌单
     @GetMapping(value = "/api/getSheetByUserId")
     @ResponseBody
-    public String getSheetByUserId() {
-        return "还没做";
+    public Result<Sheet> getSheetByUserId( String uid) {
+        List<Sheet> list = sheetService.findByUserID(uid);
+        if (list==null)return new Result<>(ResultStatus.ERROR);
+        return new Result(ResultStatus.SUCCESS,list);
     }
 
     // 获取类型歌单
@@ -87,9 +92,11 @@ public class MusicController {
     // 获取推荐歌单
     @GetMapping(value = "/api/getSheetByRecommand")
     @ResponseBody
-    public String getSheetByRecommand() {
-        return "还没做";
+    public Result<Sheet> getSheetByRecommand() {
+        List a= sheetService.findByUserID("weiyao");
+        return new Result(ResultStatus.SUCCESS,a);
     }
+
 
 
 }

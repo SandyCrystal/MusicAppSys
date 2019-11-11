@@ -9,5 +9,6 @@ public interface SheetService {
     int deleteSheet(Sheet sheet);
     int updateSheet(Sheet sheet);
     Sheet findById(int id);
+    List<Sheet> findByUserID(String uid);
     List<Sheet> findAll();
 }

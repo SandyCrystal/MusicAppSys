@@ -6,6 +6,7 @@
     <result column="sheet_id" jdbcType="INTEGER" property="sheetId" />
     <result column="user_id" jdbcType="VARCHAR" property="userId" />
     <result column="sheet_name" jdbcType="VARCHAR" property="sheetName" />
+    <result column="pic_url" jdbcType="VARCHAR" property="picUrl" />
   </resultMap>
   <sql id="Base_Column_List">
     id, sheet_id, user_id, sheet_name
@@ -15,6 +16,12 @@
     <include refid="Base_Column_List" />
     from sheet
     where id = #{id,jdbcType=INTEGER}
+  </select>
+  <select id="selectByUserId" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select
+   *
+    from sheet
+    where user_id = #{userId,jdbcType=VARCHAR}
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
     delete from sheet

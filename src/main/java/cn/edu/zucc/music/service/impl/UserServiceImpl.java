@@ -4,7 +4,6 @@ package cn.edu.zucc.music.service.impl;
 import cn.edu.zucc.music.dao.UserMapper;
 import cn.edu.zucc.music.model.User;
 import cn.edu.zucc.music.service.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;

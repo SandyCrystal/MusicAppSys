@@ -1,21 +1,39 @@
 package cn.edu.zucc.music.controller;
 
+import cn.edu.zucc.music.Until.Result;
+import cn.edu.zucc.music.Until.ResultStatus;
+import cn.edu.zucc.music.model.Banner;
+import cn.edu.zucc.music.model.User;
+import cn.edu.zucc.music.service.BannerService;
 import cn.edu.zucc.music.service.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.configurationprocessor.json.JSONObject;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.HashMap;
 
 @Controller
 public class MainController {
-
-    private UserService login;
-    private UserService logup;
-
+    @Autowired
+    private UserService userService;
+    @Autowired
+    private BannerService bannerService;
     // 登录
+    @CrossOrigin
     @GetMapping(value = "/api/login")
     @ResponseBody
-    public String getLogin() {
-        return "还没做";
+    public Result<User> getLogin(String userid,String password) {
+        System.out.println(1);
+        User user=userService.findById(userid);
+        System.out.println(user.getUserPwd());
+        if (user==null){
+            return new Result<>(ResultStatus.USER_NOT_EXISTS);
+        }
+        if (user.getUserPwd().equals(password))return new Result<>(ResultStatus.SUCCESS,user);
+        else
+            return new Result<>(ResultStatus.PERMISSION_DENIED);
+
     }
 
     // 注册
@@ -24,6 +42,10 @@ public class MainController {
     public String getLogup() {
         return "还没做";
     }
-
-
+    @CrossOrigin
+    @GetMapping(value = "/api/banner")
+    @ResponseBody
+    public Result<Banner> getBanners(int type){
+        return new Result(ResultStatus.SUCCESS,bannerService.findAll());
+    }
 }

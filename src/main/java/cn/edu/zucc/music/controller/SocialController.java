@@ -3,8 +3,10 @@ package cn.edu.zucc.music.controller;
 import cn.edu.zucc.music.service.CommentService;
 import cn.edu.zucc.music.service.DynamicService;
 import cn.edu.zucc.music.service.UserService;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+@Controller
 
 public class SocialController {
     public CommentService getSongComment;
