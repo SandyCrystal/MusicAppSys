@@ -1,23 +1,23 @@
 package cn.edu.zucc.music.model;
 
-public class Song {
+import java.io.Serializable;
+
+public class Song implements Serializable {
     private Integer id;
 
     private Integer songId;
 
     private String songName;
 
-    private Integer commentId;
-
     private Integer albumId;
 
-    private String userId;
+    private Integer artistId;
 
-    private String url;
-
-    private String path;
+    private String picUrl;
 
     private String content;
+
+    private static final long serialVersionUID = 1L;
 
     public Integer getId() {
         return id;
@@ -43,14 +43,6 @@ public class Song {
         this.songName = songName == null ? null : songName.trim();
     }
 
-    public Integer getCommentId() {
-        return commentId;
-    }
-
-    public void setCommentId(Integer commentId) {
-        this.commentId = commentId;
-    }
-
     public Integer getAlbumId() {
         return albumId;
     }
@@ -59,28 +51,20 @@ public class Song {
         this.albumId = albumId;
     }
 
-    public String getUserId() {
-        return userId;
+    public Integer getArtistId() {
+        return artistId;
     }
 
-    public void setUserId(String userId) {
-        this.userId = userId == null ? null : userId.trim();
+    public void setArtistId(Integer artistId) {
+        this.artistId = artistId;
     }
 
-    public String getUrl() {
-        return url;
+    public String getPicUrl() {
+        return picUrl;
     }
 
-    public void setUrl(String url) {
-        this.url = url == null ? null : url.trim();
-    }
-
-    public String getPath() {
-        return path;
-    }
-
-    public void setPath(String path) {
-        this.path = path == null ? null : path.trim();
+    public void setPicUrl(String picUrl) {
+        this.picUrl = picUrl == null ? null : picUrl.trim();
     }
 
     public String getContent() {
@@ -89,5 +73,23 @@ public class Song {
 
     public void setContent(String content) {
         this.content = content == null ? null : content.trim();
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append(getClass().getSimpleName());
+        sb.append(" [");
+        sb.append("Hash = ").append(hashCode());
+        sb.append(", id=").append(id);
+        sb.append(", songId=").append(songId);
+        sb.append(", songName=").append(songName);
+        sb.append(", albumId=").append(albumId);
+        sb.append(", artistId=").append(artistId);
+        sb.append(", picUrl=").append(picUrl);
+        sb.append(", content=").append(content);
+        sb.append(", serialVersionUID=").append(serialVersionUID);
+        sb.append("]");
+        return sb.toString();
     }
 }
