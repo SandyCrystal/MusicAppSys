@@ -30,13 +30,13 @@ public class SheetServiceImpl implements SheetService {
     }
 
     @Override
-    public Sheet findById(long id) {
+    public Sheet findById(String id) {
         return sheetMapper.selectByPrimaryKey(id);
     }
 
     @Override
     public List<Sheet> findByUserID(String uid) {
-        return sheetMapper.selectByUserId(uid);
+        return null;
     }
 
     @Override

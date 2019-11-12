@@ -1,7 +1,9 @@
 package cn.edu.zucc.music.dao;
 
 import cn.edu.zucc.music.model.Sheet;
+import org.apache.ibatis.annotations.Mapper;
 
+@Mapper
 public interface SheetMapper {
     int deleteByPrimaryKey(String sheetId);
 

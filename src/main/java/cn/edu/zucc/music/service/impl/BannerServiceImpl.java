@@ -35,6 +35,6 @@ public class BannerServiceImpl implements BannerService {
 
     @Override
     public List<Banner> findAll() {
-        return bannerMapper.selectAll() ;
+        return null ;
     }
 }

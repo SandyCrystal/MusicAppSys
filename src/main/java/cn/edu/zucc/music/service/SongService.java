@@ -8,6 +8,6 @@ public interface SongService {
     int addSong(Song song);
     int deleteSong(Song song);
     int updateSong(Song song);
-    Song findById(int id);
+    Song findById(String  id);
     List<Song> findAll();
 }

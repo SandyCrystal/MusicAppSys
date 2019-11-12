@@ -1,7 +1,10 @@
 package cn.edu.zucc.music.dao;
 
 import cn.edu.zucc.music.model.Song;
+import org.apache.ibatis.annotations.Mapper;
+import org.springframework.web.bind.annotation.RequestParam;
 
+@Mapper
 public interface SongMapper {
     int deleteByPrimaryKey(String songId);
 

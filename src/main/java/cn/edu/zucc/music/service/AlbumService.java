@@ -9,6 +9,6 @@ public interface AlbumService {
     int addAlbum(Album album);
     int deleteAlbum(Album album);
     int updateAlbum(Album album);
-    Album findById(int id);
+    Album findById(String id);
     List<Album> findAll();
 }

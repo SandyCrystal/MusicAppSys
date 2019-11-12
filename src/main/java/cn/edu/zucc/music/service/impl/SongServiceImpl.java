@@ -27,7 +27,7 @@ public class SongServiceImpl implements SongService {
     }
 
     @Override
-    public Song findById(int id) {
+    public Song findById(String id) {
         return songMapper.selectByPrimaryKey(id);
     }
 

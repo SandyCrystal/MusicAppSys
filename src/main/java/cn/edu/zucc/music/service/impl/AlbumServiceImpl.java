@@ -28,7 +28,7 @@ public class AlbumServiceImpl implements AlbumService {
     }
 
     @Override
-    public Album findById(int id) {
+    public Album findById(String id) {
         return albumMapper.selectByPrimaryKey(id);
     }
 

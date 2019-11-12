@@ -1,7 +1,9 @@
 package cn.edu.zucc.music.dao;
 
 import cn.edu.zucc.music.model.Dynamic;
+import org.apache.ibatis.annotations.Mapper;
 
+@Mapper
 public interface DynamicMapper {
     int deleteByPrimaryKey(Integer dynamicId);
 
