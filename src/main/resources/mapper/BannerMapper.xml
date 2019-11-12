@@ -6,11 +6,6 @@
     <result column="typeTitle" property="typetitle" jdbcType="VARCHAR" />
     <result column="targetId" property="targetid" jdbcType="INTEGER" />
   </resultMap>
-  <select id="selectAll"  resultMap="BaseResultMap">
-    select
-   *
-    from banner
-  </select>
   <insert id="insert" parameterType="cn.edu.zucc.music.model.Banner" >
     insert into banner (pic, typeTitle, targetId
       )

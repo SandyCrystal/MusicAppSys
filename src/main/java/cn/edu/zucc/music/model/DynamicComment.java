@@ -1,6 +1,9 @@
 package cn.edu.zucc.music.model;
 
-public class DynamicComment {
+import java.io.Serializable;
+import java.util.Date;
+
+public class DynamicComment implements Serializable {
     private Integer id;
 
     private Integer dynamicId;
@@ -8,6 +11,10 @@ public class DynamicComment {
     private String userId;
 
     private String comment;
+
+    private Date commentTime;
+
+    private static final long serialVersionUID = 1L;
 
     public Integer getId() {
         return id;
@@ -39,5 +46,29 @@ public class DynamicComment {
 
     public void setComment(String comment) {
         this.comment = comment == null ? null : comment.trim();
+    }
+
+    public Date getCommentTime() {
+        return commentTime;
+    }
+
+    public void setCommentTime(Date commentTime) {
+        this.commentTime = commentTime;
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append(getClass().getSimpleName());
+        sb.append(" [");
+        sb.append("Hash = ").append(hashCode());
+        sb.append(", id=").append(id);
+        sb.append(", dynamicId=").append(dynamicId);
+        sb.append(", userId=").append(userId);
+        sb.append(", comment=").append(comment);
+        sb.append(", commentTime=").append(commentTime);
+        sb.append(", serialVersionUID=").append(serialVersionUID);
+        sb.append("]");
+        return sb.toString();
     }
 }

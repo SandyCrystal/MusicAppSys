@@ -1,10 +1,9 @@
 package cn.edu.zucc.music.model;
 
+import java.io.Serializable;
 import java.util.Date;
 
-public class Dynamic {
-    private Integer id;
-
+public class Dynamic implements Serializable {
     private Integer dynamicId;
 
     private String introduction;
@@ -15,13 +14,7 @@ public class Dynamic {
 
     private String userId;
 
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
+    private static final long serialVersionUID = 1L;
 
     public Integer getDynamicId() {
         return dynamicId;
@@ -61,5 +54,21 @@ public class Dynamic {
 
     public void setUserId(String userId) {
         this.userId = userId == null ? null : userId.trim();
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append(getClass().getSimpleName());
+        sb.append(" [");
+        sb.append("Hash = ").append(hashCode());
+        sb.append(", dynamicId=").append(dynamicId);
+        sb.append(", introduction=").append(introduction);
+        sb.append(", dynamicPath=").append(dynamicPath);
+        sb.append(", createTime=").append(createTime);
+        sb.append(", userId=").append(userId);
+        sb.append(", serialVersionUID=").append(serialVersionUID);
+        sb.append("]");
+        return sb.toString();
     }
 }

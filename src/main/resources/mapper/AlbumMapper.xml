@@ -1,128 +1,106 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="cn.edu.zucc.music.dao.AlbumMapper">
-  <resultMap id="BaseResultMap" type="cn.edu.zucc.music.model.Album">
-    <id column="id" jdbcType="INTEGER" property="id" />
-    <result column="album_id" jdbcType="INTEGER" property="albumId" />
-    <result column="albun_name" jdbcType="VARCHAR" property="albunName" />
-    <result column="user_id" jdbcType="VARCHAR" property="userId" />
-    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
-    <result column="collect_num" jdbcType="VARCHAR" property="collectNum" />
-    <result column="introduction" jdbcType="VARCHAR" property="introduction" />
-    <result column="path" jdbcType="VARCHAR" property="path" />
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.edu.zucc.music.dao.AlbumMapper" >
+  <resultMap id="BaseResultMap" type="cn.edu.zucc.music.model.Album" >
+    <id column="album_id" property="albumId" jdbcType="VARCHAR" />
+    <result column="albun_name" property="albunName" jdbcType="VARCHAR" />
+    <result column="artist_id" property="artistId" jdbcType="VARCHAR" />
+    <result column="publish_time" property="publishTime" jdbcType="TIMESTAMP" />
+    <result column="introduction" property="introduction" jdbcType="VARCHAR" />
+    <result column="blur_pic_url" property="blurPicUrl" jdbcType="VARCHAR" />
   </resultMap>
-  <sql id="Base_Column_List">
-    id, album_id, albun_name, user_id, create_time, collect_num, introduction, path
+  <sql id="Base_Column_List" >
+    album_id, albun_name, artist_id, publish_time, introduction, blur_pic_url
   </sql>
-  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
     select 
     <include refid="Base_Column_List" />
     from album
-    where id = #{id,jdbcType=INTEGER}
+    where album_id = #{albumId,jdbcType=VARCHAR}
   </select>
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
     delete from album
-    where id = #{id,jdbcType=INTEGER}
+    where album_id = #{albumId,jdbcType=VARCHAR}
   </delete>
-  <insert id="insert" parameterType="cn.edu.zucc.music.model.Album">
-    insert into album (id, album_id, albun_name, 
-      user_id, create_time, collect_num, 
-      introduction, path)
-    values (#{id,jdbcType=INTEGER}, #{albumId,jdbcType=INTEGER}, #{albunName,jdbcType=VARCHAR}, 
-      #{userId,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{collectNum,jdbcType=VARCHAR}, 
-      #{introduction,jdbcType=VARCHAR}, #{path,jdbcType=VARCHAR})
+  <insert id="insert" parameterType="cn.edu.zucc.music.model.Album" >
+    insert into album (album_id, albun_name, artist_id, 
+      publish_time, introduction, blur_pic_url
+      )
+    values (#{albumId,jdbcType=VARCHAR}, #{albunName,jdbcType=VARCHAR}, #{artistId,jdbcType=VARCHAR}, 
+      #{publishTime,jdbcType=TIMESTAMP}, #{introduction,jdbcType=VARCHAR}, #{blurPicUrl,jdbcType=VARCHAR}
+      )
   </insert>
-  <insert id="insertSelective" parameterType="cn.edu.zucc.music.model.Album">
+  <insert id="insertSelective" parameterType="cn.edu.zucc.music.model.Album" >
     insert into album
-    <trim prefix="(" suffix=")" suffixOverrides=",">
-      <if test="id != null">
-        id,
-      </if>
-      <if test="albumId != null">
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="albumId != null" >
         album_id,
       </if>
-      <if test="albunName != null">
+      <if test="albunName != null" >
         albun_name,
       </if>
-      <if test="userId != null">
-        user_id,
+      <if test="artistId != null" >
+        artist_id,
       </if>
-      <if test="createTime != null">
-        create_time,
+      <if test="publishTime != null" >
+        publish_time,
       </if>
-      <if test="collectNum != null">
-        collect_num,
-      </if>
-      <if test="introduction != null">
+      <if test="introduction != null" >
         introduction,
       </if>
-      <if test="path != null">
-        path,
+      <if test="blurPicUrl != null" >
+        blur_pic_url,
       </if>
     </trim>
-    <trim prefix="values (" suffix=")" suffixOverrides=",">
-      <if test="id != null">
-        #{id,jdbcType=INTEGER},
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="albumId != null" >
+        #{albumId,jdbcType=VARCHAR},
       </if>
-      <if test="albumId != null">
-        #{albumId,jdbcType=INTEGER},
-      </if>
-      <if test="albunName != null">
+      <if test="albunName != null" >
         #{albunName,jdbcType=VARCHAR},
       </if>
-      <if test="userId != null">
-        #{userId,jdbcType=VARCHAR},
+      <if test="artistId != null" >
+        #{artistId,jdbcType=VARCHAR},
       </if>
-      <if test="createTime != null">
-        #{createTime,jdbcType=TIMESTAMP},
+      <if test="publishTime != null" >
+        #{publishTime,jdbcType=TIMESTAMP},
       </if>
-      <if test="collectNum != null">
-        #{collectNum,jdbcType=VARCHAR},
-      </if>
-      <if test="introduction != null">
+      <if test="introduction != null" >
         #{introduction,jdbcType=VARCHAR},
       </if>
-      <if test="path != null">
-        #{path,jdbcType=VARCHAR},
+      <if test="blurPicUrl != null" >
+        #{blurPicUrl,jdbcType=VARCHAR},
       </if>
     </trim>
   </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="cn.edu.zucc.music.model.Album">
+  <update id="updateByPrimaryKeySelective" parameterType="cn.edu.zucc.music.model.Album" >
     update album
-    <set>
-      <if test="albumId != null">
-        album_id = #{albumId,jdbcType=INTEGER},
-      </if>
-      <if test="albunName != null">
+    <set >
+      <if test="albunName != null" >
         albun_name = #{albunName,jdbcType=VARCHAR},
       </if>
-      <if test="userId != null">
-        user_id = #{userId,jdbcType=VARCHAR},
+      <if test="artistId != null" >
+        artist_id = #{artistId,jdbcType=VARCHAR},
       </if>
-      <if test="createTime != null">
-        create_time = #{createTime,jdbcType=TIMESTAMP},
+      <if test="publishTime != null" >
+        publish_time = #{publishTime,jdbcType=TIMESTAMP},
       </if>
-      <if test="collectNum != null">
-        collect_num = #{collectNum,jdbcType=VARCHAR},
-      </if>
-      <if test="introduction != null">
+      <if test="introduction != null" >
         introduction = #{introduction,jdbcType=VARCHAR},
       </if>
-      <if test="path != null">
-        path = #{path,jdbcType=VARCHAR},
+      <if test="blurPicUrl != null" >
+        blur_pic_url = #{blurPicUrl,jdbcType=VARCHAR},
       </if>
     </set>
-    where id = #{id,jdbcType=INTEGER}
+    where album_id = #{albumId,jdbcType=VARCHAR}
   </update>
-  <update id="updateByPrimaryKey" parameterType="cn.edu.zucc.music.model.Album">
+  <update id="updateByPrimaryKey" parameterType="cn.edu.zucc.music.model.Album" >
     update album
-    set album_id = #{albumId,jdbcType=INTEGER},
-      albun_name = #{albunName,jdbcType=VARCHAR},
-      user_id = #{userId,jdbcType=VARCHAR},
-      create_time = #{createTime,jdbcType=TIMESTAMP},
-      collect_num = #{collectNum,jdbcType=VARCHAR},
+    set albun_name = #{albunName,jdbcType=VARCHAR},
+      artist_id = #{artistId,jdbcType=VARCHAR},
+      publish_time = #{publishTime,jdbcType=TIMESTAMP},
       introduction = #{introduction,jdbcType=VARCHAR},
-      path = #{path,jdbcType=VARCHAR}
-    where id = #{id,jdbcType=INTEGER}
+      blur_pic_url = #{blurPicUrl,jdbcType=VARCHAR}
+    where album_id = #{albumId,jdbcType=VARCHAR}
   </update>
 </mapper>

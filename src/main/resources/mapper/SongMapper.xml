@@ -2,48 +2,44 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="cn.edu.zucc.music.dao.SongMapper" >
   <resultMap id="BaseResultMap" type="cn.edu.zucc.music.model.Song" >
-    <id column="id" property="id" jdbcType="INTEGER" />
-    <result column="song_id" property="songId" jdbcType="INTEGER" />
+    <id column="song_id" property="songId" jdbcType="VARCHAR" />
     <result column="song_name" property="songName" jdbcType="VARCHAR" />
-    <result column="album_id" property="albumId" jdbcType="INTEGER" />
-    <result column="artist_id" property="artistId" jdbcType="INTEGER" />
+    <result column="album_id" property="albumId" jdbcType="VARCHAR" />
+    <result column="artist_id" property="artistId" jdbcType="VARCHAR" />
     <result column="pic_url" property="picUrl" jdbcType="VARCHAR" />
   </resultMap>
   <resultMap id="ResultMapWithBLOBs" type="cn.edu.zucc.music.model.Song" extends="BaseResultMap" >
     <result column="content" property="content" jdbcType="LONGVARCHAR" />
   </resultMap>
   <sql id="Base_Column_List" >
-    id, song_id, song_name, album_id, artist_id, pic_url
+    song_id, song_name, album_id, artist_id, pic_url
   </sql>
   <sql id="Blob_Column_List" >
     content
   </sql>
-  <select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs" parameterType="java.lang.Integer" >
+  <select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs" parameterType="java.lang.String" >
     select 
     <include refid="Base_Column_List" />
     ,
     <include refid="Blob_Column_List" />
     from song
-    where id = #{id,jdbcType=INTEGER}
+    where song_id = #{songId,jdbcType=VARCHAR}
   </select>
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
     delete from song
-    where id = #{id,jdbcType=INTEGER}
+    where song_id = #{songId,jdbcType=VARCHAR}
   </delete>
   <insert id="insert" parameterType="cn.edu.zucc.music.model.Song" >
-    insert into song (id, song_id, song_name, 
-      album_id, artist_id, pic_url, 
-      content)
-    values (#{id,jdbcType=INTEGER}, #{songId,jdbcType=INTEGER}, #{songName,jdbcType=VARCHAR}, 
-      #{albumId,jdbcType=INTEGER}, #{artistId,jdbcType=INTEGER}, #{picUrl,jdbcType=VARCHAR}, 
-      #{content,jdbcType=LONGVARCHAR})
+    insert into song (song_id, song_name, album_id, 
+      artist_id, pic_url, content
+      )
+    values (#{songId,jdbcType=VARCHAR}, #{songName,jdbcType=VARCHAR}, #{albumId,jdbcType=VARCHAR}, 
+      #{artistId,jdbcType=VARCHAR}, #{picUrl,jdbcType=VARCHAR}, #{content,jdbcType=LONGVARCHAR}
+      )
   </insert>
   <insert id="insertSelective" parameterType="cn.edu.zucc.music.model.Song" >
     insert into song
     <trim prefix="(" suffix=")" suffixOverrides="," >
-      <if test="id != null" >
-        id,
-      </if>
       <if test="songId != null" >
         song_id,
       </if>
@@ -64,20 +60,17 @@
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
-      <if test="id != null" >
-        #{id,jdbcType=INTEGER},
-      </if>
       <if test="songId != null" >
-        #{songId,jdbcType=INTEGER},
+        #{songId,jdbcType=VARCHAR},
       </if>
       <if test="songName != null" >
         #{songName,jdbcType=VARCHAR},
       </if>
       <if test="albumId != null" >
-        #{albumId,jdbcType=INTEGER},
+        #{albumId,jdbcType=VARCHAR},
       </if>
       <if test="artistId != null" >
-        #{artistId,jdbcType=INTEGER},
+        #{artistId,jdbcType=VARCHAR},
       </if>
       <if test="picUrl != null" >
         #{picUrl,jdbcType=VARCHAR},
@@ -90,17 +83,14 @@
   <update id="updateByPrimaryKeySelective" parameterType="cn.edu.zucc.music.model.Song" >
     update song
     <set >
-      <if test="songId != null" >
-        song_id = #{songId,jdbcType=INTEGER},
-      </if>
       <if test="songName != null" >
         song_name = #{songName,jdbcType=VARCHAR},
       </if>
       <if test="albumId != null" >
-        album_id = #{albumId,jdbcType=INTEGER},
+        album_id = #{albumId,jdbcType=VARCHAR},
       </if>
       <if test="artistId != null" >
-        artist_id = #{artistId,jdbcType=INTEGER},
+        artist_id = #{artistId,jdbcType=VARCHAR},
       </if>
       <if test="picUrl != null" >
         pic_url = #{picUrl,jdbcType=VARCHAR},
@@ -109,25 +99,23 @@
         content = #{content,jdbcType=LONGVARCHAR},
       </if>
     </set>
-    where id = #{id,jdbcType=INTEGER}
+    where song_id = #{songId,jdbcType=VARCHAR}
   </update>
   <update id="updateByPrimaryKeyWithBLOBs" parameterType="cn.edu.zucc.music.model.Song" >
     update song
-    set song_id = #{songId,jdbcType=INTEGER},
-      song_name = #{songName,jdbcType=VARCHAR},
-      album_id = #{albumId,jdbcType=INTEGER},
-      artist_id = #{artistId,jdbcType=INTEGER},
+    set song_name = #{songName,jdbcType=VARCHAR},
+      album_id = #{albumId,jdbcType=VARCHAR},
+      artist_id = #{artistId,jdbcType=VARCHAR},
       pic_url = #{picUrl,jdbcType=VARCHAR},
       content = #{content,jdbcType=LONGVARCHAR}
-    where id = #{id,jdbcType=INTEGER}
+    where song_id = #{songId,jdbcType=VARCHAR}
   </update>
   <update id="updateByPrimaryKey" parameterType="cn.edu.zucc.music.model.Song" >
     update song
-    set song_id = #{songId,jdbcType=INTEGER},
-      song_name = #{songName,jdbcType=VARCHAR},
-      album_id = #{albumId,jdbcType=INTEGER},
-      artist_id = #{artistId,jdbcType=INTEGER},
+    set song_name = #{songName,jdbcType=VARCHAR},
+      album_id = #{albumId,jdbcType=VARCHAR},
+      artist_id = #{artistId,jdbcType=VARCHAR},
       pic_url = #{picUrl,jdbcType=VARCHAR}
-    where id = #{id,jdbcType=INTEGER}
+    where song_id = #{songId,jdbcType=VARCHAR}
   </update>
 </mapper>

@@ -3,15 +3,13 @@ package cn.edu.zucc.music.model;
 import java.io.Serializable;
 
 public class Song implements Serializable {
-    private Integer id;
-
-    private Integer songId;
+    private String songId;
 
     private String songName;
 
-    private Integer albumId;
+    private String albumId;
 
-    private Integer artistId;
+    private String artistId;
 
     private String picUrl;
 
@@ -19,20 +17,12 @@ public class Song implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public Integer getSongId() {
+    public String getSongId() {
         return songId;
     }
 
-    public void setSongId(Integer songId) {
-        this.songId = songId;
+    public void setSongId(String songId) {
+        this.songId = songId == null ? null : songId.trim();
     }
 
     public String getSongName() {
@@ -43,20 +33,20 @@ public class Song implements Serializable {
         this.songName = songName == null ? null : songName.trim();
     }
 
-    public Integer getAlbumId() {
+    public String getAlbumId() {
         return albumId;
     }
 
-    public void setAlbumId(Integer albumId) {
-        this.albumId = albumId;
+    public void setAlbumId(String albumId) {
+        this.albumId = albumId == null ? null : albumId.trim();
     }
 
-    public Integer getArtistId() {
+    public String getArtistId() {
         return artistId;
     }
 
-    public void setArtistId(Integer artistId) {
-        this.artistId = artistId;
+    public void setArtistId(String artistId) {
+        this.artistId = artistId == null ? null : artistId.trim();
     }
 
     public String getPicUrl() {
@@ -81,7 +71,6 @@ public class Song implements Serializable {
         sb.append(getClass().getSimpleName());
         sb.append(" [");
         sb.append("Hash = ").append(hashCode());
-        sb.append(", id=").append(id);
         sb.append(", songId=").append(songId);
         sb.append(", songName=").append(songName);
         sb.append(", albumId=").append(albumId);
