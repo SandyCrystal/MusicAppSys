@@ -1,7 +1,10 @@
 package cn.edu.zucc.music.dao;
 
 import cn.edu.zucc.music.model.Sheet;
+import org.apache.ibatis.annotations.Mapper;
 
+import java.util.List;
+@Mapper
 public interface SheetMapper {
     int deleteByPrimaryKey(Long id);
 
@@ -14,4 +17,5 @@ public interface SheetMapper {
     int updateByPrimaryKeySelective(Sheet record);
 
     int updateByPrimaryKey(Sheet record);
+    List<Sheet> selectByUserId(String userid);
 }

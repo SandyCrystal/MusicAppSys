@@ -30,7 +30,7 @@ public class SheetServiceImpl implements SheetService {
     }
 
     @Override
-    public Sheet findById(int id) {
+    public Sheet findById(long id) {
         return sheetMapper.selectByPrimaryKey(id);
     }
 
