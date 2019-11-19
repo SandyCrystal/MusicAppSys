@@ -3,13 +3,14 @@
 <mapper namespace="cn.edu.zucc.music.dao.DynamicMapper" >
   <resultMap id="BaseResultMap" type="cn.edu.zucc.music.model.Dynamic" >
     <id column="dynamic_id" property="dynamicId" jdbcType="INTEGER" />
-    <result column="introduction" property="introduction" jdbcType="VARCHAR" />
+    <result column="user_id" property="userId" jdbcType="VARCHAR" />
+    <result column="introducion" property="introducion" jdbcType="VARCHAR" />
     <result column="dynamic_path" property="dynamicPath" jdbcType="VARCHAR" />
     <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
-    <result column="user_id" property="userId" jdbcType="VARCHAR" />
+    <result column="like_count" property="likeCount" jdbcType="INTEGER" />
   </resultMap>
   <sql id="Base_Column_List" >
-    dynamic_id, introduction, dynamic_path, create_time, user_id
+    dynamic_id, user_id, introducion, dynamic_path, create_time, like_count
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
     select 
@@ -22,10 +23,12 @@
     where dynamic_id = #{dynamicId,jdbcType=INTEGER}
   </delete>
   <insert id="insert" parameterType="cn.edu.zucc.music.model.Dynamic" >
-    insert into dynamic (dynamic_id, introduction, dynamic_path, 
-      create_time, user_id)
-    values (#{dynamicId,jdbcType=INTEGER}, #{introduction,jdbcType=VARCHAR}, #{dynamicPath,jdbcType=VARCHAR}, 
-      #{createTime,jdbcType=TIMESTAMP}, #{userId,jdbcType=VARCHAR})
+    insert into dynamic (dynamic_id, user_id, introducion, 
+      dynamic_path, create_time, like_count
+      )
+    values (#{dynamicId,jdbcType=INTEGER}, #{userId,jdbcType=VARCHAR}, #{introducion,jdbcType=VARCHAR}, 
+      #{dynamicPath,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{likeCount,jdbcType=INTEGER}
+      )
   </insert>
   <insert id="insertSelective" parameterType="cn.edu.zucc.music.model.Dynamic" >
     insert into dynamic
@@ -33,8 +36,11 @@
       <if test="dynamicId != null" >
         dynamic_id,
       </if>
-      <if test="introduction != null" >
-        introduction,
+      <if test="userId != null" >
+        user_id,
+      </if>
+      <if test="introducion != null" >
+        introducion,
       </if>
       <if test="dynamicPath != null" >
         dynamic_path,
@@ -42,16 +48,19 @@
       <if test="createTime != null" >
         create_time,
       </if>
-      <if test="userId != null" >
-        user_id,
+      <if test="likeCount != null" >
+        like_count,
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="dynamicId != null" >
         #{dynamicId,jdbcType=INTEGER},
       </if>
-      <if test="introduction != null" >
-        #{introduction,jdbcType=VARCHAR},
+      <if test="userId != null" >
+        #{userId,jdbcType=VARCHAR},
+      </if>
+      <if test="introducion != null" >
+        #{introducion,jdbcType=VARCHAR},
       </if>
       <if test="dynamicPath != null" >
         #{dynamicPath,jdbcType=VARCHAR},
@@ -59,16 +68,19 @@
       <if test="createTime != null" >
         #{createTime,jdbcType=TIMESTAMP},
       </if>
-      <if test="userId != null" >
-        #{userId,jdbcType=VARCHAR},
+      <if test="likeCount != null" >
+        #{likeCount,jdbcType=INTEGER},
       </if>
     </trim>
   </insert>
   <update id="updateByPrimaryKeySelective" parameterType="cn.edu.zucc.music.model.Dynamic" >
     update dynamic
     <set >
-      <if test="introduction != null" >
-        introduction = #{introduction,jdbcType=VARCHAR},
+      <if test="userId != null" >
+        user_id = #{userId,jdbcType=VARCHAR},
+      </if>
+      <if test="introducion != null" >
+        introducion = #{introducion,jdbcType=VARCHAR},
       </if>
       <if test="dynamicPath != null" >
         dynamic_path = #{dynamicPath,jdbcType=VARCHAR},
@@ -76,18 +88,19 @@
       <if test="createTime != null" >
         create_time = #{createTime,jdbcType=TIMESTAMP},
       </if>
-      <if test="userId != null" >
-        user_id = #{userId,jdbcType=VARCHAR},
+      <if test="likeCount != null" >
+        like_count = #{likeCount,jdbcType=INTEGER},
       </if>
     </set>
     where dynamic_id = #{dynamicId,jdbcType=INTEGER}
   </update>
   <update id="updateByPrimaryKey" parameterType="cn.edu.zucc.music.model.Dynamic" >
     update dynamic
-    set introduction = #{introduction,jdbcType=VARCHAR},
+    set user_id = #{userId,jdbcType=VARCHAR},
+      introducion = #{introducion,jdbcType=VARCHAR},
       dynamic_path = #{dynamicPath,jdbcType=VARCHAR},
       create_time = #{createTime,jdbcType=TIMESTAMP},
-      user_id = #{userId,jdbcType=VARCHAR}
+      like_count = #{likeCount,jdbcType=INTEGER}
     where dynamic_id = #{dynamicId,jdbcType=INTEGER}
   </update>
 </mapper>

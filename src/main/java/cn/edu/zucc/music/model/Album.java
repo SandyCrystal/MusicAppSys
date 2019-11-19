@@ -6,15 +6,21 @@ import java.util.Date;
 public class Album implements Serializable {
     private String albumId;
 
-    private String albunName;
-
     private String artistId;
 
     private Date publishTime;
 
+    private String albumName;
+
     private String introduction;
 
-    private String blurPicUrl;
+    private String albumPicUrl;
+
+    private Integer subCount;
+
+    private Integer commentCount;
+
+    private Integer shareCount;
 
     private static final long serialVersionUID = 1L;
 
@@ -24,14 +30,6 @@ public class Album implements Serializable {
 
     public void setAlbumId(String albumId) {
         this.albumId = albumId == null ? null : albumId.trim();
-    }
-
-    public String getAlbunName() {
-        return albunName;
-    }
-
-    public void setAlbunName(String albunName) {
-        this.albunName = albunName == null ? null : albunName.trim();
     }
 
     public String getArtistId() {
@@ -50,6 +48,14 @@ public class Album implements Serializable {
         this.publishTime = publishTime;
     }
 
+    public String getAlbumName() {
+        return albumName;
+    }
+
+    public void setAlbumName(String albumName) {
+        this.albumName = albumName == null ? null : albumName.trim();
+    }
+
     public String getIntroduction() {
         return introduction;
     }
@@ -58,12 +64,36 @@ public class Album implements Serializable {
         this.introduction = introduction == null ? null : introduction.trim();
     }
 
-    public String getBlurPicUrl() {
-        return blurPicUrl;
+    public String getAlbumPicUrl() {
+        return albumPicUrl;
     }
 
-    public void setBlurPicUrl(String blurPicUrl) {
-        this.blurPicUrl = blurPicUrl == null ? null : blurPicUrl.trim();
+    public void setAlbumPicUrl(String albumPicUrl) {
+        this.albumPicUrl = albumPicUrl == null ? null : albumPicUrl.trim();
+    }
+
+    public Integer getSubCount() {
+        return subCount;
+    }
+
+    public void setSubCount(Integer subCount) {
+        this.subCount = subCount;
+    }
+
+    public Integer getCommentCount() {
+        return commentCount;
+    }
+
+    public void setCommentCount(Integer commentCount) {
+        this.commentCount = commentCount;
+    }
+
+    public Integer getShareCount() {
+        return shareCount;
+    }
+
+    public void setShareCount(Integer shareCount) {
+        this.shareCount = shareCount;
     }
 
     @Override
@@ -73,11 +103,14 @@ public class Album implements Serializable {
         sb.append(" [");
         sb.append("Hash = ").append(hashCode());
         sb.append(", albumId=").append(albumId);
-        sb.append(", albunName=").append(albunName);
         sb.append(", artistId=").append(artistId);
         sb.append(", publishTime=").append(publishTime);
+        sb.append(", albumName=").append(albumName);
         sb.append(", introduction=").append(introduction);
-        sb.append(", blurPicUrl=").append(blurPicUrl);
+        sb.append(", albumPicUrl=").append(albumPicUrl);
+        sb.append(", subCount=").append(subCount);
+        sb.append(", commentCount=").append(commentCount);
+        sb.append(", shareCount=").append(shareCount);
         sb.append(", serialVersionUID=").append(serialVersionUID);
         sb.append("]");
         return sb.toString();

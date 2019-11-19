@@ -4,13 +4,15 @@ import java.io.Serializable;
 import java.util.Date;
 
 public class AlbumComment implements Serializable {
-    private Integer id;
+    private Integer albumCommentId;
 
-    private String albumId;
+    private Integer albumId;
 
     private String userId;
 
-    private String comment;
+    private String userName;
+
+    private String commentContent;
 
     private Date commentTime;
 
@@ -18,20 +20,20 @@ public class AlbumComment implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    public Integer getId() {
-        return id;
+    public Integer getAlbumCommentId() {
+        return albumCommentId;
     }
 
-    public void setId(Integer id) {
-        this.id = id;
+    public void setAlbumCommentId(Integer albumCommentId) {
+        this.albumCommentId = albumCommentId;
     }
 
-    public String getAlbumId() {
+    public Integer getAlbumId() {
         return albumId;
     }
 
-    public void setAlbumId(String albumId) {
-        this.albumId = albumId == null ? null : albumId.trim();
+    public void setAlbumId(Integer albumId) {
+        this.albumId = albumId;
     }
 
     public String getUserId() {
@@ -42,12 +44,20 @@ public class AlbumComment implements Serializable {
         this.userId = userId == null ? null : userId.trim();
     }
 
-    public String getComment() {
-        return comment;
+    public String getUserName() {
+        return userName;
     }
 
-    public void setComment(String comment) {
-        this.comment = comment == null ? null : comment.trim();
+    public void setUserName(String userName) {
+        this.userName = userName == null ? null : userName.trim();
+    }
+
+    public String getCommentContent() {
+        return commentContent;
+    }
+
+    public void setCommentContent(String commentContent) {
+        this.commentContent = commentContent == null ? null : commentContent.trim();
     }
 
     public Date getCommentTime() {
@@ -72,10 +82,11 @@ public class AlbumComment implements Serializable {
         sb.append(getClass().getSimpleName());
         sb.append(" [");
         sb.append("Hash = ").append(hashCode());
-        sb.append(", id=").append(id);
+        sb.append(", albumCommentId=").append(albumCommentId);
         sb.append(", albumId=").append(albumId);
         sb.append(", userId=").append(userId);
-        sb.append(", comment=").append(comment);
+        sb.append(", userName=").append(userName);
+        sb.append(", commentContent=").append(commentContent);
         sb.append(", commentTime=").append(commentTime);
         sb.append(", likeCount=").append(likeCount);
         sb.append(", serialVersionUID=").append(serialVersionUID);

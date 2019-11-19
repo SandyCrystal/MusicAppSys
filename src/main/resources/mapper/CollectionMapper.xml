@@ -2,34 +2,34 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="cn.edu.zucc.music.dao.CollectionMapper" >
   <resultMap id="BaseResultMap" type="cn.edu.zucc.music.model.Collection" >
-    <id column="id" property="id" jdbcType="INTEGER" />
+    <id column="collection" property="collection" jdbcType="INTEGER" />
     <result column="user_id" property="userId" jdbcType="VARCHAR" />
-    <result column="sheet_id" property="sheetId" jdbcType="INTEGER" />
+    <result column="sheet_id" property="sheetId" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Base_Column_List" >
-    id, user_id, sheet_id
+    collection, user_id, sheet_id
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
     select 
     <include refid="Base_Column_List" />
     from collection
-    where id = #{id,jdbcType=INTEGER}
+    where collection = #{collection,jdbcType=INTEGER}
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
     delete from collection
-    where id = #{id,jdbcType=INTEGER}
+    where collection = #{collection,jdbcType=INTEGER}
   </delete>
   <insert id="insert" parameterType="cn.edu.zucc.music.model.Collection" >
-    insert into collection (id, user_id, sheet_id
+    insert into collection (collection, user_id, sheet_id
       )
-    values (#{id,jdbcType=INTEGER}, #{userId,jdbcType=VARCHAR}, #{sheetId,jdbcType=INTEGER}
+    values (#{collection,jdbcType=INTEGER}, #{userId,jdbcType=VARCHAR}, #{sheetId,jdbcType=VARCHAR}
       )
   </insert>
   <insert id="insertSelective" parameterType="cn.edu.zucc.music.model.Collection" >
     insert into collection
     <trim prefix="(" suffix=")" suffixOverrides="," >
-      <if test="id != null" >
-        id,
+      <if test="collection != null" >
+        collection,
       </if>
       <if test="userId != null" >
         user_id,
@@ -39,14 +39,14 @@
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
-      <if test="id != null" >
-        #{id,jdbcType=INTEGER},
+      <if test="collection != null" >
+        #{collection,jdbcType=INTEGER},
       </if>
       <if test="userId != null" >
         #{userId,jdbcType=VARCHAR},
       </if>
       <if test="sheetId != null" >
-        #{sheetId,jdbcType=INTEGER},
+        #{sheetId,jdbcType=VARCHAR},
       </if>
     </trim>
   </insert>
@@ -57,15 +57,15 @@
         user_id = #{userId,jdbcType=VARCHAR},
       </if>
       <if test="sheetId != null" >
-        sheet_id = #{sheetId,jdbcType=INTEGER},
+        sheet_id = #{sheetId,jdbcType=VARCHAR},
       </if>
     </set>
-    where id = #{id,jdbcType=INTEGER}
+    where collection = #{collection,jdbcType=INTEGER}
   </update>
   <update id="updateByPrimaryKey" parameterType="cn.edu.zucc.music.model.Collection" >
     update collection
     set user_id = #{userId,jdbcType=VARCHAR},
-      sheet_id = #{sheetId,jdbcType=INTEGER}
-    where id = #{id,jdbcType=INTEGER}
+      sheet_id = #{sheetId,jdbcType=VARCHAR}
+    where collection = #{collection,jdbcType=INTEGER}
   </update>
 </mapper>

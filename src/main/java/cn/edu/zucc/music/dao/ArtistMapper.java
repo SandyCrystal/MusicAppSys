@@ -4,14 +4,15 @@ import cn.edu.zucc.music.model.Artist;
 import org.apache.ibatis.annotations.Mapper;
 
 @Mapper
+
 public interface ArtistMapper {
-    int deleteByPrimaryKey(String id);
+    int deleteByPrimaryKey(String artistId);
 
     int insert(Artist record);
 
     int insertSelective(Artist record);
 
-    Artist selectByPrimaryKey(String id);
+    Artist selectByPrimaryKey(String artistId);
 
     int updateByPrimaryKeySelective(Artist record);
 

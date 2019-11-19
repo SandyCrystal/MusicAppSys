@@ -7,14 +7,11 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @Controller
 
 public class UserController {
-    public UserService modifyUser;
-    public UserService followUser;
-    public UserService unfollowUser;
-    public UserService viewFollowUser;
+    public UserService userService;
 
-    public SongService searchSong;
-    public AlbumService searchAlbum;
-    public SheetService searchSheet;
+    public SongService songService;
+    public AlbumService albumService;
+    public SheetService sheetService;
 
     // 编辑个人资料
     @GetMapping(value = "/api/modifyUser")

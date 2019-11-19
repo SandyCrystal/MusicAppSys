@@ -1,6 +1,5 @@
 package cn.edu.zucc.music.service;
 
-
 import cn.edu.zucc.music.model.Collection;
 
 import java.util.List;

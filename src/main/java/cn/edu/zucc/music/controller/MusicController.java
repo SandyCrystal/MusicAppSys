@@ -4,10 +4,8 @@ import cn.edu.zucc.music.Until.Result;
 import cn.edu.zucc.music.Until.ResultStatus;
 import cn.edu.zucc.music.model.Sheet;
 import cn.edu.zucc.music.service.AlbumService;
-import cn.edu.zucc.music.service.CommentService;
 import cn.edu.zucc.music.service.SheetService;
 import cn.edu.zucc.music.service.SongService;
-import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -76,7 +74,7 @@ public class MusicController {
     // 获取个人歌单
     @GetMapping(value = "/api/getSheetByUserId")
     @ResponseBody
-    public Result<Sheet> getSheetByUserId( String uid) {
+    public Result<Sheet> getSheetByUserId(String uid) {
         List<Sheet> list = sheetService.findByUserID(uid);
         if (list==null)return new Result<>(ResultStatus.ERROR);
         return new Result(ResultStatus.SUCCESS,list);

@@ -4,13 +4,13 @@ import java.io.Serializable;
 import java.util.Date;
 
 public class SongComment implements Serializable {
-    private Integer id;
+    private Integer songCommentId;
 
     private String songId;
 
     private String userId;
 
-    private String comment;
+    private String commentContent;
 
     private Date commentTime;
 
@@ -18,12 +18,12 @@ public class SongComment implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    public Integer getId() {
-        return id;
+    public Integer getSongCommentId() {
+        return songCommentId;
     }
 
-    public void setId(Integer id) {
-        this.id = id;
+    public void setSongCommentId(Integer songCommentId) {
+        this.songCommentId = songCommentId;
     }
 
     public String getSongId() {
@@ -42,12 +42,12 @@ public class SongComment implements Serializable {
         this.userId = userId == null ? null : userId.trim();
     }
 
-    public String getComment() {
-        return comment;
+    public String getCommentContent() {
+        return commentContent;
     }
 
-    public void setComment(String comment) {
-        this.comment = comment == null ? null : comment.trim();
+    public void setCommentContent(String commentContent) {
+        this.commentContent = commentContent == null ? null : commentContent.trim();
     }
 
     public Date getCommentTime() {
@@ -72,10 +72,10 @@ public class SongComment implements Serializable {
         sb.append(getClass().getSimpleName());
         sb.append(" [");
         sb.append("Hash = ").append(hashCode());
-        sb.append(", id=").append(id);
+        sb.append(", songCommentId=").append(songCommentId);
         sb.append(", songId=").append(songId);
         sb.append(", userId=").append(userId);
-        sb.append(", comment=").append(comment);
+        sb.append(", commentContent=").append(commentContent);
         sb.append(", commentTime=").append(commentTime);
         sb.append(", likeCount=").append(likeCount);
         sb.append(", serialVersionUID=").append(serialVersionUID);

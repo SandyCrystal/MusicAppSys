@@ -2,70 +2,70 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="cn.edu.zucc.music.dao.SheetSongMapper" >
   <resultMap id="BaseResultMap" type="cn.edu.zucc.music.model.SheetSong" >
-    <id column="id" property="id" jdbcType="INTEGER" />
-    <result column="sheetid" property="sheetid" jdbcType="INTEGER" />
-    <result column="songid" property="songid" jdbcType="INTEGER" />
+    <id column="sheet_song_id" property="sheetSongId" jdbcType="INTEGER" />
+    <result column="sheet_id" property="sheetId" jdbcType="VARCHAR" />
+    <result column="song_id" property="songId" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Base_Column_List" >
-    id, sheetid, songid
+    sheet_song_id, sheet_id, song_id
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
     select 
     <include refid="Base_Column_List" />
     from sheet_song
-    where id = #{id,jdbcType=INTEGER}
+    where sheet_song_id = #{sheetSongId,jdbcType=INTEGER}
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
     delete from sheet_song
-    where id = #{id,jdbcType=INTEGER}
+    where sheet_song_id = #{sheetSongId,jdbcType=INTEGER}
   </delete>
   <insert id="insert" parameterType="cn.edu.zucc.music.model.SheetSong" >
-    insert into sheet_song (id, sheetid, songid
+    insert into sheet_song (sheet_song_id, sheet_id, song_id
       )
-    values (#{id,jdbcType=INTEGER}, #{sheetid,jdbcType=INTEGER}, #{songid,jdbcType=INTEGER}
+    values (#{sheetSongId,jdbcType=INTEGER}, #{sheetId,jdbcType=VARCHAR}, #{songId,jdbcType=VARCHAR}
       )
   </insert>
   <insert id="insertSelective" parameterType="cn.edu.zucc.music.model.SheetSong" >
     insert into sheet_song
     <trim prefix="(" suffix=")" suffixOverrides="," >
-      <if test="id != null" >
-        id,
+      <if test="sheetSongId != null" >
+        sheet_song_id,
       </if>
-      <if test="sheetid != null" >
-        sheetid,
+      <if test="sheetId != null" >
+        sheet_id,
       </if>
-      <if test="songid != null" >
-        songid,
+      <if test="songId != null" >
+        song_id,
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
-      <if test="id != null" >
-        #{id,jdbcType=INTEGER},
+      <if test="sheetSongId != null" >
+        #{sheetSongId,jdbcType=INTEGER},
       </if>
-      <if test="sheetid != null" >
-        #{sheetid,jdbcType=INTEGER},
+      <if test="sheetId != null" >
+        #{sheetId,jdbcType=VARCHAR},
       </if>
-      <if test="songid != null" >
-        #{songid,jdbcType=INTEGER},
+      <if test="songId != null" >
+        #{songId,jdbcType=VARCHAR},
       </if>
     </trim>
   </insert>
   <update id="updateByPrimaryKeySelective" parameterType="cn.edu.zucc.music.model.SheetSong" >
     update sheet_song
     <set >
-      <if test="sheetid != null" >
-        sheetid = #{sheetid,jdbcType=INTEGER},
+      <if test="sheetId != null" >
+        sheet_id = #{sheetId,jdbcType=VARCHAR},
       </if>
-      <if test="songid != null" >
-        songid = #{songid,jdbcType=INTEGER},
+      <if test="songId != null" >
+        song_id = #{songId,jdbcType=VARCHAR},
       </if>
     </set>
-    where id = #{id,jdbcType=INTEGER}
+    where sheet_song_id = #{sheetSongId,jdbcType=INTEGER}
   </update>
   <update id="updateByPrimaryKey" parameterType="cn.edu.zucc.music.model.SheetSong" >
     update sheet_song
-    set sheetid = #{sheetid,jdbcType=INTEGER},
-      songid = #{songid,jdbcType=INTEGER}
-    where id = #{id,jdbcType=INTEGER}
+    set sheet_id = #{sheetId,jdbcType=VARCHAR},
+      song_id = #{songId,jdbcType=VARCHAR}
+    where sheet_song_id = #{sheetSongId,jdbcType=INTEGER}
   </update>
 </mapper>

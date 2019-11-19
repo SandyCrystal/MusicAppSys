@@ -2,39 +2,40 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="cn.edu.zucc.music.dao.AlbumCommentMapper" >
   <resultMap id="BaseResultMap" type="cn.edu.zucc.music.model.AlbumComment" >
-    <id column="id" property="id" jdbcType="INTEGER" />
-    <result column="album_id" property="albumId" jdbcType="VARCHAR" />
+    <id column="album_comment_id" property="albumCommentId" jdbcType="INTEGER" />
+    <result column="album_id" property="albumId" jdbcType="INTEGER" />
     <result column="user_id" property="userId" jdbcType="VARCHAR" />
-    <result column="comment" property="comment" jdbcType="VARCHAR" />
+    <result column="user_name" property="userName" jdbcType="VARCHAR" />
+    <result column="comment_content" property="commentContent" jdbcType="VARCHAR" />
     <result column="comment_time" property="commentTime" jdbcType="TIMESTAMP" />
     <result column="like_count" property="likeCount" jdbcType="INTEGER" />
   </resultMap>
   <sql id="Base_Column_List" >
-    id, album_id, user_id, comment, comment_time, like_count
+    album_comment_id, album_id, user_id, user_name, comment_content, comment_time, like_count
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
     select 
     <include refid="Base_Column_List" />
     from album_comment
-    where id = #{id,jdbcType=INTEGER}
+    where album_comment_id = #{albumCommentId,jdbcType=INTEGER}
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
     delete from album_comment
-    where id = #{id,jdbcType=INTEGER}
+    where album_comment_id = #{albumCommentId,jdbcType=INTEGER}
   </delete>
   <insert id="insert" parameterType="cn.edu.zucc.music.model.AlbumComment" >
-    insert into album_comment (id, album_id, user_id, 
-      comment, comment_time, like_count
-      )
-    values (#{id,jdbcType=INTEGER}, #{albumId,jdbcType=VARCHAR}, #{userId,jdbcType=VARCHAR}, 
-      #{comment,jdbcType=VARCHAR}, #{commentTime,jdbcType=TIMESTAMP}, #{likeCount,jdbcType=INTEGER}
-      )
+    insert into album_comment (album_comment_id, album_id, user_id, 
+      user_name, comment_content, comment_time, 
+      like_count)
+    values (#{albumCommentId,jdbcType=INTEGER}, #{albumId,jdbcType=INTEGER}, #{userId,jdbcType=VARCHAR}, 
+      #{userName,jdbcType=VARCHAR}, #{commentContent,jdbcType=VARCHAR}, #{commentTime,jdbcType=TIMESTAMP}, 
+      #{likeCount,jdbcType=INTEGER})
   </insert>
   <insert id="insertSelective" parameterType="cn.edu.zucc.music.model.AlbumComment" >
     insert into album_comment
     <trim prefix="(" suffix=")" suffixOverrides="," >
-      <if test="id != null" >
-        id,
+      <if test="albumCommentId != null" >
+        album_comment_id,
       </if>
       <if test="albumId != null" >
         album_id,
@@ -42,8 +43,11 @@
       <if test="userId != null" >
         user_id,
       </if>
-      <if test="comment != null" >
-        comment,
+      <if test="userName != null" >
+        user_name,
+      </if>
+      <if test="commentContent != null" >
+        comment_content,
       </if>
       <if test="commentTime != null" >
         comment_time,
@@ -53,17 +57,20 @@
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
-      <if test="id != null" >
-        #{id,jdbcType=INTEGER},
+      <if test="albumCommentId != null" >
+        #{albumCommentId,jdbcType=INTEGER},
       </if>
       <if test="albumId != null" >
-        #{albumId,jdbcType=VARCHAR},
+        #{albumId,jdbcType=INTEGER},
       </if>
       <if test="userId != null" >
         #{userId,jdbcType=VARCHAR},
       </if>
-      <if test="comment != null" >
-        #{comment,jdbcType=VARCHAR},
+      <if test="userName != null" >
+        #{userName,jdbcType=VARCHAR},
+      </if>
+      <if test="commentContent != null" >
+        #{commentContent,jdbcType=VARCHAR},
       </if>
       <if test="commentTime != null" >
         #{commentTime,jdbcType=TIMESTAMP},
@@ -77,13 +84,16 @@
     update album_comment
     <set >
       <if test="albumId != null" >
-        album_id = #{albumId,jdbcType=VARCHAR},
+        album_id = #{albumId,jdbcType=INTEGER},
       </if>
       <if test="userId != null" >
         user_id = #{userId,jdbcType=VARCHAR},
       </if>
-      <if test="comment != null" >
-        comment = #{comment,jdbcType=VARCHAR},
+      <if test="userName != null" >
+        user_name = #{userName,jdbcType=VARCHAR},
+      </if>
+      <if test="commentContent != null" >
+        comment_content = #{commentContent,jdbcType=VARCHAR},
       </if>
       <if test="commentTime != null" >
         comment_time = #{commentTime,jdbcType=TIMESTAMP},
@@ -92,15 +102,16 @@
         like_count = #{likeCount,jdbcType=INTEGER},
       </if>
     </set>
-    where id = #{id,jdbcType=INTEGER}
+    where album_comment_id = #{albumCommentId,jdbcType=INTEGER}
   </update>
   <update id="updateByPrimaryKey" parameterType="cn.edu.zucc.music.model.AlbumComment" >
     update album_comment
-    set album_id = #{albumId,jdbcType=VARCHAR},
+    set album_id = #{albumId,jdbcType=INTEGER},
       user_id = #{userId,jdbcType=VARCHAR},
-      comment = #{comment,jdbcType=VARCHAR},
+      user_name = #{userName,jdbcType=VARCHAR},
+      comment_content = #{commentContent,jdbcType=VARCHAR},
       comment_time = #{commentTime,jdbcType=TIMESTAMP},
       like_count = #{likeCount,jdbcType=INTEGER}
-    where id = #{id,jdbcType=INTEGER}
+    where album_comment_id = #{albumCommentId,jdbcType=INTEGER}
   </update>
 </mapper>

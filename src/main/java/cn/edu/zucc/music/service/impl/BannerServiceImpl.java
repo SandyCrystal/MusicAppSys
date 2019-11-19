@@ -7,11 +7,12 @@ import cn.edu.zucc.music.service.BannerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
 import java.util.List;
 
 @Service
 public class BannerServiceImpl implements BannerService {
-    @Autowired
+    @Resource
     private BannerMapper bannerMapper;
     @Override
     public int addBanner(Banner banner) {
@@ -35,6 +36,6 @@ public class BannerServiceImpl implements BannerService {
 
     @Override
     public List<Banner> findAll() {
-        return null ;
+        return bannerMapper.selectAll();
     }
 }

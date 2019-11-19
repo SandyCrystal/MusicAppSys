@@ -4,24 +4,24 @@ import java.io.Serializable;
 import java.util.Date;
 
 public class DynamicComment implements Serializable {
-    private Integer id;
+    private Integer dynamicCommentId;
 
     private Integer dynamicId;
 
     private String userId;
 
-    private String comment;
+    private String commentContent;
 
     private Date commentTime;
 
     private static final long serialVersionUID = 1L;
 
-    public Integer getId() {
-        return id;
+    public Integer getDynamicCommentId() {
+        return dynamicCommentId;
     }
 
-    public void setId(Integer id) {
-        this.id = id;
+    public void setDynamicCommentId(Integer dynamicCommentId) {
+        this.dynamicCommentId = dynamicCommentId;
     }
 
     public Integer getDynamicId() {
@@ -40,12 +40,12 @@ public class DynamicComment implements Serializable {
         this.userId = userId == null ? null : userId.trim();
     }
 
-    public String getComment() {
-        return comment;
+    public String getCommentContent() {
+        return commentContent;
     }
 
-    public void setComment(String comment) {
-        this.comment = comment == null ? null : comment.trim();
+    public void setCommentContent(String commentContent) {
+        this.commentContent = commentContent == null ? null : commentContent.trim();
     }
 
     public Date getCommentTime() {
@@ -62,10 +62,10 @@ public class DynamicComment implements Serializable {
         sb.append(getClass().getSimpleName());
         sb.append(" [");
         sb.append("Hash = ").append(hashCode());
-        sb.append(", id=").append(id);
+        sb.append(", dynamicCommentId=").append(dynamicCommentId);
         sb.append(", dynamicId=").append(dynamicId);
         sb.append(", userId=").append(userId);
-        sb.append(", comment=").append(comment);
+        sb.append(", commentContent=").append(commentContent);
         sb.append(", commentTime=").append(commentTime);
         sb.append(", serialVersionUID=").append(serialVersionUID);
         sb.append("]");

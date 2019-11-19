@@ -2,36 +2,36 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="cn.edu.zucc.music.dao.DynamicCommentMapper" >
   <resultMap id="BaseResultMap" type="cn.edu.zucc.music.model.DynamicComment" >
-    <id column="id" property="id" jdbcType="INTEGER" />
+    <id column="dynamic_comment_id" property="dynamicCommentId" jdbcType="INTEGER" />
     <result column="dynamic_id" property="dynamicId" jdbcType="INTEGER" />
     <result column="user_id" property="userId" jdbcType="VARCHAR" />
-    <result column="comment" property="comment" jdbcType="VARCHAR" />
+    <result column="comment_content" property="commentContent" jdbcType="VARCHAR" />
     <result column="comment_time" property="commentTime" jdbcType="TIMESTAMP" />
   </resultMap>
   <sql id="Base_Column_List" >
-    id, dynamic_id, user_id, comment, comment_time
+    dynamic_comment_id, dynamic_id, user_id, comment_content, comment_time
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
     select 
     <include refid="Base_Column_List" />
     from dynamic_comment
-    where id = #{id,jdbcType=INTEGER}
+    where dynamic_comment_id = #{dynamicCommentId,jdbcType=INTEGER}
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
     delete from dynamic_comment
-    where id = #{id,jdbcType=INTEGER}
+    where dynamic_comment_id = #{dynamicCommentId,jdbcType=INTEGER}
   </delete>
   <insert id="insert" parameterType="cn.edu.zucc.music.model.DynamicComment" >
-    insert into dynamic_comment (id, dynamic_id, user_id, 
-      comment, comment_time)
-    values (#{id,jdbcType=INTEGER}, #{dynamicId,jdbcType=INTEGER}, #{userId,jdbcType=VARCHAR}, 
-      #{comment,jdbcType=VARCHAR}, #{commentTime,jdbcType=TIMESTAMP})
+    insert into dynamic_comment (dynamic_comment_id, dynamic_id, user_id, 
+      comment_content, comment_time)
+    values (#{dynamicCommentId,jdbcType=INTEGER}, #{dynamicId,jdbcType=INTEGER}, #{userId,jdbcType=VARCHAR}, 
+      #{commentContent,jdbcType=VARCHAR}, #{commentTime,jdbcType=TIMESTAMP})
   </insert>
   <insert id="insertSelective" parameterType="cn.edu.zucc.music.model.DynamicComment" >
     insert into dynamic_comment
     <trim prefix="(" suffix=")" suffixOverrides="," >
-      <if test="id != null" >
-        id,
+      <if test="dynamicCommentId != null" >
+        dynamic_comment_id,
       </if>
       <if test="dynamicId != null" >
         dynamic_id,
@@ -39,16 +39,16 @@
       <if test="userId != null" >
         user_id,
       </if>
-      <if test="comment != null" >
-        comment,
+      <if test="commentContent != null" >
+        comment_content,
       </if>
       <if test="commentTime != null" >
         comment_time,
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
-      <if test="id != null" >
-        #{id,jdbcType=INTEGER},
+      <if test="dynamicCommentId != null" >
+        #{dynamicCommentId,jdbcType=INTEGER},
       </if>
       <if test="dynamicId != null" >
         #{dynamicId,jdbcType=INTEGER},
@@ -56,8 +56,8 @@
       <if test="userId != null" >
         #{userId,jdbcType=VARCHAR},
       </if>
-      <if test="comment != null" >
-        #{comment,jdbcType=VARCHAR},
+      <if test="commentContent != null" >
+        #{commentContent,jdbcType=VARCHAR},
       </if>
       <if test="commentTime != null" >
         #{commentTime,jdbcType=TIMESTAMP},
@@ -73,21 +73,21 @@
       <if test="userId != null" >
         user_id = #{userId,jdbcType=VARCHAR},
       </if>
-      <if test="comment != null" >
-        comment = #{comment,jdbcType=VARCHAR},
+      <if test="commentContent != null" >
+        comment_content = #{commentContent,jdbcType=VARCHAR},
       </if>
       <if test="commentTime != null" >
         comment_time = #{commentTime,jdbcType=TIMESTAMP},
       </if>
     </set>
-    where id = #{id,jdbcType=INTEGER}
+    where dynamic_comment_id = #{dynamicCommentId,jdbcType=INTEGER}
   </update>
   <update id="updateByPrimaryKey" parameterType="cn.edu.zucc.music.model.DynamicComment" >
     update dynamic_comment
     set dynamic_id = #{dynamicId,jdbcType=INTEGER},
       user_id = #{userId,jdbcType=VARCHAR},
-      comment = #{comment,jdbcType=VARCHAR},
+      comment_content = #{commentContent,jdbcType=VARCHAR},
       comment_time = #{commentTime,jdbcType=TIMESTAMP}
-    where id = #{id,jdbcType=INTEGER}
+    where dynamic_comment_id = #{dynamicCommentId,jdbcType=INTEGER}
   </update>
 </mapper>

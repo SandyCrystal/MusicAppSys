@@ -7,13 +7,13 @@ public class Song implements Serializable {
 
     private String songName;
 
+    private String content;
+
     private String albumId;
 
     private String artistId;
 
-    private String picUrl;
-
-    private String content;
+    private String songUrl;
 
     private static final long serialVersionUID = 1L;
 
@@ -33,6 +33,14 @@ public class Song implements Serializable {
         this.songName = songName == null ? null : songName.trim();
     }
 
+    public String getContent() {
+        return content;
+    }
+
+    public void setContent(String content) {
+        this.content = content == null ? null : content.trim();
+    }
+
     public String getAlbumId() {
         return albumId;
     }
@@ -49,20 +57,12 @@ public class Song implements Serializable {
         this.artistId = artistId == null ? null : artistId.trim();
     }
 
-    public String getPicUrl() {
-        return picUrl;
+    public String getSongUrl() {
+        return songUrl;
     }
 
-    public void setPicUrl(String picUrl) {
-        this.picUrl = picUrl == null ? null : picUrl.trim();
-    }
-
-    public String getContent() {
-        return content;
-    }
-
-    public void setContent(String content) {
-        this.content = content == null ? null : content.trim();
+    public void setSongUrl(String songUrl) {
+        this.songUrl = songUrl == null ? null : songUrl.trim();
     }
 
     @Override
@@ -73,10 +73,10 @@ public class Song implements Serializable {
         sb.append("Hash = ").append(hashCode());
         sb.append(", songId=").append(songId);
         sb.append(", songName=").append(songName);
+        sb.append(", content=").append(content);
         sb.append(", albumId=").append(albumId);
         sb.append(", artistId=").append(artistId);
-        sb.append(", picUrl=").append(picUrl);
-        sb.append(", content=").append(content);
+        sb.append(", songUrl=").append(songUrl);
         sb.append(", serialVersionUID=").append(serialVersionUID);
         sb.append("]");
         return sb.toString();

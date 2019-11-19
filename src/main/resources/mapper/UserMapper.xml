@@ -6,12 +6,12 @@
     <result column="user_name" property="userName" jdbcType="VARCHAR" />
     <result column="user_pwd" property="userPwd" jdbcType="VARCHAR" />
     <result column="introduction" property="introduction" jdbcType="VARCHAR" />
-    <result column="pic_url" property="picUrl" jdbcType="VARCHAR" />
+    <result column="avatar_url" property="avatarUrl" jdbcType="VARCHAR" />
     <result column="user_type" property="userType" jdbcType="INTEGER" />
     <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
   </resultMap>
   <sql id="Base_Column_List" >
-    user_id, user_name, user_pwd, introduction, pic_url, user_type, create_time
+    user_id, user_name, user_pwd, introduction, avatar_url, user_type, create_time
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
     select 
@@ -25,10 +25,10 @@
   </delete>
   <insert id="insert" parameterType="cn.edu.zucc.music.model.User" >
     insert into user (user_id, user_name, user_pwd, 
-      introduction, pic_url, user_type, 
+      introduction, avatar_url, user_type, 
       create_time)
     values (#{userId,jdbcType=VARCHAR}, #{userName,jdbcType=VARCHAR}, #{userPwd,jdbcType=VARCHAR}, 
-      #{introduction,jdbcType=VARCHAR}, #{picUrl,jdbcType=VARCHAR}, #{userType,jdbcType=INTEGER}, 
+      #{introduction,jdbcType=VARCHAR}, #{avatarUrl,jdbcType=VARCHAR}, #{userType,jdbcType=INTEGER}, 
       #{createTime,jdbcType=TIMESTAMP})
   </insert>
   <insert id="insertSelective" parameterType="cn.edu.zucc.music.model.User" >
@@ -46,8 +46,8 @@
       <if test="introduction != null" >
         introduction,
       </if>
-      <if test="picUrl != null" >
-        pic_url,
+      <if test="avatarUrl != null" >
+        avatar_url,
       </if>
       <if test="userType != null" >
         user_type,
@@ -69,8 +69,8 @@
       <if test="introduction != null" >
         #{introduction,jdbcType=VARCHAR},
       </if>
-      <if test="picUrl != null" >
-        #{picUrl,jdbcType=VARCHAR},
+      <if test="avatarUrl != null" >
+        #{avatarUrl,jdbcType=VARCHAR},
       </if>
       <if test="userType != null" >
         #{userType,jdbcType=INTEGER},
@@ -92,8 +92,8 @@
       <if test="introduction != null" >
         introduction = #{introduction,jdbcType=VARCHAR},
       </if>
-      <if test="picUrl != null" >
-        pic_url = #{picUrl,jdbcType=VARCHAR},
+      <if test="avatarUrl != null" >
+        avatar_url = #{avatarUrl,jdbcType=VARCHAR},
       </if>
       <if test="userType != null" >
         user_type = #{userType,jdbcType=INTEGER},
@@ -109,7 +109,7 @@
     set user_name = #{userName,jdbcType=VARCHAR},
       user_pwd = #{userPwd,jdbcType=VARCHAR},
       introduction = #{introduction,jdbcType=VARCHAR},
-      pic_url = #{picUrl,jdbcType=VARCHAR},
+      avatar_url = #{avatarUrl,jdbcType=VARCHAR},
       user_type = #{userType,jdbcType=INTEGER},
       create_time = #{createTime,jdbcType=TIMESTAMP}
     where user_id = #{userId,jdbcType=VARCHAR}

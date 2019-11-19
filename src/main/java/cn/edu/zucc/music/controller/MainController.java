@@ -7,11 +7,8 @@ import cn.edu.zucc.music.model.User;
 import cn.edu.zucc.music.service.BannerService;
 import cn.edu.zucc.music.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.configurationprocessor.json.JSONObject;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.HashMap;
 
 @Controller
 public class MainController {
@@ -45,7 +42,7 @@ public class MainController {
     @CrossOrigin
     @GetMapping(value = "/api/banner")
     @ResponseBody
-    public Result<Banner> getBanners(int type){
+    public Result<Banner> getBanners(){
         return new Result(ResultStatus.SUCCESS,bannerService.findAll());
     }
 }

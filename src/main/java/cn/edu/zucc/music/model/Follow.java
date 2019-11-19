@@ -3,36 +3,36 @@ package cn.edu.zucc.music.model;
 import java.io.Serializable;
 
 public class Follow implements Serializable {
-    private Integer id;
+    private Integer followId;
 
-    private String fromUserid;
+    private String fromUserId;
 
-    private String toUserid;
+    private String toUserId;
 
     private static final long serialVersionUID = 1L;
 
-    public Integer getId() {
-        return id;
+    public Integer getFollowId() {
+        return followId;
     }
 
-    public void setId(Integer id) {
-        this.id = id;
+    public void setFollowId(Integer followId) {
+        this.followId = followId;
     }
 
-    public String getFromUserid() {
-        return fromUserid;
+    public String getFromUserId() {
+        return fromUserId;
     }
 
-    public void setFromUserid(String fromUserid) {
-        this.fromUserid = fromUserid == null ? null : fromUserid.trim();
+    public void setFromUserId(String fromUserId) {
+        this.fromUserId = fromUserId == null ? null : fromUserId.trim();
     }
 
-    public String getToUserid() {
-        return toUserid;
+    public String getToUserId() {
+        return toUserId;
     }
 
-    public void setToUserid(String toUserid) {
-        this.toUserid = toUserid == null ? null : toUserid.trim();
+    public void setToUserId(String toUserId) {
+        this.toUserId = toUserId == null ? null : toUserId.trim();
     }
 
     @Override
@@ -41,9 +41,9 @@ public class Follow implements Serializable {
         sb.append(getClass().getSimpleName());
         sb.append(" [");
         sb.append("Hash = ").append(hashCode());
-        sb.append(", id=").append(id);
-        sb.append(", fromUserid=").append(fromUserid);
-        sb.append(", toUserid=").append(toUserid);
+        sb.append(", followId=").append(followId);
+        sb.append(", fromUserId=").append(fromUserId);
+        sb.append(", toUserId=").append(toUserId);
         sb.append(", serialVersionUID=").append(serialVersionUID);
         sb.append("]");
         return sb.toString();

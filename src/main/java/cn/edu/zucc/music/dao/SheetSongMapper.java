@@ -4,14 +4,15 @@ import cn.edu.zucc.music.model.SheetSong;
 import org.apache.ibatis.annotations.Mapper;
 
 @Mapper
+
 public interface SheetSongMapper {
-    int deleteByPrimaryKey(Integer id);
+    int deleteByPrimaryKey(Integer sheetSongId);
 
     int insert(SheetSong record);
 
     int insertSelective(SheetSong record);
 
-    SheetSong selectByPrimaryKey(Integer id);
+    SheetSong selectByPrimaryKey(Integer sheetSongId);
 
     int updateByPrimaryKeySelective(SheetSong record);
 

@@ -5,9 +5,9 @@ import java.io.Serializable;
 public class Banner implements Serializable {
     private String pic;
 
-    private String typetitle;
+    private String typeTitle;
 
-    private Integer targetid;
+    private Integer targetId;
 
     private static final long serialVersionUID = 1L;
 
@@ -19,20 +19,20 @@ public class Banner implements Serializable {
         this.pic = pic == null ? null : pic.trim();
     }
 
-    public String getTypetitle() {
-        return typetitle;
+    public String getTypeTitle() {
+        return typeTitle;
     }
 
-    public void setTypetitle(String typetitle) {
-        this.typetitle = typetitle == null ? null : typetitle.trim();
+    public void setTypeTitle(String typeTitle) {
+        this.typeTitle = typeTitle == null ? null : typeTitle.trim();
     }
 
-    public Integer getTargetid() {
-        return targetid;
+    public Integer getTargetId() {
+        return targetId;
     }
 
-    public void setTargetid(Integer targetid) {
-        this.targetid = targetid;
+    public void setTargetId(Integer targetId) {
+        this.targetId = targetId;
     }
 
     @Override
@@ -42,8 +42,8 @@ public class Banner implements Serializable {
         sb.append(" [");
         sb.append("Hash = ").append(hashCode());
         sb.append(", pic=").append(pic);
-        sb.append(", typetitle=").append(typetitle);
-        sb.append(", targetid=").append(targetid);
+        sb.append(", typeTitle=").append(typeTitle);
+        sb.append(", targetId=").append(targetId);
         sb.append(", serialVersionUID=").append(serialVersionUID);
         sb.append("]");
         return sb.toString();

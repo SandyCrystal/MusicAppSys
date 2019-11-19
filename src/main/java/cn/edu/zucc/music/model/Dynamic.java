@@ -6,13 +6,15 @@ import java.util.Date;
 public class Dynamic implements Serializable {
     private Integer dynamicId;
 
-    private String introduction;
+    private String userId;
+
+    private String introducion;
 
     private String dynamicPath;
 
     private Date createTime;
 
-    private String userId;
+    private Integer likeCount;
 
     private static final long serialVersionUID = 1L;
 
@@ -24,12 +26,20 @@ public class Dynamic implements Serializable {
         this.dynamicId = dynamicId;
     }
 
-    public String getIntroduction() {
-        return introduction;
+    public String getUserId() {
+        return userId;
     }
 
-    public void setIntroduction(String introduction) {
-        this.introduction = introduction == null ? null : introduction.trim();
+    public void setUserId(String userId) {
+        this.userId = userId == null ? null : userId.trim();
+    }
+
+    public String getIntroducion() {
+        return introducion;
+    }
+
+    public void setIntroducion(String introducion) {
+        this.introducion = introducion == null ? null : introducion.trim();
     }
 
     public String getDynamicPath() {
@@ -48,12 +58,12 @@ public class Dynamic implements Serializable {
         this.createTime = createTime;
     }
 
-    public String getUserId() {
-        return userId;
+    public Integer getLikeCount() {
+        return likeCount;
     }
 
-    public void setUserId(String userId) {
-        this.userId = userId == null ? null : userId.trim();
+    public void setLikeCount(Integer likeCount) {
+        this.likeCount = likeCount;
     }
 
     @Override
@@ -63,10 +73,11 @@ public class Dynamic implements Serializable {
         sb.append(" [");
         sb.append("Hash = ").append(hashCode());
         sb.append(", dynamicId=").append(dynamicId);
-        sb.append(", introduction=").append(introduction);
+        sb.append(", userId=").append(userId);
+        sb.append(", introducion=").append(introducion);
         sb.append(", dynamicPath=").append(dynamicPath);
         sb.append(", createTime=").append(createTime);
-        sb.append(", userId=").append(userId);
+        sb.append(", likeCount=").append(likeCount);
         sb.append(", serialVersionUID=").append(serialVersionUID);
         sb.append("]");
         return sb.toString();

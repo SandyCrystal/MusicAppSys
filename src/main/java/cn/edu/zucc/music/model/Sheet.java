@@ -6,17 +6,19 @@ import java.util.Date;
 public class Sheet implements Serializable {
     private String sheetId;
 
-    private String userId;
-
     private String sheetName;
 
-    private String picUrl;
+    private String userId;
 
-    private Date createtime;
+    private String userName;
 
-    private String copywriter;
+    private String sheetPicUrl;
 
-    private Integer playconut;
+    private Date createTime;
+
+    private Integer sheetType;
+
+    private Integer playCount;
 
     private static final long serialVersionUID = 1L;
 
@@ -28,14 +30,6 @@ public class Sheet implements Serializable {
         this.sheetId = sheetId == null ? null : sheetId.trim();
     }
 
-    public String getUserId() {
-        return userId;
-    }
-
-    public void setUserId(String userId) {
-        this.userId = userId == null ? null : userId.trim();
-    }
-
     public String getSheetName() {
         return sheetName;
     }
@@ -44,36 +38,52 @@ public class Sheet implements Serializable {
         this.sheetName = sheetName == null ? null : sheetName.trim();
     }
 
-    public String getPicUrl() {
-        return picUrl;
+    public String getUserId() {
+        return userId;
     }
 
-    public void setPicUrl(String picUrl) {
-        this.picUrl = picUrl == null ? null : picUrl.trim();
+    public void setUserId(String userId) {
+        this.userId = userId == null ? null : userId.trim();
     }
 
-    public Date getCreatetime() {
-        return createtime;
+    public String getUserName() {
+        return userName;
     }
 
-    public void setCreatetime(Date createtime) {
-        this.createtime = createtime;
+    public void setUserName(String userName) {
+        this.userName = userName == null ? null : userName.trim();
     }
 
-    public String getCopywriter() {
-        return copywriter;
+    public String getSheetPicUrl() {
+        return sheetPicUrl;
     }
 
-    public void setCopywriter(String copywriter) {
-        this.copywriter = copywriter == null ? null : copywriter.trim();
+    public void setSheetPicUrl(String sheetPicUrl) {
+        this.sheetPicUrl = sheetPicUrl == null ? null : sheetPicUrl.trim();
     }
 
-    public Integer getPlayconut() {
-        return playconut;
+    public Date getCreateTime() {
+        return createTime;
     }
 
-    public void setPlayconut(Integer playconut) {
-        this.playconut = playconut;
+    public void setCreateTime(Date createTime) {
+        this.createTime = createTime;
+    }
+
+    public Integer getSheetType() {
+        return sheetType;
+    }
+
+    public void setSheetType(Integer sheetType) {
+        this.sheetType = sheetType;
+    }
+
+    public Integer getPlayCount() {
+        return playCount;
+    }
+
+    public void setPlayCount(Integer playCount) {
+        this.playCount = playCount;
     }
 
     @Override
@@ -83,12 +93,13 @@ public class Sheet implements Serializable {
         sb.append(" [");
         sb.append("Hash = ").append(hashCode());
         sb.append(", sheetId=").append(sheetId);
-        sb.append(", userId=").append(userId);
         sb.append(", sheetName=").append(sheetName);
-        sb.append(", picUrl=").append(picUrl);
-        sb.append(", createtime=").append(createtime);
-        sb.append(", copywriter=").append(copywriter);
-        sb.append(", playconut=").append(playconut);
+        sb.append(", userId=").append(userId);
+        sb.append(", userName=").append(userName);
+        sb.append(", sheetPicUrl=").append(sheetPicUrl);
+        sb.append(", createTime=").append(createTime);
+        sb.append(", sheetType=").append(sheetType);
+        sb.append(", playCount=").append(playCount);
         sb.append(", serialVersionUID=").append(serialVersionUID);
         sb.append("]");
         return sb.toString();

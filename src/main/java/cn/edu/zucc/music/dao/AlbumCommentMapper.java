@@ -5,13 +5,13 @@ import org.apache.ibatis.annotations.Mapper;
 
 @Mapper
 public interface AlbumCommentMapper {
-    int deleteByPrimaryKey(Integer id);
+    int deleteByPrimaryKey(Integer albumCommentId);
 
     int insert(AlbumComment record);
 
     int insertSelective(AlbumComment record);
 
-    AlbumComment selectByPrimaryKey(Integer id);
+    AlbumComment selectByPrimaryKey(Integer albumCommentId);
 
     int updateByPrimaryKeySelective(AlbumComment record);
 

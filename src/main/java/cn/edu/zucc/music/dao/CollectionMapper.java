@@ -4,14 +4,15 @@ import cn.edu.zucc.music.model.Collection;
 import org.apache.ibatis.annotations.Mapper;
 
 @Mapper
+
 public interface CollectionMapper {
-    int deleteByPrimaryKey(Integer id);
+    int deleteByPrimaryKey(Integer collection);
 
     int insert(Collection record);
 
     int insertSelective(Collection record);
 
-    Collection selectByPrimaryKey(Integer id);
+    Collection selectByPrimaryKey(Integer collection);
 
     int updateByPrimaryKeySelective(Collection record);
 

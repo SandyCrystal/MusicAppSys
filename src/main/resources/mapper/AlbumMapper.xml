@@ -3,14 +3,18 @@
 <mapper namespace="cn.edu.zucc.music.dao.AlbumMapper" >
   <resultMap id="BaseResultMap" type="cn.edu.zucc.music.model.Album" >
     <id column="album_id" property="albumId" jdbcType="VARCHAR" />
-    <result column="albun_name" property="albunName" jdbcType="VARCHAR" />
     <result column="artist_id" property="artistId" jdbcType="VARCHAR" />
     <result column="publish_time" property="publishTime" jdbcType="TIMESTAMP" />
+    <result column="album_name" property="albumName" jdbcType="VARCHAR" />
     <result column="introduction" property="introduction" jdbcType="VARCHAR" />
-    <result column="blur_pic_url" property="blurPicUrl" jdbcType="VARCHAR" />
+    <result column="album_pic_url" property="albumPicUrl" jdbcType="VARCHAR" />
+    <result column="sub_count" property="subCount" jdbcType="INTEGER" />
+    <result column="comment_count" property="commentCount" jdbcType="INTEGER" />
+    <result column="share_count" property="shareCount" jdbcType="INTEGER" />
   </resultMap>
   <sql id="Base_Column_List" >
-    album_id, albun_name, artist_id, publish_time, introduction, blur_pic_url
+    album_id, artist_id, publish_time, album_name, introduction, album_pic_url, sub_count, 
+    comment_count, share_count
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
     select 
@@ -23,11 +27,13 @@
     where album_id = #{albumId,jdbcType=VARCHAR}
   </delete>
   <insert id="insert" parameterType="cn.edu.zucc.music.model.Album" >
-    insert into album (album_id, albun_name, artist_id, 
-      publish_time, introduction, blur_pic_url
+    insert into album (album_id, artist_id, publish_time, 
+      album_name, introduction, album_pic_url, 
+      sub_count, comment_count, share_count
       )
-    values (#{albumId,jdbcType=VARCHAR}, #{albunName,jdbcType=VARCHAR}, #{artistId,jdbcType=VARCHAR}, 
-      #{publishTime,jdbcType=TIMESTAMP}, #{introduction,jdbcType=VARCHAR}, #{blurPicUrl,jdbcType=VARCHAR}
+    values (#{albumId,jdbcType=VARCHAR}, #{artistId,jdbcType=VARCHAR}, #{publishTime,jdbcType=TIMESTAMP}, 
+      #{albumName,jdbcType=VARCHAR}, #{introduction,jdbcType=VARCHAR}, #{albumPicUrl,jdbcType=VARCHAR}, 
+      #{subCount,jdbcType=INTEGER}, #{commentCount,jdbcType=INTEGER}, #{shareCount,jdbcType=INTEGER}
       )
   </insert>
   <insert id="insertSelective" parameterType="cn.edu.zucc.music.model.Album" >
@@ -36,28 +42,34 @@
       <if test="albumId != null" >
         album_id,
       </if>
-      <if test="albunName != null" >
-        albun_name,
-      </if>
       <if test="artistId != null" >
         artist_id,
       </if>
       <if test="publishTime != null" >
         publish_time,
       </if>
+      <if test="albumName != null" >
+        album_name,
+      </if>
       <if test="introduction != null" >
         introduction,
       </if>
-      <if test="blurPicUrl != null" >
-        blur_pic_url,
+      <if test="albumPicUrl != null" >
+        album_pic_url,
+      </if>
+      <if test="subCount != null" >
+        sub_count,
+      </if>
+      <if test="commentCount != null" >
+        comment_count,
+      </if>
+      <if test="shareCount != null" >
+        share_count,
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="albumId != null" >
         #{albumId,jdbcType=VARCHAR},
-      </if>
-      <if test="albunName != null" >
-        #{albunName,jdbcType=VARCHAR},
       </if>
       <if test="artistId != null" >
         #{artistId,jdbcType=VARCHAR},
@@ -65,42 +77,66 @@
       <if test="publishTime != null" >
         #{publishTime,jdbcType=TIMESTAMP},
       </if>
+      <if test="albumName != null" >
+        #{albumName,jdbcType=VARCHAR},
+      </if>
       <if test="introduction != null" >
         #{introduction,jdbcType=VARCHAR},
       </if>
-      <if test="blurPicUrl != null" >
-        #{blurPicUrl,jdbcType=VARCHAR},
+      <if test="albumPicUrl != null" >
+        #{albumPicUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="subCount != null" >
+        #{subCount,jdbcType=INTEGER},
+      </if>
+      <if test="commentCount != null" >
+        #{commentCount,jdbcType=INTEGER},
+      </if>
+      <if test="shareCount != null" >
+        #{shareCount,jdbcType=INTEGER},
       </if>
     </trim>
   </insert>
   <update id="updateByPrimaryKeySelective" parameterType="cn.edu.zucc.music.model.Album" >
     update album
     <set >
-      <if test="albunName != null" >
-        albun_name = #{albunName,jdbcType=VARCHAR},
-      </if>
       <if test="artistId != null" >
         artist_id = #{artistId,jdbcType=VARCHAR},
       </if>
       <if test="publishTime != null" >
         publish_time = #{publishTime,jdbcType=TIMESTAMP},
       </if>
+      <if test="albumName != null" >
+        album_name = #{albumName,jdbcType=VARCHAR},
+      </if>
       <if test="introduction != null" >
         introduction = #{introduction,jdbcType=VARCHAR},
       </if>
-      <if test="blurPicUrl != null" >
-        blur_pic_url = #{blurPicUrl,jdbcType=VARCHAR},
+      <if test="albumPicUrl != null" >
+        album_pic_url = #{albumPicUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="subCount != null" >
+        sub_count = #{subCount,jdbcType=INTEGER},
+      </if>
+      <if test="commentCount != null" >
+        comment_count = #{commentCount,jdbcType=INTEGER},
+      </if>
+      <if test="shareCount != null" >
+        share_count = #{shareCount,jdbcType=INTEGER},
       </if>
     </set>
     where album_id = #{albumId,jdbcType=VARCHAR}
   </update>
   <update id="updateByPrimaryKey" parameterType="cn.edu.zucc.music.model.Album" >
     update album
-    set albun_name = #{albunName,jdbcType=VARCHAR},
-      artist_id = #{artistId,jdbcType=VARCHAR},
+    set artist_id = #{artistId,jdbcType=VARCHAR},
       publish_time = #{publishTime,jdbcType=TIMESTAMP},
+      album_name = #{albumName,jdbcType=VARCHAR},
       introduction = #{introduction,jdbcType=VARCHAR},
-      blur_pic_url = #{blurPicUrl,jdbcType=VARCHAR}
+      album_pic_url = #{albumPicUrl,jdbcType=VARCHAR},
+      sub_count = #{subCount,jdbcType=INTEGER},
+      comment_count = #{commentCount,jdbcType=INTEGER},
+      share_count = #{shareCount,jdbcType=INTEGER}
     where album_id = #{albumId,jdbcType=VARCHAR}
   </update>
 </mapper>

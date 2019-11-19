@@ -3,7 +3,6 @@ package cn.edu.zucc.music.service.impl;
 
 import cn.edu.zucc.music.dao.DynamicMapper;
 import cn.edu.zucc.music.model.Dynamic;
-import cn.edu.zucc.music.model.DynamicComment;
 import cn.edu.zucc.music.service.DynamicService;
 import org.springframework.stereotype.Service;
 

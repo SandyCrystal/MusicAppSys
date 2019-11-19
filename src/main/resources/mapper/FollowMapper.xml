@@ -2,70 +2,70 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="cn.edu.zucc.music.dao.FollowMapper" >
   <resultMap id="BaseResultMap" type="cn.edu.zucc.music.model.Follow" >
-    <id column="id" property="id" jdbcType="INTEGER" />
-    <result column="from_userid" property="fromUserid" jdbcType="VARCHAR" />
-    <result column="to_userid" property="toUserid" jdbcType="VARCHAR" />
+    <id column="follow_id" property="followId" jdbcType="INTEGER" />
+    <result column="from_user_id" property="fromUserId" jdbcType="VARCHAR" />
+    <result column="to_user_id" property="toUserId" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Base_Column_List" >
-    id, from_userid, to_userid
+    follow_id, from_user_id, to_user_id
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
     select 
     <include refid="Base_Column_List" />
-    from follow
-    where id = #{id,jdbcType=INTEGER}
+    from Follow
+    where follow_id = #{followId,jdbcType=INTEGER}
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
-    delete from follow
-    where id = #{id,jdbcType=INTEGER}
+    delete from Follow
+    where follow_id = #{followId,jdbcType=INTEGER}
   </delete>
   <insert id="insert" parameterType="cn.edu.zucc.music.model.Follow" >
-    insert into follow (id, from_userid, to_userid
+    insert into Follow (follow_id, from_user_id, to_user_id
       )
-    values (#{id,jdbcType=INTEGER}, #{fromUserid,jdbcType=VARCHAR}, #{toUserid,jdbcType=VARCHAR}
+    values (#{followId,jdbcType=INTEGER}, #{fromUserId,jdbcType=VARCHAR}, #{toUserId,jdbcType=VARCHAR}
       )
   </insert>
   <insert id="insertSelective" parameterType="cn.edu.zucc.music.model.Follow" >
-    insert into follow
+    insert into Follow
     <trim prefix="(" suffix=")" suffixOverrides="," >
-      <if test="id != null" >
-        id,
+      <if test="followId != null" >
+        follow_id,
       </if>
-      <if test="fromUserid != null" >
-        from_userid,
+      <if test="fromUserId != null" >
+        from_user_id,
       </if>
-      <if test="toUserid != null" >
-        to_userid,
+      <if test="toUserId != null" >
+        to_user_id,
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
-      <if test="id != null" >
-        #{id,jdbcType=INTEGER},
+      <if test="followId != null" >
+        #{followId,jdbcType=INTEGER},
       </if>
-      <if test="fromUserid != null" >
-        #{fromUserid,jdbcType=VARCHAR},
+      <if test="fromUserId != null" >
+        #{fromUserId,jdbcType=VARCHAR},
       </if>
-      <if test="toUserid != null" >
-        #{toUserid,jdbcType=VARCHAR},
+      <if test="toUserId != null" >
+        #{toUserId,jdbcType=VARCHAR},
       </if>
     </trim>
   </insert>
   <update id="updateByPrimaryKeySelective" parameterType="cn.edu.zucc.music.model.Follow" >
-    update follow
+    update Follow
     <set >
-      <if test="fromUserid != null" >
-        from_userid = #{fromUserid,jdbcType=VARCHAR},
+      <if test="fromUserId != null" >
+        from_user_id = #{fromUserId,jdbcType=VARCHAR},
       </if>
-      <if test="toUserid != null" >
-        to_userid = #{toUserid,jdbcType=VARCHAR},
+      <if test="toUserId != null" >
+        to_user_id = #{toUserId,jdbcType=VARCHAR},
       </if>
     </set>
-    where id = #{id,jdbcType=INTEGER}
+    where follow_id = #{followId,jdbcType=INTEGER}
   </update>
   <update id="updateByPrimaryKey" parameterType="cn.edu.zucc.music.model.Follow" >
-    update follow
-    set from_userid = #{fromUserid,jdbcType=VARCHAR},
-      to_userid = #{toUserid,jdbcType=VARCHAR}
-    where id = #{id,jdbcType=INTEGER}
+    update Follow
+    set from_user_id = #{fromUserId,jdbcType=VARCHAR},
+      to_user_id = #{toUserId,jdbcType=VARCHAR}
+    where follow_id = #{followId,jdbcType=INTEGER}
   </update>
 </mapper>

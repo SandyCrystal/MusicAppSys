@@ -3,13 +3,18 @@
 <mapper namespace="cn.edu.zucc.music.dao.BannerMapper" >
   <resultMap id="BaseResultMap" type="cn.edu.zucc.music.model.Banner" >
     <result column="pic" property="pic" jdbcType="VARCHAR" />
-    <result column="typeTitle" property="typetitle" jdbcType="VARCHAR" />
-    <result column="targetId" property="targetid" jdbcType="INTEGER" />
+    <result column="type_title" property="typeTitle" jdbcType="VARCHAR" />
+    <result column="target_id" property="targetId" jdbcType="INTEGER" />
   </resultMap>
+  <select id="selectAll" resultMap="BaseResultMap"  >
+    select
+   *
+    from banner
+  </select>
   <insert id="insert" parameterType="cn.edu.zucc.music.model.Banner" >
-    insert into banner (pic, typeTitle, targetId
+    insert into banner (pic, type_title, target_id
       )
-    values (#{pic,jdbcType=VARCHAR}, #{typetitle,jdbcType=VARCHAR}, #{targetid,jdbcType=INTEGER}
+    values (#{pic,jdbcType=VARCHAR}, #{typeTitle,jdbcType=VARCHAR}, #{targetId,jdbcType=INTEGER}
       )
   </insert>
   <insert id="insertSelective" parameterType="cn.edu.zucc.music.model.Banner" >
@@ -18,22 +23,22 @@
       <if test="pic != null" >
         pic,
       </if>
-      <if test="typetitle != null" >
-        typeTitle,
+      <if test="typeTitle != null" >
+        type_title,
       </if>
-      <if test="targetid != null" >
-        targetId,
+      <if test="targetId != null" >
+        target_id,
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="pic != null" >
         #{pic,jdbcType=VARCHAR},
       </if>
-      <if test="typetitle != null" >
-        #{typetitle,jdbcType=VARCHAR},
+      <if test="typeTitle != null" >
+        #{typeTitle,jdbcType=VARCHAR},
       </if>
-      <if test="targetid != null" >
-        #{targetid,jdbcType=INTEGER},
+      <if test="targetId != null" >
+        #{targetId,jdbcType=INTEGER},
       </if>
     </trim>
   </insert>

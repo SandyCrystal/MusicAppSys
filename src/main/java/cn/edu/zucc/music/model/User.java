@@ -12,7 +12,7 @@ public class User implements Serializable {
 
     private String introduction;
 
-    private String picUrl;
+    private String avatarUrl;
 
     private Integer userType;
 
@@ -52,12 +52,12 @@ public class User implements Serializable {
         this.introduction = introduction == null ? null : introduction.trim();
     }
 
-    public String getPicUrl() {
-        return picUrl;
+    public String getAvatarUrl() {
+        return avatarUrl;
     }
 
-    public void setPicUrl(String picUrl) {
-        this.picUrl = picUrl == null ? null : picUrl.trim();
+    public void setAvatarUrl(String avatarUrl) {
+        this.avatarUrl = avatarUrl == null ? null : avatarUrl.trim();
     }
 
     public Integer getUserType() {
@@ -86,7 +86,7 @@ public class User implements Serializable {
         sb.append(", userName=").append(userName);
         sb.append(", userPwd=").append(userPwd);
         sb.append(", introduction=").append(introduction);
-        sb.append(", picUrl=").append(picUrl);
+        sb.append(", avatarUrl=").append(avatarUrl);
         sb.append(", userType=").append(userType);
         sb.append(", createTime=").append(createTime);
         sb.append(", serialVersionUID=").append(serialVersionUID);

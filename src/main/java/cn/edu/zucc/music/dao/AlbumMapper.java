@@ -4,6 +4,7 @@ import cn.edu.zucc.music.model.Album;
 import org.apache.ibatis.annotations.Mapper;
 
 @Mapper
+
 public interface AlbumMapper {
     int deleteByPrimaryKey(String albumId);
 
