@@ -15,6 +15,10 @@
     sheet_id, sheet_name, user_id, user_name, sheet_pic_url, create_time, sheet_type, 
     play_count
   </sql>
+  <select id="selectTenSheets" resultMap="BaseResultMap">
+    SELECT * FROM sheet limit 10
+  </select>
+
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
     select 
     <include refid="Base_Column_List" />

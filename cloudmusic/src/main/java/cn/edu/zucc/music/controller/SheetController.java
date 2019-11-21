@@ -4,20 +4,29 @@ import cn.edu.zucc.music.Until.Result;
 import cn.edu.zucc.music.Until.ResultStatus;
 import cn.edu.zucc.music.model.Sheet;
 import cn.edu.zucc.music.service.SheetService;
-import cn.edu.zucc.music.service.SheetSongService;
+import com.alibaba.fastjson.JSONObject;
+import jdk.internal.loader.Resource;
+import org.apache.ibatis.io.Resources;
+import org.apache.ibatis.session.SqlSession;
+import org.apache.ibatis.session.SqlSessionFactory;
+import org.apache.ibatis.session.SqlSessionFactoryBuilder;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import javax.annotation.Resource;
+import java.io.IOException;
+import java.io.Reader;
+import java.util.ArrayList;
+import java.util.List;
+
 
 @Controller
 public class SheetController {
-    @Resource
+    @Autowired
     private SheetService sheetService;
-    @Resource
-    private SheetSongService sheetSongService;
+
     @CrossOrigin
     @GetMapping(value = "/api/createSheet")
     @ResponseBody
@@ -29,6 +38,38 @@ public class SheetController {
         System.out.println(a);
         return new Result<>(ResultStatus.SUCCESS);
     }
+
+    @CrossOrigin
+    @GetMapping(value = "/api/createSheet")
+    @ResponseBody
+    public JSONObject recommandSheet() {
+        JSONObject jsonObject = new JSONObject();
+        String resources = "mybatis.xml";
+        Reader reader = null;
+        List<Sheet> list = new ArrayList<Sheet>();
+        try {
+            reader = Resources.getResourceAsReader(resources);
+            SqlSessionFactory sqlMapper = new SqlSessionFactoryBuilder().build(reader);
+            SqlSession session = sqlMapper.openSession();
+
+            list = session.selectList("selectTenSheets");
+            if(list.size() < 10) {
+                jsonObject.put("code", 4000);
+            }
+
+            List<JSONObject> data = new ArrayList<JSONObject>();
+            for(Sheet sheet : list) {
+                JSONObject tmp = PackerController.transformSheetToJson(sheet);
+                data.add(tmp);
+            }
+
+            jsonObject.put("data", data);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return jsonObject;
+    }
+
 //    @CrossOrigin
 //    @GetMapping(value = "/api/addSong")
 //    @ResponseBody
