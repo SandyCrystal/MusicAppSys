@@ -42,4 +42,9 @@ public class SheetServiceImpl implements SheetService {
     public List<Sheet> findAll() {
         return null;
     }
+
+    @Override
+    public List<Sheet> selectTenSheets() {
+        return sheetMapper.selectTenSheets();
+    }
 }
