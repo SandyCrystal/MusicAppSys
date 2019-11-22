@@ -11,4 +11,5 @@ public interface SheetService {
     Sheet findById(String id);
     List<Sheet> findByUserID(String uid);
     List<Sheet> findAll();
+    List<Sheet> selectTenSheets();
 }

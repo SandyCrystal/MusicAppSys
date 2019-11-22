@@ -1,7 +1,11 @@
 package cn.edu.zucc.music.controller;
 
+import cn.edu.zucc.music.Until.Result;
+import cn.edu.zucc.music.Until.ResultStatus;
 import cn.edu.zucc.music.model.Sheet;
+import cn.edu.zucc.music.model.User;
 import cn.edu.zucc.music.service.SheetService;
+import cn.edu.zucc.music.service.UserService;
 import com.alibaba.fastjson.JSONObject;
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.session.SqlSession;
@@ -23,33 +27,48 @@ import java.util.List;
 public class SheetController {
     @Autowired
     private SheetService sheetService;
+    @Autowired
+    private UserService userService;
+    @CrossOrigin
+    @GetMapping(value = "/api/createSheet")
+    @ResponseBody
+    public Result<String > createSheet(String userid, String sheetname ){
+        Sheet sheet =new Sheet();
+        sheet.setSheetName(sheetname);
+        sheet.setUserId(userid);
+        int a=sheetService.addSheet(sheet);
+        System.out.println(a);
+        return new Result<>(ResultStatus.SUCCESS);
+    }
 
     @CrossOrigin
     @GetMapping(value = "/api/recommandSheet")
     @ResponseBody
     public JSONObject recommandSheet() {
         JSONObject jsonObject = new JSONObject();
-        String resources = "generatorConfig.xml";
-        Reader reader = null;
+//        String resources = "/resource/mapper/mybatis.xml";
+//        Reader reader = null;
         List<Sheet> list = new ArrayList<Sheet>();
         try {
-            reader = Resources.getResourceAsReader(resources);
-            SqlSessionFactory sqlMapper = new SqlSessionFactoryBuilder().build(reader);
-            SqlSession session = sqlMapper.openSession();
+//            reader = Resources.getResourceAsReader(resources);
+//            SqlSessionFactory sqlMapper = new SqlSessionFactoryBuilder().build(reader);
+//            SqlSession session = sqlMapper.openSession();
 
-            list = session.selectList("selectTenSheets");
-            if(list.size() < 10) {
-                jsonObject.put("code", 4000);
-            }
-
+//            list = session.selectList("selectTenSheets");
+            list=sheetService.selectTenSheets();
+//            if(list.size() < 10) {
+//                jsonObject.put("code", 4000);
+//            }
+            jsonObject.put("code", 200);
             List<JSONObject> data = new ArrayList<JSONObject>();
             for(Sheet sheet : list) {
-                JSONObject tmp = PackerController.transformSheetToJson(sheet);
+                User user=userService.findById(sheet.getUserId());
+                JSONObject tmp = PackerController.transformSheetToJson(sheet,user);
                 data.add(tmp);
             }
 
             jsonObject.put("data", data);
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return jsonObject;
@@ -67,4 +86,5 @@ public class SheetController {
 //        else
 //            return new Result<>(ResultStatus.ERROR);
 //    }
+
 }
