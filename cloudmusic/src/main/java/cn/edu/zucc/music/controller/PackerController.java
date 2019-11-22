@@ -10,7 +10,6 @@ import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 
 import java.io.IOException;
 import java.io.Reader;
-import java.util.List;
 
 public class PackerController {
     public static JSONObject transformSheetToJson(Sheet sheet) {
@@ -21,7 +20,7 @@ public class PackerController {
         json.put("playCount", sheet.getPlayCount());
         json.put("createTime", sheet.getCreateTime());
 
-        String resources = "mybatis.xml";
+        String resources = "generatorConfig.xml";
         Reader reader = null;
 
         try {

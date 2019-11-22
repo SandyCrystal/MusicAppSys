@@ -1,11 +1,8 @@
 package cn.edu.zucc.music.controller;
 
-import cn.edu.zucc.music.Until.Result;
-import cn.edu.zucc.music.Until.ResultStatus;
 import cn.edu.zucc.music.model.Sheet;
 import cn.edu.zucc.music.service.SheetService;
 import com.alibaba.fastjson.JSONObject;
-import jdk.internal.loader.Resource;
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
@@ -28,23 +25,11 @@ public class SheetController {
     private SheetService sheetService;
 
     @CrossOrigin
-    @GetMapping(value = "/api/createSheet")
-    @ResponseBody
-    public Result<String > createSheet(String userid, String sheetname ){
-        Sheet sheet =new Sheet();
-        sheet.setSheetName(sheetname);
-        sheet.setUserId(userid);
-        int a=sheetService.addSheet(sheet);
-        System.out.println(a);
-        return new Result<>(ResultStatus.SUCCESS);
-    }
-
-    @CrossOrigin
-    @GetMapping(value = "/api/createSheet")
+    @GetMapping(value = "/api/recommandSheet")
     @ResponseBody
     public JSONObject recommandSheet() {
         JSONObject jsonObject = new JSONObject();
-        String resources = "mybatis.xml";
+        String resources = "generatorConfig.xml";
         Reader reader = null;
         List<Sheet> list = new ArrayList<Sheet>();
         try {
@@ -82,5 +67,4 @@ public class SheetController {
 //        else
 //            return new Result<>(ResultStatus.ERROR);
 //    }
-
 }
