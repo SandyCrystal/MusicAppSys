@@ -115,6 +115,18 @@ public class MusicController {
         return jsonObject;
     }
 
+    // 获取对应歌曲的歌词
+    @GetMapping(value = "/api/getMusicComment")
+    @ResponseBody
+    public JSONObject getMusicComment(String song_id) {
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("code", 200);
+        Song song = songService.findById(song_id);
+        jsonObject.put("total", );
+        jsonObject.put("more", false);
+        jsonObject.put("comments", );
 
+        return jsonObject;
+    }
 
 }

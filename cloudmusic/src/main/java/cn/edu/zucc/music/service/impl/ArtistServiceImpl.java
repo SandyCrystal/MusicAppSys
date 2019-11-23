@@ -28,7 +28,7 @@ public class ArtistServiceImpl implements ArtistService {
 
     @Override
     public Artist findById(String id) {
-        return null;
+        return artistMapper.selectByPrimaryKey(id);
     }
 
     @Override
