@@ -4,7 +4,7 @@ import java.io.Serializable;
 import java.util.Date;
 
 public class SongComment implements Serializable {
-    private Integer songCommentId;
+    private String songCommentId;
 
     private String songId;
 
@@ -18,11 +18,11 @@ public class SongComment implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    public Integer getSongCommentId() {
+    public String getSongCommentId() {
         return songCommentId;
     }
 
-    public void setSongCommentId(Integer songCommentId) {
+    public void setSongCommentId(String songCommentId) {
         this.songCommentId = songCommentId;
     }
 

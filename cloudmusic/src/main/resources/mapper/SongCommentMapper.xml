@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="cn.edu.zucc.music.dao.SongCommentMapper" >
   <resultMap id="BaseResultMap" type="cn.edu.zucc.music.model.SongComment" >
-    <id column="song_comment_id" property="songCommentId" jdbcType="INTEGER" />
+    <id column="song_comment_id" property="songCommentId" jdbcType="VARCHAR" />
     <result column="song_id" property="songId" jdbcType="VARCHAR" />
     <result column="user_id" property="userId" jdbcType="VARCHAR" />
     <result column="comment_content" property="commentContent" jdbcType="VARCHAR" />
@@ -12,21 +12,21 @@
   <sql id="Base_Column_List" >
     song_comment_id, song_id, user_id, comment_content, comment_time, like_count
   </sql>
-  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
     select 
     <include refid="Base_Column_List" />
     from song_comment
-    where song_comment_id = #{songCommentId,jdbcType=INTEGER}
+    where song_comment_id = #{songCommentId,jdbcType=VARCHAR}
   </select>
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
     delete from song_comment
-    where song_comment_id = #{songCommentId,jdbcType=INTEGER}
+    where song_comment_id = #{songCommentId,jdbcType=VARCHAR}
   </delete>
   <insert id="insert" parameterType="cn.edu.zucc.music.model.SongComment" >
     insert into song_comment (song_comment_id, song_id, user_id, 
       comment_content, comment_time, like_count
       )
-    values (#{songCommentId,jdbcType=INTEGER}, #{songId,jdbcType=VARCHAR}, #{userId,jdbcType=VARCHAR}, 
+    values (#{songCommentId,jdbcType=VARCHAR}, #{songId,jdbcType=VARCHAR}, #{userId,jdbcType=VARCHAR},
       #{commentContent,jdbcType=VARCHAR}, #{commentTime,jdbcType=TIMESTAMP}, #{likeCount,jdbcType=INTEGER}
       )
   </insert>
@@ -54,7 +54,7 @@
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="songCommentId != null" >
-        #{songCommentId,jdbcType=INTEGER},
+        #{songCommentId,jdbcType=VARCHAR},
       </if>
       <if test="songId != null" >
         #{songId,jdbcType=VARCHAR},
@@ -92,7 +92,7 @@
         like_count = #{likeCount,jdbcType=INTEGER},
       </if>
     </set>
-    where song_comment_id = #{songCommentId,jdbcType=INTEGER}
+    where song_comment_id = #{songCommentId,jdbcType=VARCHAR}
   </update>
   <update id="updateByPrimaryKey" parameterType="cn.edu.zucc.music.model.SongComment" >
     update song_comment
@@ -101,6 +101,6 @@
       comment_content = #{commentContent,jdbcType=VARCHAR},
       comment_time = #{commentTime,jdbcType=TIMESTAMP},
       like_count = #{likeCount,jdbcType=INTEGER}
-    where song_comment_id = #{songCommentId,jdbcType=INTEGER}
+    where song_comment_id = #{songCommentId,jdbcType=VARCHAR}
   </update>
 </mapper>

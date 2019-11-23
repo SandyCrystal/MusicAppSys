@@ -30,7 +30,7 @@ public class SongCommentServiceImpl implements SongCommentService {
     }
 
     @Override
-    public SongComment findById(int id) {
+    public SongComment findById(String id) {
         return songCommentMapper.selectByPrimaryKey(id);
     }
 

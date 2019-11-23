@@ -6,13 +6,13 @@ import org.apache.ibatis.annotations.Mapper;
 @Mapper
 
 public interface SongCommentMapper {
-    int deleteByPrimaryKey(Integer songCommentId);
+    int deleteByPrimaryKey(String songCommentId);
 
     int insert(SongComment record);
 
     int insertSelective(SongComment record);
 
-    SongComment selectByPrimaryKey(Integer songCommentId);
+    SongComment selectByPrimaryKey(String songCommentId);
 
     int updateByPrimaryKeySelective(SongComment record);
 
