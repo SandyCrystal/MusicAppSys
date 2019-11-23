@@ -14,6 +14,15 @@ public class Song implements Serializable {
     private String artistId;
 
     private String songUrl;
+    private Integer commentCount;
+
+    public Integer getCommentCount() {
+        return commentCount;
+    }
+
+    public void setCommentCount(Integer commentCount) {
+        this.commentCount = commentCount;
+    }
 
     private static final long serialVersionUID = 1L;
 

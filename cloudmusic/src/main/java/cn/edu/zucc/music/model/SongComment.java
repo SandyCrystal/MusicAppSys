@@ -16,6 +16,7 @@ public class SongComment implements Serializable {
 
     private Integer likeCount;
 
+
     private static final long serialVersionUID = 1L;
 
     public String getSongCommentId() {
