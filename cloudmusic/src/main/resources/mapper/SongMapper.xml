@@ -9,19 +9,27 @@
     <result column="artist_id" property="artistId" jdbcType="VARCHAR" />
     <result column="song_url" property="songUrl" jdbcType="VARCHAR" />
   </resultMap>
+
   <sql id="Base_Column_List" >
     song_id, song_name, content, album_id, artist_id, song_url
   </sql>
+
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
     select 
     <include refid="Base_Column_List" />
     from song
     where song_id = #{songId,jdbcType=VARCHAR}
   </select>
+
   <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
     delete from song
     where song_id = #{songId,jdbcType=VARCHAR}
   </delete>
+
+  <select id="selectTenSongs" resultMap="BaseResultMap">
+    SELECT * FROM song limit 10
+  </select>
+
   <insert id="insert" parameterType="cn.edu.zucc.music.model.Song" >
     insert into song (song_id, song_name, content, 
       album_id, artist_id, song_url

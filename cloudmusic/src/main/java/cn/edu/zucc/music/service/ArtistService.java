@@ -12,4 +12,5 @@ public interface ArtistService {
     int updateArtist(Artist artist);
     Artist findById(String id);
     List<Artist> findAll();
+
 }

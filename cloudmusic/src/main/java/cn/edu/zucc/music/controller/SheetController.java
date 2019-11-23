@@ -2,23 +2,14 @@ package cn.edu.zucc.music.controller;
 
 import cn.edu.zucc.music.Until.Result;
 import cn.edu.zucc.music.Until.ResultStatus;
-import cn.edu.zucc.music.model.Sheet;
-import cn.edu.zucc.music.model.User;
-import cn.edu.zucc.music.service.SheetService;
-import cn.edu.zucc.music.service.UserService;
+import cn.edu.zucc.music.model.*;
+import cn.edu.zucc.music.service.*;
 import com.alibaba.fastjson.JSONObject;
-import org.apache.ibatis.io.Resources;
-import org.apache.ibatis.session.SqlSession;
-import org.apache.ibatis.session.SqlSessionFactory;
-import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
-
-import java.io.IOException;
-import java.io.Reader;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,6 +20,15 @@ public class SheetController {
     private SheetService sheetService;
     @Autowired
     private UserService userService;
+    @Autowired
+    private SongService songService;
+    @Autowired
+    private SheetSongService sheetSongService;
+    @Autowired
+    private ArtistService artistService;
+    @Autowired
+    private AlbumService albumService;
+
     @CrossOrigin
     @GetMapping(value = "/api/createSheet")
     @ResponseBody
@@ -46,23 +46,14 @@ public class SheetController {
     @ResponseBody
     public JSONObject recommandSheet() {
         JSONObject jsonObject = new JSONObject();
-//        String resources = "/resource/mapper/mybatis.xml";
-//        Reader reader = null;
         List<Sheet> list = new ArrayList<Sheet>();
         try {
-//            reader = Resources.getResourceAsReader(resources);
-//            SqlSessionFactory sqlMapper = new SqlSessionFactoryBuilder().build(reader);
-//            SqlSession session = sqlMapper.openSession();
-
-//            list = session.selectList("selectTenSheets");
-            list=sheetService.selectTenSheets();
-//            if(list.size() < 10) {
-//                jsonObject.put("code", 4000);
-//            }
+            list = sheetService.selectTenSheets();
             jsonObject.put("code", 200);
             List<JSONObject> data = new ArrayList<JSONObject>();
             for(Sheet sheet : list) {
-                User user=userService.findById(sheet.getUserId());
+                User user = userService.findById(sheet.getUserId());
+
                 JSONObject tmp = PackerController.transformSheetToJson(sheet,user);
                 data.add(tmp);
             }
@@ -74,17 +65,39 @@ public class SheetController {
         return jsonObject;
     }
 
-//    @CrossOrigin
-//    @GetMapping(value = "/api/addSong")
-//    @ResponseBody
-//    public Result<String > addSong(int sheetid,int songid){
-//        SheetSong sheetSong=new SheetSong();
-//        sheetSong.setSheetid(sheetid);
-//        sheetSong.setSongid(songid);
-//        if (1==sheetSongService.addSheet(sheetSong))
-//        return new Result<>(ResultStatus.SUCCESS);
-//        else
-//            return new Result<>(ResultStatus.ERROR);
-//    }
+    @CrossOrigin
+    @GetMapping(value = "/api/getSheetDetails")
+    @ResponseBody
+    public JSONObject getSheetDetails(String sheet_id){
+        JSONObject jsonObject = new JSONObject();
+        Sheet sheet = sheetService.findById(sheet_id);
+        if(sheet.getSheetName().equals("") || sheet.getSheetName()==null) {
+            jsonObject.put("code", 666);
+            jsonObject.put("data", null);
+        } else {
+            List<SheetSong> sheet_songs = sheetSongService.getSongsBySheetId(sheet_id);
+            List<Song> old_songs = new ArrayList<Song>();
+
+            for(SheetSong sheet_song : sheet_songs) {
+                Song tmp = songService.findById(sheet_song.getSongId());
+                old_songs.add(tmp);
+            }
+
+            List<Song> songs = new ArrayList<Song>();
+            List<Album> albums = new ArrayList<Album>();
+            User user = userService.findById(sheet.getUserId());
+            for(Song song : old_songs) {
+                Artist artist = artistService.findById(song.getArtistId());
+                song.setArtistId(artist.getArtistName());
+                Album album = albumService.findById(song.getAlbumId());
+                songs.add(song);
+                albums.add(album);
+            }
+            jsonObject.put("code", 200);
+            JSONObject tmp = PackerController.transformSheetDetailsToJson(sheet, user, songs, albums);
+            jsonObject.put("data", tmp);
+        }
+        return jsonObject;
+    }
 
 }

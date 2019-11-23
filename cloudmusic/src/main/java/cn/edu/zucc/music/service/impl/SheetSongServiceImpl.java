@@ -2,6 +2,7 @@ package cn.edu.zucc.music.service.impl;
 
 import cn.edu.zucc.music.dao.SheetSongMapper;
 import cn.edu.zucc.music.model.SheetSong;
+import cn.edu.zucc.music.model.Song;
 import cn.edu.zucc.music.service.SheetSongService;
 import org.springframework.stereotype.Service;
 
@@ -35,5 +36,10 @@ public class SheetSongServiceImpl implements SheetSongService {
     @Override
     public List<SheetSong> findAll() {
         return null;
+    }
+
+    @Override
+    public List<SheetSong> getSongsBySheetId(String sheet_id) {
+        return sheetSongMapper.getSongsBySheetId(sheet_id);
     }
 }

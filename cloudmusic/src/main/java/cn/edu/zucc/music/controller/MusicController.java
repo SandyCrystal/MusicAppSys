@@ -2,25 +2,29 @@ package cn.edu.zucc.music.controller;
 
 import cn.edu.zucc.music.Until.Result;
 import cn.edu.zucc.music.Until.ResultStatus;
-import cn.edu.zucc.music.model.Sheet;
+import cn.edu.zucc.music.model.*;
 import cn.edu.zucc.music.service.AlbumService;
+import cn.edu.zucc.music.service.ArtistService;
 import cn.edu.zucc.music.service.SheetService;
 import cn.edu.zucc.music.service.SongService;
+import com.alibaba.fastjson.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.util.ArrayList;
 import java.util.List;
 @Controller
 public class MusicController {
     @Autowired
     public SheetService sheetService;
-
     @Autowired
     public SongService songService;
     @Autowired
     public AlbumService albumService;
+    @Autowired
+    private ArtistService artistService;
 
     // 创建歌单
     @GetMapping(value = "/api/addSheet")
@@ -88,11 +92,27 @@ public class MusicController {
     }
 
     // 获取推荐歌单
-    @GetMapping(value = "/api/getSheetByRecommand")
+    @GetMapping(value = "/api/recommandSong")
     @ResponseBody
-    public Result<Sheet> getSheetByRecommand() {
-        List a= sheetService.findByUserID("weiyao");
-        return new Result(ResultStatus.SUCCESS,a);
+    public JSONObject getSheetByRecommand() {
+        JSONObject jsonObject = new JSONObject();
+        List<Song> list = new ArrayList<Song>();
+        try {
+            list = songService.selectTenSongs();
+            jsonObject.put("code", 200);
+            List<JSONObject> data = new ArrayList<JSONObject>();
+            for(Song song : list) {
+                Album album = albumService.findById(song.getAlbumId());
+                Artist artist = artistService.findById(song.getArtistId());
+                JSONObject tmp = PackerController.transformSongToJson(song, album, artist);
+                data.add(tmp);
+            }
+
+            jsonObject.put("data", data);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return jsonObject;
     }
 
 

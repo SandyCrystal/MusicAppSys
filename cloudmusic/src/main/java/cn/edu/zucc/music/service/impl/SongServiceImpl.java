@@ -7,7 +7,8 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.util.List;
-@Service
+
+@Service(value = "songService")
 public class SongServiceImpl implements SongService {
     @Resource
     private SongMapper songMapper;
@@ -34,5 +35,10 @@ public class SongServiceImpl implements SongService {
     @Override
     public List<Song> findAll() {
         return null;
+    }
+
+    @Override
+    public List<Song> selectTenSongs() {
+        return songMapper.selectTenSongs();
     }
 }

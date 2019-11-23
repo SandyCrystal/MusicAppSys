@@ -6,7 +6,6 @@ import org.apache.ibatis.annotations.Mapper;
 import java.util.List;
 
 @Mapper
-
 public interface SheetMapper {
     int deleteByPrimaryKey(String sheetId);
 
@@ -19,5 +18,6 @@ public interface SheetMapper {
     int updateByPrimaryKeySelective(Sheet record);
 
     int updateByPrimaryKey(Sheet record);
+
     List<Sheet> selectTenSheets();
 }

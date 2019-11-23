@@ -10,7 +10,7 @@
     sheet_song_id, sheet_id, song_id
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
-    select 
+    select
     <include refid="Base_Column_List" />
     from sheet_song
     where sheet_song_id = #{sheetSongId,jdbcType=INTEGER}
@@ -19,6 +19,11 @@
     delete from sheet_song
     where sheet_song_id = #{sheetSongId,jdbcType=INTEGER}
   </delete>
+
+  <select id="getSongsBySheetId" resultMap="BaseResultMap" parameterType="java.lang.String">
+    SELECT * FROM sheet_song WHERE sheet_id = #{sheetId, jdbcType=VARCHAR}
+  </select>
+
   <insert id="insert" parameterType="cn.edu.zucc.music.model.SheetSong" >
     insert into sheet_song (sheet_song_id, sheet_id, song_id
       )

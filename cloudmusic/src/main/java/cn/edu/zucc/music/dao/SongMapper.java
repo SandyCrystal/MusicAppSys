@@ -3,8 +3,9 @@ package cn.edu.zucc.music.dao;
 import cn.edu.zucc.music.model.Song;
 import org.apache.ibatis.annotations.Mapper;
 
-@Mapper
+import java.util.List;
 
+@Mapper
 public interface SongMapper {
     int deleteByPrimaryKey(String songId);
 
@@ -17,4 +18,6 @@ public interface SongMapper {
     int updateByPrimaryKeySelective(Song record);
 
     int updateByPrimaryKey(Song record);
+
+    List<Song> selectTenSongs();
 }
