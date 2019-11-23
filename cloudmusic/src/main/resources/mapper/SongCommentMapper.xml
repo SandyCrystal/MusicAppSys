@@ -12,16 +12,23 @@
   <sql id="Base_Column_List" >
     song_comment_id, song_id, user_id, comment_content, comment_time, like_count
   </sql>
+
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
     select 
     <include refid="Base_Column_List" />
     from song_comment
     where song_comment_id = #{songCommentId,jdbcType=VARCHAR}
   </select>
+
+  <select id="selectBySongId" resultMap="BaseResultMap" parameterType="java.lang.String">
+    SELECT * FROM song_comment WHERE song_id = #{songId,jdbcType=VARCHAR}
+  </select>
+
   <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
     delete from song_comment
     where song_comment_id = #{songCommentId,jdbcType=VARCHAR}
   </delete>
+
   <insert id="insert" parameterType="cn.edu.zucc.music.model.SongComment" >
     insert into song_comment (song_comment_id, song_id, user_id, 
       comment_content, comment_time, like_count
@@ -30,6 +37,7 @@
       #{commentContent,jdbcType=VARCHAR}, #{commentTime,jdbcType=TIMESTAMP}, #{likeCount,jdbcType=INTEGER}
       )
   </insert>
+
   <insert id="insertSelective" parameterType="cn.edu.zucc.music.model.SongComment" >
     insert into song_comment
     <trim prefix="(" suffix=")" suffixOverrides="," >

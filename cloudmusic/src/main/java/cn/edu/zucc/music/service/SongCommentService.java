@@ -9,6 +9,7 @@ public interface SongCommentService {
     int addSongComment(SongComment songComment);
     int deleteSongComment(SongComment songComment);
     int updateSongComment(SongComment songComment);
-    SongComment findById(String  id);
+    SongComment findById(String id);
     List<SongComment> findAll();
+    List<SongComment> findBySongId(String song_id);
 }

@@ -38,4 +38,9 @@ public class SongCommentServiceImpl implements SongCommentService {
     public List<SongComment> findAll() {
         return null;
     }
+
+    @Override
+    public List<SongComment> findBySongId(String song_id) {
+        return songCommentMapper.selectBySongId(song_id);
+    }
 }

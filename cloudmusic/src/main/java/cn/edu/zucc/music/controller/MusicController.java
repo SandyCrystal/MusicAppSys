@@ -3,10 +3,7 @@ package cn.edu.zucc.music.controller;
 import cn.edu.zucc.music.Until.Result;
 import cn.edu.zucc.music.Until.ResultStatus;
 import cn.edu.zucc.music.model.*;
-import cn.edu.zucc.music.service.AlbumService;
-import cn.edu.zucc.music.service.ArtistService;
-import cn.edu.zucc.music.service.SheetService;
-import cn.edu.zucc.music.service.SongService;
+import cn.edu.zucc.music.service.*;
 import com.alibaba.fastjson.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -25,6 +22,10 @@ public class MusicController {
     public AlbumService albumService;
     @Autowired
     private ArtistService artistService;
+    @Autowired
+    private SongCommentService songCommentService;
+    @Autowired
+    private UserService userService;
 
     // 创建歌单
     @GetMapping(value = "/api/addSheet")
@@ -115,16 +116,25 @@ public class MusicController {
         return jsonObject;
     }
 
-    // 获取对应歌曲的歌词
+    // 获取对应歌曲的评论
     @GetMapping(value = "/api/getMusicComment")
     @ResponseBody
     public JSONObject getMusicComment(String song_id) {
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("code", 200);
         Song song = songService.findById(song_id);
-        jsonObject.put("total", );
+        jsonObject.put("total", song.getCommentCount());
         jsonObject.put("more", false);
-        jsonObject.put("comments", );
+
+        List<SongComment> songComments = songCommentService.findBySongId(song_id);
+        List<User> users = new ArrayList<User>();
+        for(int i = 0; i < songComments.size(); i++) {
+            SongComment songComment = songComments.get(i);
+            User user = userService.findById(songComment.getUserId());
+            users.add(user);
+        }
+        List<JSONObject> list = PackerController.transformSongCommentToJson(songComments, users);
+        jsonObject.put("comments", list);
 
         return jsonObject;
     }

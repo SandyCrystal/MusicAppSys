@@ -99,4 +99,32 @@ public class PackerController {
 
         return json;
     }
+
+    public static List<JSONObject> transformSongCommentToJson(List<SongComment> songComments, List<User> users) {
+        JSONObject json = new JSONObject();
+        List<JSONObject> list = new ArrayList<JSONObject>();
+        for(int i = 0; i < songComments.size(); i++) {
+            SongComment songComment = songComments.get(i);
+            User user = users.get(i);
+            JSONObject jsonSongComment = new JSONObject();
+            JSONObject jsonUser = new JSONObject();
+
+            jsonUser.put("userType", user.getUserType());
+            jsonUser.put("userName", user.getUserName());
+            jsonUser.put("introduction", user.getIntroduction());
+            jsonUser.put("createTime", user.getCreateTime());
+            jsonUser.put("userId", user.getUserId());
+            jsonUser.put("avatarUrl", user.getAvatarUrl());
+
+            jsonSongComment.put("comment_id", songComment.getSongCommentId());
+            jsonSongComment.put("time", songComment.getCommentTime());
+            jsonSongComment.put("content", songComment.getCommentContent());
+            jsonSongComment.put("likeCount", songComment.getLikeCount());
+            jsonSongComment.put("user", jsonUser);
+
+            list.add(jsonSongComment);
+        }
+
+        return list;
+    }
 }
