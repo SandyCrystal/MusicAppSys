@@ -2,13 +2,17 @@ package cn.edu.zucc.music.controller;
 
 import cn.edu.zucc.music.Until.Result;
 import cn.edu.zucc.music.Until.ResultStatus;
+import cn.edu.zucc.music.entity.SongEntityItem;
 import cn.edu.zucc.music.model.Banner;
 import cn.edu.zucc.music.model.User;
 import cn.edu.zucc.music.service.BannerService;
+import cn.edu.zucc.music.service.GraphService;
 import cn.edu.zucc.music.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @Controller
 public class MainController {
@@ -16,6 +20,8 @@ public class MainController {
     private UserService userService;
     @Autowired
     private BannerService bannerService;
+    @Autowired
+    private GraphService graphService;
     // 登录
     @CrossOrigin
     @GetMapping(value = "/api/login")
@@ -44,5 +50,10 @@ public class MainController {
     @ResponseBody
     public Result<Banner> getBanners(){
         return new Result(ResultStatus.SUCCESS,bannerService.findAll());
+    }
+    @GetMapping(value = "/api/ad")
+    @ResponseBody
+    public List<SongEntityItem> SongEntityItem(){
+        return graphService.findAll();
     }
 }
