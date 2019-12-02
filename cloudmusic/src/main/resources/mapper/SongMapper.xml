@@ -32,7 +32,7 @@
   </delete>
 
   <select id="selectTenSongs" resultMap="BaseResultMap">
-    SELECT * FROM song limit 10
+    SELECT * FROM song order by rand() limit 10
   </select>
 
   <insert id="insert" parameterType="cn.edu.zucc.music.model.Song" >

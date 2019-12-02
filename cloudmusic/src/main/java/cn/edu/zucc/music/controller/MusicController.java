@@ -121,14 +121,14 @@ public class MusicController {
     // 获取对应歌曲的评论
     @GetMapping(value = "/api/getMusicComment")
     @ResponseBody
-    public JSONObject getMusicComment(String song_id) {
+    public JSONObject getMusicComment(String id) {
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("code", 200);
-        Song song = songService.findById(song_id);
+        Song song = songService.findById(id);
         jsonObject.put("total", song.getCommentCount());
         jsonObject.put("more", false);
 
-        List<SongComment> songComments = songCommentService.findBySongId(song_id);
+        List<SongComment> songComments = songCommentService.findBySongId(id);
         List<User> users = new ArrayList<User>();
         for(int i = 0; i < songComments.size(); i++) {
             SongComment songComment = songComments.get(i);
