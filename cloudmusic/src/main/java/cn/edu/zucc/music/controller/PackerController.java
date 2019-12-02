@@ -54,7 +54,9 @@ public class PackerController {
 
         json.put("id", song.getSongId());
         json.put("name", song.getSongName());
-        json.put("artist", artist.getArtistName());
+        if (artist==null)json.put("artist", null);
+        else
+            json.put("artist", artist.getArtistName());
         json.put("album", tmp);
 
         return json;

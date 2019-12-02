@@ -94,7 +94,7 @@ public class MusicController {
     }
 
     // 获取推荐歌单
-    @Cacheable(value = "getSheetByRecommand")
+//    @Cacheable(value = "getSheetByRecommand")
     @GetMapping(value = "/api/recommandSong")
     @ResponseBody
     public JSONObject getSheetByRecommand() {
@@ -106,7 +106,7 @@ public class MusicController {
             List<JSONObject> data = new ArrayList<JSONObject>();
             for(Song song : list) {
                 Album album = albumService.findById(song.getAlbumId());
-                Artist artist = artistService.findById(song.getArtistId());
+                Artist artist = artistService.findById(album.getArtistId());
                 JSONObject tmp = PackerController.transformSongToJson(song, album, artist);
                 data.add(tmp);
             }
