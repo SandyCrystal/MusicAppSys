@@ -94,7 +94,7 @@ public class MusicController {
     }
 
     // 获取推荐歌单
-//    @Cacheable(value = "getSheetByRecommand")
+    @Cacheable(value = "getSheetByRecommand")
     @GetMapping(value = "/api/recommandSong")
     @ResponseBody
     public JSONObject getSheetByRecommand() {

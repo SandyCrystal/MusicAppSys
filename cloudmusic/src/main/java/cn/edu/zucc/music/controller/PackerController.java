@@ -22,7 +22,7 @@ public class PackerController {
         json.put("name", sheet.getSheetName());
         json.put("picUrl", sheet.getSheetPicUrl());
         json.put("playCount", sheet.getPlayCount());
-        json.put("createTime", sheet.getCreateTime());
+        json.put("createTime", sheet.getCreateTime().getTime());
 
         try {
             JSONObject tmp = PackerController.transformUserToJson(user);
