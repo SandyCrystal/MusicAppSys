@@ -2,6 +2,7 @@ package cn.edu.zucc.music.dao;
 
 import cn.edu.zucc.music.model.Song;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -20,4 +21,6 @@ public interface SongMapper {
     int updateByPrimaryKey(Song record);
 
     List<Song> selectTenSongs();
+//    Integer getYearSongCount();
+    java.lang.Integer getYearSongCount(@Param("start") String start,@Param("end") String end);
 }
