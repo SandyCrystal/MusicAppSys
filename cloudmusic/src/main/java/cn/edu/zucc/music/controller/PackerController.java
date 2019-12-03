@@ -16,7 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class PackerController {
-    public static JSONObject transformSheetToJson(Sheet sheet,User user) {
+    public static JSONObject transformSheetToJson(Sheet sheet, User user) {
         JSONObject json = new JSONObject();
         json.put("id", sheet.getSheetId());
         json.put("name", sheet.getSheetName());
@@ -143,5 +143,17 @@ public class PackerController {
         }
 
         return list;
+    }
+
+    public static JSONObject transformCreateSheetToJson(User user, Sheet sheet) {
+        JSONObject json = new JSONObject();
+        json.put("id", sheet.getSheetId());
+        json.put("name", sheet.getSheetName());
+        json.put("picUrl", sheet.getSheetPicUrl());
+        json.put("playCount", sheet.getPlayCount());
+        json.put("createTime", sheet.getCreateTime().getTime());
+        json.put("creator", transformUserToJson(user));
+
+        return json;
     }
 }

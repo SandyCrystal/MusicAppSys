@@ -12,4 +12,5 @@ public interface SheetService {
     List<Sheet> findByUserID(String uid);
     List<Sheet> findAll();
     List<Sheet> selectTenSheets();
+    String findMaxSheetId();
 }

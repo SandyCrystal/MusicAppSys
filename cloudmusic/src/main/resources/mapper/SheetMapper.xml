@@ -19,6 +19,11 @@
     SELECT * FROM sheet LIMIT 10
   </select>
 
+  <select id="findMaxSheetId" resultType="java.lang.String">
+    select max(sheet_id)
+    from sheet
+  </select>
+
   <select id="selectByUserId" resultMap="BaseResultMap" parameterType="java.lang.String" >
     select * from sheet where user_id = #{user_id,jdbcType=VARCHAR}
   </select>

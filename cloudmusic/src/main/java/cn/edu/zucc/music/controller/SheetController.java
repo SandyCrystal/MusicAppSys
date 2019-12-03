@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 
@@ -32,13 +33,28 @@ public class SheetController {
     @CrossOrigin
     @GetMapping(value = "/api/createSheet")
     @ResponseBody
-    public Result<String > createSheet(String userid, String sheetname ){
-        Sheet sheet =new Sheet();
+    public JSONObject createSheet(String user_id, String sheetname){
+        JSONObject jsonObject = new JSONObject();
+        User user = userService.findById(user_id);
+        Sheet sheet = new Sheet();
+        String id = sheetService.findMaxSheetId();
+        String sheet_id = String.valueOf(Integer.parseInt(id)+1);
+        Date date = new Date();
+
+        sheet.setSheetId(sheet_id);
         sheet.setSheetName(sheetname);
-        sheet.setUserId(userid);
-        int a=sheetService.addSheet(sheet);
-        System.out.println(a);
-        return new Result<>(ResultStatus.SUCCESS);
+        sheet.setSheetPicUrl(null);
+        sheet.setPlayCount(0);
+        sheet.setSheetType(1);
+        sheet.setCreateTime(date);
+        sheet.setUserId(user_id);
+        sheet.setUserName(user.getUserName());
+        sheetService.addSheet(sheet);
+
+        jsonObject.put("code", 200);
+        JSONObject data = PackerController.transformCreateSheetToJson(user, sheet);
+        jsonObject.put("data", data);
+        return jsonObject;
     }
 
     @CrossOrigin

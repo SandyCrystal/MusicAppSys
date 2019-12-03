@@ -46,4 +46,9 @@ public class SheetServiceImpl implements SheetService {
     public List<Sheet> selectTenSheets() {
         return sheetMapper.selectTenSheets();
     }
+
+    @Override
+    public String findMaxSheetId() {
+        return sheetMapper.findMaxSheetId();
+    }
 }

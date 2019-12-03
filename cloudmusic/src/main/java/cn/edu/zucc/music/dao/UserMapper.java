@@ -1,7 +1,6 @@
 package cn.edu.zucc.music.dao;
 
 import cn.edu.zucc.music.model.User;
-import com.sun.org.apache.xpath.internal.objects.XString;
 import org.apache.ibatis.annotations.Mapper;
 
 @Mapper
