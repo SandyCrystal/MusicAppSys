@@ -21,4 +21,6 @@ public interface SongCommentMapper {
     int updateByPrimaryKey(SongComment record);
 
     List<SongComment> selectBySongId(String song_id);
+
+    String findMaxSongCommentId();
 }

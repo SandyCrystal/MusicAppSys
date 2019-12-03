@@ -16,7 +16,7 @@ public class SongCommentServiceImpl implements SongCommentService {
     private SongCommentMapper songCommentMapper;
     @Override
     public int addSongComment(SongComment songComment) {
-        return 0;
+        return songCommentMapper.insert(songComment);
     }
 
     @Override
@@ -42,5 +42,10 @@ public class SongCommentServiceImpl implements SongCommentService {
     @Override
     public List<SongComment> findBySongId(String song_id) {
         return songCommentMapper.selectBySongId(song_id);
+    }
+
+    @Override
+    public String findMaxSongCommentId() {
+        return songCommentMapper.findMaxSongCommentId();
     }
 }
