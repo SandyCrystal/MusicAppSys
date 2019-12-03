@@ -8,10 +8,12 @@ import com.alibaba.fastjson.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 @Controller
 public class MusicController {
@@ -27,20 +29,6 @@ public class MusicController {
     private SongCommentService songCommentService;
     @Autowired
     private UserService userService;
-
-    // 创建歌单
-    @GetMapping(value = "/api/addSheet")
-    @ResponseBody
-    public String addSheet() {
-        return "还没做";
-    }
-
-    // 删除歌单
-    @GetMapping(value = "/api/delSheet")
-    @ResponseBody
-    public String delSheet() {
-        return "还没做";
-    }
 
     // 添加歌曲 把歌曲加入歌单
     @GetMapping(value = "/api/addSong")
@@ -125,4 +113,37 @@ public class MusicController {
         return jsonObject;
     }
 
+    @CrossOrigin
+    @GetMapping(value = "/api/makeSongComment")
+    @ResponseBody
+    public JSONObject makeSongComment(String song_id, String user_id, String content) {
+        JSONObject json = new JSONObject();
+        User user = userService.findById(user_id);
+        Song song = songService.findById(song_id);
+        SongComment songComment = new SongComment();
+        Date date = new Date();
+
+        String id = songCommentService.findMaxSongCommentId();
+        String comment_id = String.valueOf(Integer.parseInt(id));
+
+        songComment.setSongCommentId(comment_id);
+        songComment.setCommentContent(content);
+        songComment.setCommentTime(date);
+        songComment.setLikeCount(0);
+        songComment.setSongId(song_id);
+        songComment.setUserId(user_id);
+
+        songCommentService.addSongComment(songComment);
+
+        if(user==null || song==null) {
+            json.put("code", 666);
+            json.put("data", null);
+        } else {
+            json.put("code", 200);
+            JSONObject data = PackerController.transformOneSongCommentToJson(user, songComment);
+            json.put("data", data);
+        }
+
+        return json;
+    }
 }

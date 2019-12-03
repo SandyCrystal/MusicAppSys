@@ -43,4 +43,9 @@ public class SongCommentServiceImpl implements SongCommentService {
     public List<SongComment> findBySongId(String song_id) {
         return songCommentMapper.selectBySongId(song_id);
     }
+
+    @Override
+    public String findMaxSongCommentId() {
+        return songCommentMapper.findMaxSongCommentId();
+    }
 }

@@ -12,4 +12,5 @@ public interface SongCommentService {
     SongComment findById(String id);
     List<SongComment> findAll();
     List<SongComment> findBySongId(String song_id);
+    String findMaxSongCommentId();
 }

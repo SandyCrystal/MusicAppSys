@@ -156,4 +156,19 @@ public class PackerController {
 
         return json;
     }
+
+    public static JSONObject transformOneSongCommentToJson(User user, SongComment songComment) {
+        JSONObject json = new JSONObject();
+        JSONObject jsonComment = new JSONObject();
+
+        jsonComment.put("user", transformUserToJson(user));
+        jsonComment.put("comment_id", songComment.getSongCommentId());
+        jsonComment.put("content", songComment.getCommentContent());
+        jsonComment.put("time", songComment.getCommentTime());
+        jsonComment.put("likeCount", songComment.getLikeCount());
+
+        json.put("data", jsonComment);
+
+        return json;
+    }
 }

@@ -20,6 +20,11 @@
     where song_comment_id = #{songCommentId,jdbcType=VARCHAR}
   </select>
 
+  <select id="findMaxSongCommentId" resultType="java.lang.String">
+    select max(song_comment_id)
+    from song_comment
+  </select>
+
   <select id="selectBySongId" resultMap="BaseResultMap" parameterType="java.lang.String">
     SELECT * FROM song_comment WHERE song_id = #{songId,jdbcType=VARCHAR}
   </select>
