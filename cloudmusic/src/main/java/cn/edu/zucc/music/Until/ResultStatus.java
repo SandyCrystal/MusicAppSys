@@ -5,10 +5,14 @@ public enum ResultStatus {
 
     SUCCESS(200, "success"), //成功
 
+    // 用户模块
+    USER_AlREADY_EXISTS(301, "userid already exitsts"),
+    USER_PWD_COMFIRM_ERROR(302, "pwd comfirm error"),
+    USER_NOT_EXISTS(303, "user not exists"),
+
 
 
     ERROR(4000, "Error"),       //程序报错
-
 
 
     INVALID_SERVICE(199, "invalid service"),//服务不可用
@@ -25,9 +29,8 @@ public enum ResultStatus {
 
     //搜索结果不存在
 
-    USER_NOT_EXISTS(1401, "user not exists"),
 
-    USER_AlREADY_EXISTS(1404, "userid already exitsts"),
+
 
     PERMISSION_DENIED(1402,"permission denied"),
 

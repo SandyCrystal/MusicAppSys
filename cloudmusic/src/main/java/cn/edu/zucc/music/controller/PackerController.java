@@ -37,10 +37,9 @@ public class PackerController {
         JSONObject json = new JSONObject();
         json.put("user_id", user.getUserId());
         json.put("user_name", user.getUserName());
-        json.put("user_type", user.getUserType());
         json.put("avatar_url", user.getAvatarUrl());
-        json.put("introduction", user.getIntroduction());
-
+        json.put("user_type", user.getUserType());
+        json.put("create_time", user.getCreateTime());
         return json;
     }
 

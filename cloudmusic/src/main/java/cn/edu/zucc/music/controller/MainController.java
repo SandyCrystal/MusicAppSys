@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.*;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.List;
 import java.util.TimeZone;
 
 @Controller
@@ -31,34 +30,44 @@ public class MainController {
     @CrossOrigin
     @GetMapping(value = "/api/login")
     @ResponseBody
-    public Result<User> getLogin(String userid,String pwd_zero) {
-        User user=userService.findById(userid);
+    public JSONObject getLogin(String username, String pwd) {
+        JSONObject jsonObject = new JSONObject();
+        User user = userService.findByName(username);
 
-        String pwd_md5 = MD5Util.getMD5(pwd_zero);
+        String pwd_md5 = MD5Util.getMD5(pwd);
 
-        if (user==null){
-            return new Result<>(ResultStatus.USER_NOT_EXISTS);
+        if (user == null){
+            jsonObject.put("code", ResultStatus.USER_NOT_EXISTS.value());
+            jsonObject.put("data", ResultStatus.USER_NOT_EXISTS.getReasonPhrase());
+            return jsonObject;
         }
-        if (user.getUserPwd().equals(pwd_md5))return new Result<>(ResultStatus.SUCCESS,user);
-        else
-            return new Result<>(ResultStatus.PERMISSION_DENIED);
 
+        if (user.getUserPwd().equals(pwd_md5)){
+            jsonObject.put("code", ResultStatus.SUCCESS.value());
+            JSONObject tmp = PackerController.transformUserToJson(user);
+            jsonObject.put("data", tmp);
+            return jsonObject;
+        } else {
+            jsonObject.put("code", ResultStatus.USER_PWD_COMFIRM_ERROR.value());
+            jsonObject.put("data", ResultStatus.USER_PWD_COMFIRM_ERROR.getReasonPhrase());
+            return jsonObject;
+        }
     }
 
     // 注册
-    @GetMapping(value = "/api/logup")
+    @GetMapping(value = "/api/register")
     @ResponseBody
     public JSONObject getLogup(String userName, String pwd1, String pwd2) throws ParseException {
         JSONObject jsonObject = new JSONObject();
         User user = userService.findByName(userName);
         if (user!=null){
-            jsonObject.put("code", 401); // 用户已经存在
-            jsonObject.put("data", userName);
+            jsonObject.put("code", ResultStatus.USER_AlREADY_EXISTS.value());
+            jsonObject.put("data", ResultStatus.USER_AlREADY_EXISTS.getReasonPhrase());
             return jsonObject;
         }
         if (pwd1.equals(pwd2)==false) {
-            jsonObject.put("code", 222); // 密码1 ！= 密码2
-            jsonObject.put("data", null);
+            jsonObject.put("code", ResultStatus.USER_PWD_COMFIRM_ERROR.value());
+            jsonObject.put("data", ResultStatus.USER_PWD_COMFIRM_ERROR.getReasonPhrase());
             return jsonObject;
         }else {
             int maxId = Integer.parseInt(userService.findMaxId());
@@ -70,6 +79,7 @@ public class MainController {
             Date dateSql = sdf.parse(dateStr);
             String pwd = MD5Util.getMD5(pwd1);
 
+
             User userNew = new User();
             userNew.setUserId(userId);
             userNew.setUserName(userName);
@@ -78,20 +88,23 @@ public class MainController {
             userNew.setUserType(1); // 0-管理员 1-普通用户 2-评论用户
             userNew.setCreateTime(dateSql);
 
-
             userService.addUser(userNew);
-            jsonObject.put("code", 200); // SUCCESS
-            jsonObject.put("data", userId);
+
+            jsonObject.put("code", ResultStatus.SUCCESS.value());
+            JSONObject tmp = PackerController.transformUserToJson(userNew);
+            jsonObject.put("data", tmp);
+
             return jsonObject;
         }
     }
 
+    // 测试代码，没有实际用处的
     @GetMapping(value = "/api/findmaxid")
     @ResponseBody
     public JSONObject getLogup() {
         JSONObject jsonObject = new JSONObject();
         String maxId = userService.findMaxId();
-        jsonObject.put("code", 200);
+        jsonObject.put("code", ResultStatus.SUCCESS);
         jsonObject.put("data", maxId);
         return jsonObject;
     }
