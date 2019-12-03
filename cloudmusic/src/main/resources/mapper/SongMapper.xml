@@ -19,8 +19,16 @@
     select 
     <include refid="Base_Column_List" />
     from song
-    where song_id = #{songId,jdbcType=VARCHAR}
+    where song_id = #{songId, jdbcType=VARCHAR}
   </select>
+
+  <select id="selectSongBySongName" resultMap="BaseResultMap" parameterType="java.lang.String">
+    select
+    <include refid="Base_Column_List" />
+    from song
+    where song_name like #{songName, jdbcType=VARCHAR}
+  </select>
+
   <select id="getYearSongCount" resultType="java.lang.Integer">
 -- SELECT COUNT(1) FROM song WHERE song.album_id IN (select album.album_id FROM album where album.publish_time between  '1970-1-1 00:00:00'  and '1971-1-1 00:00:00');
    SELECT COUNT(1) FROM song WHERE album_id IN (select album_id FROM album where publish_time between  #{start,jdbcType=VARCHAR}  and #{end,jdbcType=VARCHAR});
@@ -35,6 +43,7 @@
     SELECT * FROM song order by rand() limit 10
   </select>
 
+
   <insert id="insert" parameterType="cn.edu.zucc.music.model.Song" >
     insert into song (song_id, song_name, content, 
       album_id, artist_id, song_url
@@ -43,6 +52,7 @@
       #{albumId,jdbcType=VARCHAR}, #{artistId,jdbcType=VARCHAR}, #{songUrl,jdbcType=VARCHAR},#{commentCount,jdbcType=INTEGER}
       )
   </insert>
+
   <insert id="insertSelective" parameterType="cn.edu.zucc.music.model.Song" >
     insert into song
     <trim prefix="(" suffix=")" suffixOverrides="," >
@@ -92,6 +102,7 @@
       </if>
     </trim>
   </insert>
+
   <update id="updateByPrimaryKeySelective" parameterType="cn.edu.zucc.music.model.Song" >
     update song
     <set >
@@ -116,6 +127,7 @@
     </set>
     where song_id = #{songId,jdbcType=VARCHAR}
   </update>
+
   <update id="updateByPrimaryKey" parameterType="cn.edu.zucc.music.model.Song" >
     update song
     set song_name = #{songName,jdbcType=VARCHAR},
@@ -126,4 +138,6 @@
       comment_count = #{commentCount,jdbcType=INTEGER}
     where song_id = #{songId,jdbcType=VARCHAR}
   </update>
+
+
 </mapper>

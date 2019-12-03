@@ -39,7 +39,8 @@ public class PackerController {
         json.put("user_name", user.getUserName());
         json.put("avatar_url", user.getAvatarUrl());
         json.put("user_type", user.getUserType());
-        json.put("create_time", user.getCreateTime());
+        json.put("create_time", user.getCreateTime().getTime());
+        json.put("introduction", user.getIntroduction());
         return json;
     }
 
@@ -113,12 +114,12 @@ public class PackerController {
             jsonUser.put("userType", user.getUserType());
             jsonUser.put("userName", user.getUserName());
             jsonUser.put("introduction", user.getIntroduction());
-            jsonUser.put("createTime", user.getCreateTime());
+            jsonUser.put("createTime", user.getCreateTime().getTime());
             jsonUser.put("userId", user.getUserId());
             jsonUser.put("avatarUrl", user.getAvatarUrl());
 
             jsonSongComment.put("comment_id", songComment.getSongCommentId());
-            jsonSongComment.put("time", songComment.getCommentTime());
+            jsonSongComment.put("time", songComment.getCommentTime().getTime());
             jsonSongComment.put("content", songComment.getCommentContent());
             jsonSongComment.put("likeCount", songComment.getLikeCount());
             jsonSongComment.put("user", jsonUser);
@@ -163,11 +164,64 @@ public class PackerController {
         jsonComment.put("user", transformUserToJson(user));
         jsonComment.put("comment_id", songComment.getSongCommentId());
         jsonComment.put("content", songComment.getCommentContent());
-        jsonComment.put("time", songComment.getCommentTime());
+        jsonComment.put("time", songComment.getCommentTime().getTime());
         jsonComment.put("likeCount", songComment.getLikeCount());
 
         json.put("data", jsonComment);
 
         return json;
+    }
+
+
+    public static List<JSONObject> transfromSongsToJson(List<Song> songs){
+        List<JSONObject> list = new ArrayList<JSONObject>();
+        for(Song song : songs) {
+            JSONObject tmp = new JSONObject();
+            tmp.put("song_id", song.getSongId());
+            tmp.put("song_name", song.getSongName());
+            tmp.put("album_id", song.getAlbumId());
+            tmp.put("artist", song.getArtistId());
+            tmp.put("comment_count", song.getCommentCount());
+            list.add(tmp);
+        }
+
+        return list;
+    }
+
+    public static List<JSONObject> transfromSheetsToJson(List<Sheet> sheets){
+        List<JSONObject> list = new ArrayList<JSONObject>();
+        for(Sheet sheet : sheets) {
+            JSONObject tmp = new JSONObject();
+            tmp.put("sheet_id", sheet.getSheetId());
+            tmp.put("sheet_name", sheet.getSheetName());
+            tmp.put("user_id", sheet.getUserId());
+            tmp.put("user_name", sheet.getUserName());
+            tmp.put("sheet_pic_url", sheet.getSheetPicUrl());
+            tmp.put("sheet_type", sheet.getSheetType());
+            tmp.put("play_count", sheet.getPlayCount());
+            list.add(tmp);
+        }
+
+        return list;
+    }
+
+    public static List<JSONObject> transfromAlbumsToJson(List<Album> albums){
+        List<JSONObject> list = new ArrayList<JSONObject>();
+        for(Album album : albums) {
+            JSONObject tmp = new JSONObject();
+            tmp.put("album_id", album.getAlbumId());
+            tmp.put("artist_id", album.getArtistId());
+            tmp.put("publish_time", album.getPublishTime());
+            tmp.put("album_name", album.getAlbumName());
+            tmp.put("introduction", album.getIntroduction());
+            tmp.put("album_pic_url", album.getAlbumPicUrl());
+            tmp.put("sub_count", album.getShareCount());
+            tmp.put("comment_count", album.getCommentCount());
+            tmp.put("share_count", album.getShareCount());
+
+            list.add(tmp);
+        }
+
+        return list;
     }
 }

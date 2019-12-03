@@ -12,16 +12,26 @@
     <result column="comment_count" property="commentCount" jdbcType="INTEGER" />
     <result column="share_count" property="shareCount" jdbcType="INTEGER" />
   </resultMap>
+
   <sql id="Base_Column_List" >
     album_id, artist_id, publish_time, album_name, introduction, album_pic_url, sub_count, 
     comment_count, share_count
   </sql>
+
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
     select 
     <include refid="Base_Column_List" />
     from album
     where album_id = #{albumId,jdbcType=VARCHAR}
   </select>
+
+  <select id="selectAlbumByAlbumName" resultMap="BaseResultMap" parameterType="java.lang.String">
+    select
+    <include refid="Base_Column_List" />
+    from album
+    where album_name like #{albumName, jdbcType=VARCHAR}
+  </select>
+
   <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
     delete from album
     where album_id = #{albumId,jdbcType=VARCHAR}

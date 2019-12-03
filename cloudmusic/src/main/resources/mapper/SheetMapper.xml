@@ -11,10 +11,12 @@
     <result column="sheet_type" property="sheetType" jdbcType="INTEGER" />
     <result column="play_count" property="playCount" jdbcType="INTEGER" />
   </resultMap>
+
   <sql id="Base_Column_List" >
     sheet_id, sheet_name, user_id, user_name, sheet_pic_url, create_time, sheet_type, 
     play_count
   </sql>
+
   <select id="selectTenSheets" resultMap="BaseResultMap">
     SELECT * FROM sheet LIMIT 10
   </select>
@@ -27,16 +29,26 @@
   <select id="selectByUserId" resultMap="BaseResultMap" parameterType="java.lang.String" >
     select * from sheet where user_id = #{user_id,jdbcType=VARCHAR}
   </select>
+
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
     select 
     <include refid="Base_Column_List" />
     from sheet
     where sheet_id = #{sheetId,jdbcType=VARCHAR}
   </select>
+
+  <select id="selectSheetBySheetName" resultMap="BaseResultMap" parameterType="java.lang.String">
+    select
+    <include refid="Base_Column_List" />
+    from sheet
+    where sheet_name like #{sheetName, jdbcType=VARCHAR}
+  </select>
+
   <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
     delete from sheet
     where sheet_id = #{sheetId,jdbcType=VARCHAR}
   </delete>
+
   <insert id="insert" parameterType="cn.edu.zucc.music.model.Sheet" >
     insert into sheet (sheet_id, sheet_name, user_id, 
       user_name, sheet_pic_url, create_time, 
@@ -45,6 +57,7 @@
       #{userName,jdbcType=VARCHAR}, #{sheetPicUrl,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
       #{sheetType,jdbcType=INTEGER}, #{playCount,jdbcType=INTEGER})
   </insert>
+
   <insert id="insertSelective" parameterType="cn.edu.zucc.music.model.Sheet" >
     insert into sheet
     <trim prefix="(" suffix=")" suffixOverrides="," >
@@ -100,6 +113,7 @@
       </if>
     </trim>
   </insert>
+
   <update id="updateByPrimaryKeySelective" parameterType="cn.edu.zucc.music.model.Sheet" >
     update sheet
     <set >
@@ -127,6 +141,7 @@
     </set>
     where sheet_id = #{sheetId,jdbcType=VARCHAR}
   </update>
+
   <update id="updateByPrimaryKey" parameterType="cn.edu.zucc.music.model.Sheet" >
     update sheet
     set sheet_name = #{sheetName,jdbcType=VARCHAR},
@@ -138,4 +153,5 @@
       play_count = #{playCount,jdbcType=INTEGER}
     where sheet_id = #{sheetId,jdbcType=VARCHAR}
   </update>
+
 </mapper>

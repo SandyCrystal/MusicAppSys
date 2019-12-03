@@ -13,5 +13,6 @@ public interface SheetService {
     List<Sheet> findAll();
     List<Sheet> selectTenSheets();
     String findMaxSheetId();
+    List<Sheet> searchSheetBySheetName(String sheetName);
 
 }

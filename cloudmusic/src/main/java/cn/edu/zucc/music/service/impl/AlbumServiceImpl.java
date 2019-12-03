@@ -33,6 +33,11 @@ public class AlbumServiceImpl implements AlbumService {
     }
 
     @Override
+    public List<Album> searchAlbumByAlbumName(String albumName) {
+        return albumMapper.selectAlbumByAlbumName(albumName);
+    }
+
+    @Override
     public List<Album> findAll() {
         return null;
     }

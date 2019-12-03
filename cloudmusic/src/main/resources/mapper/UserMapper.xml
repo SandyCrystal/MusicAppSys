@@ -135,5 +135,12 @@
     where user_id = #{userId,jdbcType=VARCHAR}
   </update>
 
+  <update id="updateByUserName" parameterType="cn.edu.zucc.music.model.User">
+    update user
+    set introduction = #{introduction,jdbcType=VARCHAR},
+      avatar_url = #{avatarUrl,jdbcType=VARCHAR}
+    where user_id = #{userId,jdbcType=VARCHAR}
+  </update>
+
 
 </mapper>

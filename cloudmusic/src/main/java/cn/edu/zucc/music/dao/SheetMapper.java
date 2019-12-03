@@ -1,5 +1,6 @@
 package cn.edu.zucc.music.dao;
 
+import cn.edu.zucc.music.model.Album;
 import cn.edu.zucc.music.model.Sheet;
 import org.apache.ibatis.annotations.Mapper;
 
@@ -16,6 +17,8 @@ public interface SheetMapper {
     List<Sheet> selectByUserId(String uid);
 
     Sheet selectByPrimaryKey(String sheetId);
+
+    List<Sheet> selectSheetBySheetName(String sheetName);
 
     int updateByPrimaryKeySelective(Sheet record);
 

@@ -33,6 +33,11 @@ public class SheetServiceImpl implements SheetService {
     }
 
     @Override
+    public List<Sheet> searchSheetBySheetName(String sheetName) {
+        return sheetMapper.selectSheetBySheetName(sheetName);
+    }
+
+    @Override
     public List<Sheet> findByUserID(String uid) {
         return sheetMapper.selectByUserId(uid);
     }

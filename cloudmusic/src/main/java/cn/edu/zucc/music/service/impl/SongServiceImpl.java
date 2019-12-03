@@ -1,6 +1,8 @@
 package cn.edu.zucc.music.service.impl;
 
 import cn.edu.zucc.music.dao.SongMapper;
+import cn.edu.zucc.music.model.Album;
+import cn.edu.zucc.music.model.Sheet;
 import cn.edu.zucc.music.model.Song;
 import cn.edu.zucc.music.service.SongService;
 import org.springframework.stereotype.Service;
@@ -35,6 +37,11 @@ public class SongServiceImpl implements SongService {
     @Override
     public List<Song> findAll() {
         return null;
+    }
+
+    @Override
+    public List<Song> searchSongBySongName(String songName) {
+        return songMapper.selectSongBySongName(songName);
     }
 
     @Override
