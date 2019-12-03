@@ -2,27 +2,16 @@ package cn.edu.zucc.music.controller;
 
 import cn.edu.zucc.music.Until.Result;
 import cn.edu.zucc.music.Until.ResultStatus;
-import cn.edu.zucc.music.entity.AlbumEntityItem;
-import cn.edu.zucc.music.entity.ArtistEntityItem;
-import cn.edu.zucc.music.entity.SongEntityItem;
-import cn.edu.zucc.music.model.Album;
-import cn.edu.zucc.music.model.Artist;
 import cn.edu.zucc.music.model.Banner;
 import cn.edu.zucc.music.model.User;
 import cn.edu.zucc.music.service.BannerService;
 import cn.edu.zucc.music.service.GraphService;
 import cn.edu.zucc.music.service.UserService;
-import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import com.fasterxml.jackson.annotation.JsonAlias;
-import org.neo4j.driver.internal.shaded.io.netty.handler.codec.json.JsonObjectDecoder;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.CachePut;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Controller
@@ -53,14 +42,46 @@ public class MainController {
     // 注册
     @GetMapping(value = "/api/logup")
     @ResponseBody
-    public String getLogup() {
-        return "还没做";
+    public JSONObject getLogup(String userName, String password, String password2) {
+        JSONObject jsonObject = new JSONObject();
+        User user = userService.findByName(userName);
+        if (user!=null){
+            jsonObject.put("code", 401); // 用户已经存在
+            jsonObject.put("data", null);
+            return jsonObject;
+        }
+        if (password.equals(password2)==false) {
+            jsonObject.put("code", 222); // 密码1 ！= 密码2
+            jsonObject.put("data", null);
+            return jsonObject;
+        }else {
+            int maxId = Integer.parseInt(userService.findMaxId());
+            String userId = String.valueOf(maxId+1);
+            User userNew = new User();
+            userNew.setUserId(userId);
+            userNew.setUserName(userName);
+            userNew.setUserPwd(password);
+            userService.addUser(userNew);
+            jsonObject.put("code", 200); // SUCCESS
+            jsonObject.put("data", userId);
+            return jsonObject;
+        }
     }
+
+    @GetMapping(value = "/api/findmaxid")
+    @ResponseBody
+    public JSONObject getLogup() {
+        JSONObject jsonObject = new JSONObject();
+        String maxId = userService.findMaxId();
+        jsonObject.put("code", 200);
+        jsonObject.put("data", maxId);
+        return jsonObject;
+    }
+
     @CrossOrigin
     @GetMapping(value = "/api/banner")
     @ResponseBody
     public Result<Banner> getBanners(){
         return new Result(ResultStatus.SUCCESS,bannerService.findAll());
     }
-
 }

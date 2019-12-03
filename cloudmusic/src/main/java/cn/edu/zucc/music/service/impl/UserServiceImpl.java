@@ -13,9 +13,11 @@ import java.util.List;
 public class UserServiceImpl implements UserService {
     @Resource
     UserMapper userMapper;
+
     @Override
     public int addUser(User user) {
-        return 0;
+        userMapper.insert(user);
+        return 1;
     }
 
     @Override
@@ -34,7 +36,16 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public User findByName(String userName) { return userMapper.selectByUserName(userName);}
+
+    @Override
+    public String findMaxId() {
+        return userMapper.findMaxId();
+    }
+
+    @Override
     public List<User> findAll() {
         return null;
     }
+
 }

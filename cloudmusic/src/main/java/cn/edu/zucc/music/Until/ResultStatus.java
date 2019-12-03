@@ -27,6 +27,8 @@ public enum ResultStatus {
 
     USER_NOT_EXISTS(1401, "user not exists"),
 
+    USER_AlREADY_EXISTS(1404, "userid already exitsts"),
+
     PERMISSION_DENIED(1402,"permission denied"),
 
     ARTICLE_NOT_EXIST(1403,"article not exist"),

@@ -53,7 +53,6 @@ public class SheetController {
             List<JSONObject> data = new ArrayList<JSONObject>();
             for(Sheet sheet : list) {
                 User user = userService.findById(sheet.getUserId());
-
                 JSONObject tmp = PackerController.transformSheetToJson(sheet,user);
                 data.add(tmp);
             }
@@ -70,7 +69,9 @@ public class SheetController {
     @ResponseBody
     public JSONObject getSheetDetails(String sheet_id){
         JSONObject jsonObject = new JSONObject();
+
         Sheet sheet = sheetService.findById(sheet_id);
+
         if(sheet.getSheetName().equals("") || sheet.getSheetName()==null) {
             jsonObject.put("code", 666);
             jsonObject.put("data", null);
@@ -99,5 +100,4 @@ public class SheetController {
         }
         return jsonObject;
     }
-
 }
