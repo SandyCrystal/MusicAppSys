@@ -28,7 +28,7 @@
   </delete>
 
   <select id="selectTenSongs" resultMap="BaseResultMap">
-    SELECT * FROM song order by rand() LIMIT 10
+    SELECT * FROM song LIMIT 10
   </select>
 
   <insert id="insert" parameterType="cn.edu.zucc.music.model.Song" >

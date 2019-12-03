@@ -16,7 +16,7 @@
     play_count
   </sql>
   <select id="selectTenSheets" resultMap="BaseResultMap">
-    SELECT * FROM sheet order by rand() LIMIT 10
+    SELECT * FROM sheet LIMIT 10
   </select>
 
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
