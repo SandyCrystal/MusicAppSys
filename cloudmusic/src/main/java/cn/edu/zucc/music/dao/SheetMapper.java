@@ -13,6 +13,8 @@ public interface SheetMapper {
 
     int insertSelective(Sheet record);
 
+    List<Sheet> selectByUserId(String uid);
+
     Sheet selectByPrimaryKey(String sheetId);
 
     int updateByPrimaryKeySelective(Sheet record);

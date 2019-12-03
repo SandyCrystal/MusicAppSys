@@ -34,7 +34,7 @@ public class SheetServiceImpl implements SheetService {
 
     @Override
     public List<Sheet> findByUserID(String uid) {
-        return null;
+        return sheetMapper.selectByUserId(uid);
     }
 
     @Override
