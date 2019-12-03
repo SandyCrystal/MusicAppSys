@@ -129,4 +129,19 @@ public class PackerController {
 
         return list;
     }
+
+    public static List<JSONObject> transformPersonalSheetToJson(List<Sheet> Sheets, User user) {
+        List<JSONObject> list = new ArrayList<JSONObject>();
+        for(Sheet sheet : Sheets) {
+            JSONObject tmp = new JSONObject();
+            tmp.put("id", sheet.getSheetId());
+            tmp.put("name", sheet.getSheetName());
+            tmp.put("picUrl", sheet.getSheetPicUrl());
+            tmp.put("createTime", sheet.getCreateTime().getTime());
+            tmp.put("creator", transformUserToJson(user));
+            list.add(tmp);
+        }
+
+        return list;
+    }
 }
