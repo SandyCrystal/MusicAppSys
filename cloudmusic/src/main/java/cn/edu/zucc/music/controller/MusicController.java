@@ -6,6 +6,7 @@ import cn.edu.zucc.music.model.*;
 import cn.edu.zucc.music.service.*;
 import com.alibaba.fastjson.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -93,6 +94,7 @@ public class MusicController {
     }
 
     // 获取推荐歌单
+    @Cacheable(value = "getSheetByRecommand")
     @GetMapping(value = "/api/recommandSong")
     @ResponseBody
     public JSONObject getSheetByRecommand() {
@@ -104,7 +106,7 @@ public class MusicController {
             List<JSONObject> data = new ArrayList<JSONObject>();
             for(Song song : list) {
                 Album album = albumService.findById(song.getAlbumId());
-                Artist artist = artistService.findById(song.getArtistId());
+                Artist artist = artistService.findById(album.getArtistId());
                 JSONObject tmp = PackerController.transformSongToJson(song, album, artist);
                 data.add(tmp);
             }
@@ -119,14 +121,14 @@ public class MusicController {
     // 获取对应歌曲的评论
     @GetMapping(value = "/api/getMusicComment")
     @ResponseBody
-    public JSONObject getMusicComment(String song_id) {
+    public JSONObject getMusicComment(String id) {
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("code", 200);
-        Song song = songService.findById(song_id);
+        Song song = songService.findById(id);
         jsonObject.put("total", song.getCommentCount());
         jsonObject.put("more", false);
 
-        List<SongComment> songComments = songCommentService.findBySongId(song_id);
+        List<SongComment> songComments = songCommentService.findBySongId(id);
         List<User> users = new ArrayList<User>();
         for(int i = 0; i < songComments.size(); i++) {
             SongComment songComment = songComments.get(i);

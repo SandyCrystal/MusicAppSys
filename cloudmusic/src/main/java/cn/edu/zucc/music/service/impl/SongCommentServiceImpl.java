@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 import javax.annotation.Resource;
 import java.util.List;
 
-@Service
+@Service(value = "SongCommentService")
 public class SongCommentServiceImpl implements SongCommentService {
     @Resource
     private SongCommentMapper songCommentMapper;

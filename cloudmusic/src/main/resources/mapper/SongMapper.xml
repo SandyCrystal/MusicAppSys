@@ -21,6 +21,10 @@
     from song
     where song_id = #{songId,jdbcType=VARCHAR}
   </select>
+  <select id="getYearSongCount" resultType="java.lang.Integer">
+-- SELECT COUNT(1) FROM song WHERE song.album_id IN (select album.album_id FROM album where album.publish_time between  '1970-1-1 00:00:00'  and '1971-1-1 00:00:00');
+   SELECT COUNT(1) FROM song WHERE album_id IN (select album_id FROM album where publish_time between  #{start,jdbcType=VARCHAR}  and #{end,jdbcType=VARCHAR});
+  </select>
 
   <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
     delete from song
@@ -28,7 +32,7 @@
   </delete>
 
   <select id="selectTenSongs" resultMap="BaseResultMap">
-    SELECT * FROM song LIMIT 10
+    SELECT * FROM song order by rand() limit 10
   </select>
 
   <insert id="insert" parameterType="cn.edu.zucc.music.model.Song" >

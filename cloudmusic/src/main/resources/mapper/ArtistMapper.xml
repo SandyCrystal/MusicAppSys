@@ -17,6 +17,11 @@
     from artist
     where artist_id = #{artistId,jdbcType=VARCHAR}
   </select>
+  <select id="getDistribute" resultType="java.lang.Integer"  >
+   SELECT COUNT(1) from artist
+    where music_size <![CDATA[ >= ]]> #{start,jdbcType=INTEGER}
+    and music_size  <![CDATA[ <= ]]>  #{end,jdbcType=INTEGER}
+  </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
     delete from artist
     where artist_id = #{artistId,jdbcType=VARCHAR}
