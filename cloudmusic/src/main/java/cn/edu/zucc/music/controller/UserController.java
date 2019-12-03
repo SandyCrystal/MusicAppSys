@@ -1,8 +1,6 @@
 package cn.edu.zucc.music.controller;
 
-import cn.edu.zucc.music.Until.MD5Util;
-import cn.edu.zucc.music.Until.Result;
-import cn.edu.zucc.music.Until.ResultStatus;
+import cn.edu.zucc.music.Until.*;
 import cn.edu.zucc.music.model.Album;
 import cn.edu.zucc.music.model.Sheet;
 import cn.edu.zucc.music.model.Song;
@@ -15,7 +13,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Controller
 
@@ -105,6 +105,43 @@ public class UserController {
             jsonObject.put("data", ResultStatus.USER_INFO_NOT_CHANGED.value());
         }
 
+        return jsonObject;
+    }
+
+    // 上传图片
+    @GetMapping(value = "/api/uploadPic")
+    @ResponseBody
+    public JSONObject uploadPic(String filepath){
+        JSONObject jsonObject = new JSONObject();
+
+        Map textMap = new HashMap<String, String>();
+        Map fileMap = new HashMap<String, String>();
+        String url = "https://sm.ms/api/upload";
+        fileMap.put("smfile", filepath);
+        String str = HttpRequestUtil.formUpload(url, textMap, fileMap);
+        org.json.simple.JSONObject res = JsonUtil.stringToJson(str);
+        String code = (String) res.get("code");
+        String picURL = new String();
+
+        if (code == null){
+            jsonObject.put("code", ResultStatus.UPLOAD_PIC_ERROR.value());
+            jsonObject.put("data", ResultStatus.UPLOAD_PIC_ERROR.getReasonPhrase());
+            return jsonObject;
+        } else if (code.equals("success")){
+            org.json.simple.JSONObject data = (org.json.simple.JSONObject) res.get("data");
+            picURL = (String) data.get("url");
+        }else if (code.equals("image_repeated")){
+            picURL = (String) res.get("images");
+        }else{
+            jsonObject.put("code", ResultStatus.UPLOAD_PIC_ERROR.value());
+            jsonObject.put("data", ResultStatus.UPLOAD_PIC_ERROR.getReasonPhrase());
+            return jsonObject;
+        }
+
+        JSONObject tmp = PackerController.transformPicUrl(picURL);
+
+        jsonObject.put("code", ResultStatus.SUCCESS.value());
+        jsonObject.put("data", tmp);
         return jsonObject;
     }
 

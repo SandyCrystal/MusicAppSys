@@ -224,4 +224,10 @@ public class PackerController {
 
         return list;
     }
+
+    public static JSONObject transformPicUrl(String url) {
+        JSONObject json = new JSONObject();
+        json.put("url", url);
+        return json;
+    }
 }

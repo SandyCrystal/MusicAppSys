@@ -2,8 +2,7 @@ package cn.edu.zucc.music.Until;
 public enum ResultStatus {
 
 
-
-    SUCCESS(200, "success"), //成功
+    SUCCESS(200, "success"),        // 成功
 
     // 用户模块
     USER_AlREADY_EXISTS(301, "userid already exitsts"),
@@ -11,11 +10,14 @@ public enum ResultStatus {
     USER_NOT_EXISTS(303, "user not exists"),
     USER_INFO_NOT_CHANGED(304, "user info not changed"),
 
+    // 上传图片
+    UPLOAD_PIC_ERROR(401, "upload pic error"),
 
-    ERROR(4000, "Error"),       //程序报错
+
+    ERROR(4000, "Error"),       // 程序报错
 
 
-    INVALID_SERVICE(199, "invalid service"),//服务不可用
+    INVALID_SERVICE(199, "invalid service"),        // 服务不可用
 
 
 
@@ -23,11 +25,11 @@ public enum ResultStatus {
 
 
 
-    UNKNOWN(999, "unknown"),//未知错误
+    UNKNOWN(999, "unknown"),       // 未知错误
 
 
 
-    //搜索结果不存在
+    // 搜索结果不存在
     PERMISSION_DENIED(1402,"permission denied"),
 
     ARTICLE_NOT_EXIST(1403,"article not exist"),
