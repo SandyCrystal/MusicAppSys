@@ -58,6 +58,24 @@ public class SheetController {
     }
 
     @CrossOrigin
+    @GetMapping(value = "/api/deleteSheet")
+    @ResponseBody
+    public JSONObject deleteSheet(String sheet_id) {
+        JSONObject jsonObject = new JSONObject();
+        Sheet sheet = sheetService.findById(sheet_id);
+        if(sheet == null) {
+            jsonObject.put("code", 666);
+            jsonObject.put("data", 0);
+        } else {
+            sheetService.deleteSheet(sheet_id);
+            jsonObject.put("code", 200);
+            jsonObject.put("data", 1);
+        }
+
+        return jsonObject;
+    }
+
+    @CrossOrigin
     @GetMapping(value = "/api/recommandSheet")
     @ResponseBody
     public JSONObject recommandSheet() {

@@ -18,8 +18,8 @@ public class SheetServiceImpl implements SheetService {
     }
 
     @Override
-    public int deleteSheet(Sheet sheet) {
-        return 0;
+    public int deleteSheet(String sheet_id) {
+        return sheetMapper.deleteByPrimaryKey(sheet_id);
     }
 
     @Override
