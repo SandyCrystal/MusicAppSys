@@ -1,5 +1,7 @@
 package cn.edu.zucc.music.controller;
 
+import cn.edu.zucc.music.Until.MD5Util;
+import cn.edu.zucc.music.Until.Result;
 import cn.edu.zucc.music.Until.ResultStatus;
 import cn.edu.zucc.music.model.Album;
 import cn.edu.zucc.music.model.Sheet;
@@ -35,11 +37,12 @@ public class UserController {
         JSONObject jsonObject = new JSONObject();
         User user = userService.findByName(username);
         boolean hasChanged = false;
-        if (user == null){
-            jsonObject.put("code", ResultStatus.USER_NOT_EXISTS.value());
-            jsonObject.put("data", ResultStatus.USER_NOT_EXISTS.getReasonPhrase());
-            return jsonObject;
-        }
+
+//        if (user == null){
+//            jsonObject.put("code", ResultStatus.USER_NOT_EXISTS.value());
+//            jsonObject.put("data", ResultStatus.USER_NOT_EXISTS.getReasonPhrase());
+//            return jsonObject;
+//        }
 
         if (user.getIntroduction() == null || user.getIntroduction().equals(introduction) == false){
             user.setIntroduction(introduction);
@@ -64,36 +67,46 @@ public class UserController {
         return jsonObject;
     }
 
-//    // 修改密码
-//    @GetMapping(value = "/api/modifyPwd")
-//    @ResponseBody
-//    public JSONObject modifyPwd(String username, String pwdOld, String pwdNew) {
-//        JSONObject jsonObject = new JSONObject();
-//        User user = userService.findByName(username);
-//        boolean hasChanged = false;
-//        if (user == null){
-//            jsonObject.put("code", ResultStatus.USER_NOT_EXISTS.value());
-//            jsonObject.put("data", ResultStatus.USER_NOT_EXISTS.getReasonPhrase());
-//            return jsonObject;
-//        }
-//
-//        if (user.getUserPwd().equals(introduction) == false){
-//            user.setUserPwd(introduction);
-//            hasChanged = true;
-//        }else {
-//            jsonObject.put("code", ResultStatus.);
-//            jsonObject.put("data", ResultStatus.)
-//        }
-//
-//        if (hasChanged == true){
-//            userService.updateUser(user);
-//            jsonObject.put("code", ResultStatus.SUCCESS.value());
-//            JSONObject tmp = PackerController.transformUserToJson(user);
-//            jsonObject.put("data", tmp);
-//        }
-//
-//        return jsonObject;
-//    }
+    // 修改密码
+    @GetMapping(value = "/api/modifyPwd")
+    @ResponseBody
+    public JSONObject modifyPwd(String username, String pwdOld, String pwdNew) {
+        JSONObject jsonObject = new JSONObject();
+        User user = userService.findByName(username);
+        boolean hasChanged = false;
+
+        if (user == null){
+            jsonObject.put("code", ResultStatus.USER_NOT_EXISTS.value());
+            jsonObject.put("data", ResultStatus.USER_NOT_EXISTS.getReasonPhrase());
+            return jsonObject;
+        }
+
+        String pwdOldMd5 = MD5Util.getMD5(pwdOld);
+        String pwdNewMd5 = MD5Util.getMD5(pwdNew);
+
+        if (user.getUserPwd().equals(pwdOldMd5) == false){ // 原始密码错误
+            jsonObject.put("code", ResultStatus.USER_PWD_COMFIRM_ERROR.value());
+            jsonObject.put("data", ResultStatus.USER_PWD_COMFIRM_ERROR.getReasonPhrase());
+            return jsonObject;
+        }
+
+        if (pwdOld.equals(pwdNew) == false){
+            hasChanged = true;
+            user.setUserPwd(pwdNewMd5);
+        }
+
+        if (hasChanged == true){
+            userService.updateUser(user);
+            jsonObject.put("code", ResultStatus.SUCCESS.value());
+            JSONObject tmp = PackerController.transformUserToJson(user);
+            jsonObject.put("data", tmp);
+        }else {
+            jsonObject.put("code", ResultStatus.USER_INFO_NOT_CHANGED.value());
+            jsonObject.put("data", ResultStatus.USER_INFO_NOT_CHANGED.value());
+        }
+
+        return jsonObject;
+    }
 
     // 关注用户
     @GetMapping(value = "/api/followUser")
