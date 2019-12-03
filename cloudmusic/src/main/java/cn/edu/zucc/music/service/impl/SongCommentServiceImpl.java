@@ -16,7 +16,7 @@ public class SongCommentServiceImpl implements SongCommentService {
     private SongCommentMapper songCommentMapper;
     @Override
     public int addSongComment(SongComment songComment) {
-        return 0;
+        return songCommentMapper.insert(songComment);
     }
 
     @Override

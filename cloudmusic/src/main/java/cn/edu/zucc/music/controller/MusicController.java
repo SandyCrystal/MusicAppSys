@@ -124,7 +124,7 @@ public class MusicController {
         Date date = new Date();
 
         String id = songCommentService.findMaxSongCommentId();
-        String comment_id = String.valueOf(Integer.parseInt(id));
+        String comment_id = String.valueOf(Integer.parseInt(id)+1);
 
         songComment.setSongCommentId(comment_id);
         songComment.setCommentContent(content);
