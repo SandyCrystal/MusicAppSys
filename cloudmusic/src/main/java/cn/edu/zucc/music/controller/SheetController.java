@@ -53,6 +53,7 @@ public class SheetController {
             List<JSONObject> data = new ArrayList<JSONObject>();
             for(Sheet sheet : list) {
                 User user = userService.findById(sheet.getUserId());
+
                 JSONObject tmp = PackerController.transformSheetToJson(sheet,user);
                 data.add(tmp);
             }
@@ -69,9 +70,7 @@ public class SheetController {
     @ResponseBody
     public JSONObject getSheetDetails(String sheet_id){
         JSONObject jsonObject = new JSONObject();
-
         Sheet sheet = sheetService.findById(sheet_id);
-
         if(sheet.getSheetName().equals("") || sheet.getSheetName()==null) {
             jsonObject.put("code", 666);
             jsonObject.put("data", null);
@@ -98,6 +97,25 @@ public class SheetController {
             JSONObject tmp = PackerController.transformSheetDetailsToJson(sheet, user, songs, albums);
             jsonObject.put("data", tmp);
         }
+        return jsonObject;
+    }
+
+    @CrossOrigin
+    @GetMapping(value = "/api/getPersonalSheet")
+    @ResponseBody
+    public JSONObject getPersonalSheet(String user_id) {
+        JSONObject jsonObject = new JSONObject();
+        User user = userService.findById(user_id);
+        List<Sheet> list = sheetService.findByUserID(user_id);
+        if(user.getUserId().equals("") || user.getUserId()==null || list.size()==0) {
+            jsonObject.put("code", 666);
+            jsonObject.put("data", null);
+        } else {
+            List<JSONObject> data = PackerController.transformPersonalSheetToJson(list, user);
+            jsonObject.put("code", 200);
+            jsonObject.put("data", data);
+        }
+
         return jsonObject;
     }
 }

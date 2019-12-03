@@ -70,22 +70,6 @@ public class MusicController {
         return "还没做";
     }
 
-    // 根据歌单代码获取歌单
-    @GetMapping(value = "/api/getSheetBySheetId")
-    @ResponseBody
-    public String getSheetBySheetId() {
-        return "还没做";
-    }
-
-    // 获取个人歌单
-    @GetMapping(value = "/api/getSheetByUserId")
-    @ResponseBody
-    public Result<Sheet> getSheetByUserId(String uid) {
-        List<Sheet> list = sheetService.findByUserID(uid);
-        if (list==null)return new Result<>(ResultStatus.ERROR);
-        return new Result(ResultStatus.SUCCESS,list);
-    }
-
     // 获取类型歌单
     @GetMapping(value = "/api/getSheetByType")
     @ResponseBody

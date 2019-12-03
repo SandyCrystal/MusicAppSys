@@ -16,9 +16,12 @@
     play_count
   </sql>
   <select id="selectTenSheets" resultMap="BaseResultMap">
-    SELECT * FROM sheet limit 10
+    SELECT * FROM sheet LIMIT 10
   </select>
 
+  <select id="selectByUserId" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select * from sheet where user_id = #{user_id,jdbcType=VARCHAR}
+  </select>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
     select 
     <include refid="Base_Column_List" />
