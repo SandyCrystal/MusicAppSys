@@ -18,8 +18,8 @@ public class SheetServiceImpl implements SheetService {
     }
 
     @Override
-    public int deleteSheet(Sheet sheet) {
-        return 0;
+    public int deleteSheet(String sheet_id) {
+        return sheetMapper.deleteByPrimaryKey(sheet_id);
     }
 
     @Override
@@ -45,5 +45,10 @@ public class SheetServiceImpl implements SheetService {
     @Override
     public List<Sheet> selectTenSheets() {
         return sheetMapper.selectTenSheets();
+    }
+
+    @Override
+    public String findMaxSheetId() {
+        return sheetMapper.findMaxSheetId();
     }
 }

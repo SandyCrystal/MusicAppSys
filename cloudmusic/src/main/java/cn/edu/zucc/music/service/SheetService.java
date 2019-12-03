@@ -6,10 +6,12 @@ import java.util.List;
 
 public interface SheetService {
     int addSheet(Sheet sheet);
-    int deleteSheet(Sheet sheet);
+    int deleteSheet(String sheet_id);
     int updateSheet(Sheet sheet);
     Sheet findById(String id);
     List<Sheet> findByUserID(String uid);
     List<Sheet> findAll();
     List<Sheet> selectTenSheets();
+    String findMaxSheetId();
+
 }

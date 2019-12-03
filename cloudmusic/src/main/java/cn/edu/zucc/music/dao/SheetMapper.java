@@ -22,4 +22,6 @@ public interface SheetMapper {
     int updateByPrimaryKey(Sheet record);
 
     List<Sheet> selectTenSheets();
+
+    String findMaxSheetId();
 }
