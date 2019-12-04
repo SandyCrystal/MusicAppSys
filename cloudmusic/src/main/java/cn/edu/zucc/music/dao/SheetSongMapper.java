@@ -22,4 +22,8 @@ public interface SheetSongMapper {
     int updateByPrimaryKey(SheetSong record);
 
     List<SheetSong> getSongsBySheetId(String sheetId);
+
+    SheetSong selectBySheetIdSongId(String sheetId, String songId);
+
+    int getMaxSheetSongId();
 }

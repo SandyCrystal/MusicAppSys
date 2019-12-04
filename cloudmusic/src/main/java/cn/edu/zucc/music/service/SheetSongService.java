@@ -11,5 +11,8 @@ public interface SheetSongService {
     int updateSheet(SheetSong sheet);
     SheetSong findById(int id);
     List<SheetSong> findAll();
+    SheetSong findBySheetIdSongId(String sheetId, String songId);
     List<SheetSong> getSongsBySheetId(String sheetId);
+    int getMaxSheetSongId();
+
 }
