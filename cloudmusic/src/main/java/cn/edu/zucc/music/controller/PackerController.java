@@ -1,6 +1,7 @@
 package cn.edu.zucc.music.controller;
 
 import cn.edu.zucc.music.model.*;
+import cn.edu.zucc.music.service.SheetSongService;
 import cn.edu.zucc.music.service.UserService;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
@@ -16,6 +17,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class PackerController {
+    @Autowired
+     SheetSongService sheetSongService;
     public static JSONObject transformSheetToJson(Sheet sheet, User user) {
         JSONObject json = new JSONObject();
         json.put("id", sheet.getSheetId());
@@ -138,14 +141,17 @@ public class PackerController {
         return list;
     }
 
-    public static List<JSONObject> transformPersonalSheetToJson(List<Sheet> Sheets, User user) {
+    public static List<JSONObject> transformPersonalSheetToJson(List<Sheet> Sheets, User user,int[] trackCount) {
         List<JSONObject> list = new ArrayList<JSONObject>();
+        int coun=0;
         for(Sheet sheet : Sheets) {
             JSONObject tmp = new JSONObject();
             tmp.put("id", sheet.getSheetId());
             tmp.put("name", sheet.getSheetName());
             tmp.put("picUrl", sheet.getSheetPicUrl());
             tmp.put("createTime", sheet.getCreateTime().getTime());
+            tmp.put("trackCount",trackCount[coun]);
+            coun++;
             tmp.put("creator", transformUserToJson(user));
             list.add(tmp);
         }
