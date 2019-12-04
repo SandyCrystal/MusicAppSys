@@ -130,11 +130,12 @@ public class MusicController {
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("code", 200);
         Song song = songService.findById(id);
-        jsonObject.put("total", song.getCommentCount());
+
         jsonObject.put("more", false);
 
         List<SongComment> songComments = songCommentService.findBySongId(id);
         List<User> users = new ArrayList<User>();
+        jsonObject.put("total", songComments.size());
         for(int i = 0; i < songComments.size(); i++) {
             SongComment songComment = songComments.get(i);
             User user = userService.findById(songComment.getUserId());

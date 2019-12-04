@@ -39,7 +39,9 @@ public class PackerController {
         json.put("user_name", user.getUserName());
         json.put("avatar_url", user.getAvatarUrl());
         json.put("user_type", user.getUserType());
-        json.put("create_time", user.getCreateTime().getTime());
+        if (user.getCreateTime()==null) json.put("create_time", null);
+        else
+            json.put("create_time", user.getCreateTime().getTime());
         json.put("introduction", user.getIntroduction());
         return json;
     }
@@ -109,12 +111,18 @@ public class PackerController {
             SongComment songComment = songComments.get(i);
             User user = users.get(i);
             JSONObject jsonSongComment = new JSONObject();
+            if (user==null) jsonSongComment.put("user", null);
+            else{
             JSONObject jsonUser = new JSONObject();
 
-            jsonUser.put("userType", user.getUserType());
+            if (user.getUserType()==null) jsonUser.put("userType",0);
+            else
+                jsonUser.put("userType", user.getUserType());
             jsonUser.put("userName", user.getUserName());
             jsonUser.put("introduction", user.getIntroduction());
-            jsonUser.put("createTime", user.getCreateTime().getTime());
+                if (user.getCreateTime()==null) json.put("create_time", null);
+                else
+                    json.put("create_time", user.getCreateTime().getTime());
             jsonUser.put("userId", user.getUserId());
             jsonUser.put("avatarUrl", user.getAvatarUrl());
 
@@ -122,7 +130,7 @@ public class PackerController {
             jsonSongComment.put("time", songComment.getCommentTime().getTime());
             jsonSongComment.put("content", songComment.getCommentContent());
             jsonSongComment.put("likeCount", songComment.getLikeCount());
-            jsonSongComment.put("user", jsonUser);
+            jsonSongComment.put("user", jsonUser);}
 
             list.add(jsonSongComment);
         }
@@ -167,9 +175,8 @@ public class PackerController {
         jsonComment.put("time", songComment.getCommentTime().getTime());
         jsonComment.put("likeCount", songComment.getLikeCount());
 
-        json.put("data", jsonComment);
 
-        return json;
+        return jsonComment;
     }
 
 
