@@ -33,7 +33,8 @@ public class MusicController {
     private SheetSongService sheetSongService;
 
 
-    // 添加歌曲（收藏） 把歌曲加入歌单
+    // 添加歌曲（收藏）
+    // 把歌曲加入歌单
     @GetMapping(value = "/api/addSong")
     @ResponseBody
     public JSONObject addSong(String sheetId, String songId) {
@@ -70,11 +71,25 @@ public class MusicController {
         return jsonObject;
     }
 
-    // 删除歌曲 把歌曲移出歌单
+    // 删除歌曲
+    // 把歌曲移出歌单
     @GetMapping(value = "/api/delSong")
     @ResponseBody
-    public String delSong() {
-        return "还没做";
+    public JSONObject delSong(String sheetId, String songId) {
+        JSONObject jsonObject = new JSONObject();
+        SheetSong sheetSong = sheetSongService.findBySheetIdSongId(sheetId, songId);
+        if (sheetSong == null){
+            jsonObject.put("code", ResultStatus.SHEET_SONG_NOT_EXIST.value());
+            jsonObject.put("data", ResultStatus.SHEET_SONG_NOT_EXIST.getReasonPhrase());
+            return jsonObject;
+        }else {
+            jsonObject.put("code", ResultStatus.SUCCESS.value());
+            JSONObject tmp = PackerController.transfromSheetSong(sheetSong);
+            jsonObject.put("data", tmp);
+            sheetSongService.deleteSheet(sheetSong);
+        }
+
+        return jsonObject;
     }
 
     // 获得歌曲信息 根据音乐代码获取音乐(用于播放等)
@@ -147,6 +162,7 @@ public class MusicController {
         return jsonObject;
     }
 
+    //
     @CrossOrigin
     @GetMapping(value = "/api/makeSongComment")
     @ResponseBody

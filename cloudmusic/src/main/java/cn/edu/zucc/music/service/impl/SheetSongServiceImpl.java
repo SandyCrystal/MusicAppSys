@@ -20,7 +20,7 @@ public class SheetSongServiceImpl implements SheetSongService {
 
     @Override
     public int deleteSheet(SheetSong sheet) {
-        return 0;
+        return sheetSongMapper.deleteByPrimaryKey(sheet.getSheetSongId());
     }
 
     @Override

@@ -42,6 +42,8 @@ public enum ResultStatus {
 
     ALBUM_NOT_EXIST(1407, "album not exist"),
 
+    SHEET_SONG_NOT_EXIST(1408, "sheet_song not exist"),
+
     //参数类型缺失
 
     PARAMETER_ILLEGAL(1501, "parameter illegal");

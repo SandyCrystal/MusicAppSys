@@ -19,7 +19,8 @@
   </select>
 
   <select id="selectBySheetIdSongId" resultMap="BaseResultMap" parameterType="java.lang.String" >
-    select sheet_song_id
+    select
+    <include refid="Base_Column_List" />
     from sheet_song
     where song_id = #{songId,jdbcType=INTEGER} and sheet_id = #{sheetId,jdbcType=INTEGER}
   </select>
