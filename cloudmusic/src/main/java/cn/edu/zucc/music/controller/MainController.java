@@ -26,6 +26,7 @@ public class MainController {
     private BannerService bannerService;
     @Autowired
     private GraphService graphService;
+
     // 登录
     @CrossOrigin
     @GetMapping(value = "/api/login")

@@ -30,11 +30,16 @@ public class MusicController {
     @Autowired
     private UserService userService;
 
-    // 添加歌曲 把歌曲加入歌单
+    // 添加歌曲（收藏） 把歌曲加入歌单
     @GetMapping(value = "/api/addSong")
     @ResponseBody
-    public String addSong() {
-        return "还没做";
+    public JSONObject addSong(String sheet_id, String song_id) {
+        JSONObject jsonObject = new JSONObject();
+
+
+
+
+        return jsonObject;
     }
 
     // 删除歌曲 把歌曲移出歌单
