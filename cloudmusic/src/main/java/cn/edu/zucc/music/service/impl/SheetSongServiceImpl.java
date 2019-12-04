@@ -39,7 +39,17 @@ public class SheetSongServiceImpl implements SheetSongService {
     }
 
     @Override
+    public SheetSong findBySheetIdSongId(String sheetId, String songId) {
+        return sheetSongMapper.selectBySheetIdSongId(sheetId, songId);
+    }
+
+    @Override
     public List<SheetSong> getSongsBySheetId(String sheet_id) {
         return sheetSongMapper.getSongsBySheetId(sheet_id);
+    }
+
+    @Override
+    public int getMaxSheetSongId(){
+        return sheetSongMapper.getMaxSheetSongId();
     }
 }

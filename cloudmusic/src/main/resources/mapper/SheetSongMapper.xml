@@ -6,22 +6,38 @@
     <result column="sheet_id" property="sheetId" jdbcType="VARCHAR" />
     <result column="song_id" property="songId" jdbcType="VARCHAR" />
   </resultMap>
+
   <sql id="Base_Column_List" >
     sheet_song_id, sheet_id, song_id
   </sql>
+
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
     select
     <include refid="Base_Column_List" />
     from sheet_song
     where sheet_song_id = #{sheetSongId,jdbcType=INTEGER}
   </select>
+
+  <select id="selectBySheetIdSongId" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select sheet_song_id
+    from sheet_song
+    where song_id = #{songId,jdbcType=INTEGER} and sheet_id = #{sheetId,jdbcType=INTEGER}
+  </select>
+
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
     delete from sheet_song
     where sheet_song_id = #{sheetSongId,jdbcType=INTEGER}
   </delete>
 
   <select id="getSongsBySheetId" resultMap="BaseResultMap" parameterType="java.lang.String">
-    SELECT * FROM sheet_song WHERE sheet_id = #{sheetId, jdbcType=VARCHAR}
+    SELECT *
+    FROM sheet_song
+    WHERE sheet_id = #{sheetId, jdbcType=VARCHAR}
+  </select>
+
+  <select id="getMaxSheetSongId" resultType="java.lang.Integer">
+    select max(sheet_song_id)
+    from sheet_song
   </select>
 
   <insert id="insert" parameterType="cn.edu.zucc.music.model.SheetSong" >
@@ -30,6 +46,7 @@
     values (#{sheetSongId,jdbcType=INTEGER}, #{sheetId,jdbcType=VARCHAR}, #{songId,jdbcType=VARCHAR}
       )
   </insert>
+
   <insert id="insertSelective" parameterType="cn.edu.zucc.music.model.SheetSong" >
     insert into sheet_song
     <trim prefix="(" suffix=")" suffixOverrides="," >
@@ -55,6 +72,7 @@
       </if>
     </trim>
   </insert>
+
   <update id="updateByPrimaryKeySelective" parameterType="cn.edu.zucc.music.model.SheetSong" >
     update sheet_song
     <set >
@@ -67,10 +85,13 @@
     </set>
     where sheet_song_id = #{sheetSongId,jdbcType=INTEGER}
   </update>
+
   <update id="updateByPrimaryKey" parameterType="cn.edu.zucc.music.model.SheetSong" >
     update sheet_song
     set sheet_id = #{sheetId,jdbcType=VARCHAR},
       song_id = #{songId,jdbcType=VARCHAR}
     where sheet_song_id = #{sheetSongId,jdbcType=INTEGER}
   </update>
+
+
 </mapper>

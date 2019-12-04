@@ -18,26 +18,54 @@ import java.util.List;
 @Controller
 public class MusicController {
     @Autowired
-    public SheetService sheetService;
+    private SheetService sheetService;
     @Autowired
-    public SongService songService;
+    private SongService songService;
     @Autowired
-    public AlbumService albumService;
+    private AlbumService albumService;
     @Autowired
     private ArtistService artistService;
     @Autowired
     private SongCommentService songCommentService;
     @Autowired
     private UserService userService;
+    @Autowired
+    private SheetSongService sheetSongService;
+
 
     // 添加歌曲（收藏） 把歌曲加入歌单
     @GetMapping(value = "/api/addSong")
     @ResponseBody
-    public JSONObject addSong(String sheet_id, String song_id) {
+    public JSONObject addSong(String sheetId, String songId) {
         JSONObject jsonObject = new JSONObject();
-
-
-
+        Sheet sheet = sheetService.findById(sheetId);
+        Song song = songService.findById(songId);
+        if (sheet == null){
+            jsonObject.put("code", ResultStatus.SHEET_NOT_EXIST.value());
+            jsonObject.put("data", ResultStatus.SHEET_NOT_EXIST.getReasonPhrase());
+            return jsonObject;
+        }
+        if (song == null){
+            jsonObject.put("code", ResultStatus.SONG_NOT_EXIST.value());
+            jsonObject.put("data", ResultStatus.SONG_NOT_EXIST.getReasonPhrase());
+            return jsonObject;
+        }
+        SheetSong sheetSong = sheetSongService.findBySheetIdSongId(sheetId, songId);
+        if (sheetSong != null){
+            jsonObject.put("code", ResultStatus.SHEET_SONG_ALREADY_EXISTS.value());
+            jsonObject.put("data", ResultStatus.SHEET_SONG_ALREADY_EXISTS.getReasonPhrase());
+            return jsonObject;
+        }else {
+            SheetSong sheetSongNew = new SheetSong();
+            sheetSongNew.setSheetId(sheetId);
+            sheetSongNew.setSongId(songId);
+            int sheetSongId = sheetSongService.getMaxSheetSongId() + 1;
+            sheetSongNew.setSheetSongId(sheetSongId);
+            sheetSongService.addSheet(sheetSongNew);
+            jsonObject.put("code", ResultStatus.SUCCESS.value());
+            JSONObject tmp = PackerController.transfromSheetSong(sheetSongNew);
+            jsonObject.put("data", tmp);
+        }
 
         return jsonObject;
     }

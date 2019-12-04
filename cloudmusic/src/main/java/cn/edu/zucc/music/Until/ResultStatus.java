@@ -27,7 +27,7 @@ public enum ResultStatus {
 
     UNKNOWN(999, "unknown"),       // 未知错误
 
-
+    SHEET_SONG_ALREADY_EXISTS(1301, "sheet_song already exists"),
 
     // 搜索结果不存在
     PERMISSION_DENIED(1402,"permission denied"),

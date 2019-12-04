@@ -230,4 +230,13 @@ public class PackerController {
         json.put("url", url);
         return json;
     }
+
+    public static JSONObject transfromSheetSong(SheetSong sheetSong){
+        JSONObject json = new JSONObject();
+        json.put("sheet_song_id", sheetSong.getSheetSongId());
+        json.put("sheet_id", sheetSong.getSheetId());
+        json.put("song_id", sheetSong.getSongId());
+
+        return json;
+    }
 }
