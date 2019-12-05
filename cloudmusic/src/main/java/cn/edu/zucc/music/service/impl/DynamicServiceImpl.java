@@ -37,4 +37,14 @@ public class DynamicServiceImpl implements DynamicService {
     public List<Dynamic> findAll() {
         return null;
     }
+
+    @Override
+    public List<Dynamic> getMostTenDynamic() {
+        return dynamicMapper.getMostTenDynamic();
+    }
+
+    @Override
+    public List<Dynamic> getDynamicByUserId(String user_id) {
+        return dynamicMapper.getDynamicByUserId(user_id);
+    }
 }

@@ -29,6 +29,10 @@
     where song_name like #{songName, jdbcType=VARCHAR}
   </select>
 
+  <select id="getSongByAlbumId" resultMap="BaseResultMap" parameterType="java.lang.String">
+    SELECT <include refid="Base_Column_List" /> FROM song WHERE album_id = #{albumId,jdbcType=VARCHAR}
+  </select>
+
   <select id="getYearSongCount" resultType="java.lang.Integer">
 -- SELECT COUNT(1) FROM song WHERE song.album_id IN (select album.album_id FROM album where album.publish_time between  '1970-1-1 00:00:00'  and '1971-1-1 00:00:00');
    SELECT COUNT(1) FROM song WHERE album_id IN (select album_id FROM album where publish_time between  #{start,jdbcType=VARCHAR}  and #{end,jdbcType=VARCHAR});

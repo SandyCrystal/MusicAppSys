@@ -1,10 +1,7 @@
 package cn.edu.zucc.music.controller;
 
 import cn.edu.zucc.music.Until.*;
-import cn.edu.zucc.music.model.Album;
-import cn.edu.zucc.music.model.Sheet;
-import cn.edu.zucc.music.model.Song;
-import cn.edu.zucc.music.model.User;
+import cn.edu.zucc.music.model.*;
 import cn.edu.zucc.music.service.*;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
@@ -13,6 +10,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -28,6 +26,8 @@ public class UserController {
     private AlbumService albumService;
     @Autowired
     private SheetService sheetService;
+    @Autowired
+    private FollowService followService;
 
     // 编辑个人资料：
     //      可以修改用户个人介绍等信息(除密码外等可修改内容)
@@ -148,71 +148,110 @@ public class UserController {
     // 关注用户
     @GetMapping(value = "/api/followUser")
     @ResponseBody
-    public String followUser() {
-        return "还没做";
+    public JSONObject followUser(String fromUserId, String toUserId) {
+        JSONObject jsonObject = new JSONObject();
+        Follow follow = followService.getFromMutual(fromUserId, toUserId);
+        if (follow != null){
+            jsonObject.put("code", ResultStatus.USER_ALREADY_FOLLOW_THIS_USER.value());
+            jsonObject.put("data", ResultStatus.USER_ALREADY_FOLLOW_THIS_USER.getReasonPhrase());
+            return jsonObject;
+        }else {
+            int followId = followService.getMaxFollowId()+1;
+            Follow newFollow = new Follow();
+            newFollow.setFollowId(followId);
+            newFollow.setFromUserId(fromUserId);
+            newFollow.setToUserId(toUserId);
+            followService.addFollow(newFollow);
+            JSONObject tmp = PackerController.transfromFollowToJson(newFollow);
+            jsonObject.put("code", ResultStatus.SUCCESS.value());
+            jsonObject.put("data", tmp);
+        }
+
+        return jsonObject;
     }
 
     // 取消关注用户
     @GetMapping(value = "/api/unfollowUser")
     @ResponseBody
-    public String unfollowUser() {
-        return "还没做";
-    }
-
-    // 查看已关注用户
-    @GetMapping(value = "/api/viewFollowUser")
-    @ResponseBody
-    public String viewFollowUser() {
-        return "还没做";
-    }
-
-    // 搜索歌曲
-    @GetMapping(value = "/api/searchSong")
-    @ResponseBody
-    public JSONObject searchSong(String songName) {
+    public JSONObject unfollowUser(String fromUserId, String toUserId) {
         JSONObject jsonObject = new JSONObject();
-        List<Song> songs =  songService.searchSongBySongName("%" + songName + "%");
-        if (songs.size()!=0){
+        Follow follow = followService.getFromMutual(fromUserId, toUserId);
+        if (follow == null){
+            jsonObject.put("code", ResultStatus.USER_NOT_FOLLOW_THIS_USER.value());
+            jsonObject.put("data", ResultStatus.USER_NOT_FOLLOW_THIS_USER.getReasonPhrase());
+            return jsonObject;
+        }else {
+            followService.deleteFollow(follow);
+            JSONObject tmp = PackerController.transfromFollowToJson(follow);
             jsonObject.put("code", ResultStatus.SUCCESS.value());
-            List<JSONObject> tmp = PackerController.transfromSongsToJson(songs);
             jsonObject.put("data", tmp);
-        }else{
-            jsonObject.put("code", ResultStatus.SONG_NOT_EXIST.value());
-            jsonObject.put("data", ResultStatus.SONG_NOT_EXIST.getReasonPhrase());
         }
         return jsonObject;
     }
 
-    // 搜索歌单
-    @GetMapping(value = "/api/searchSheet")
+    // 获取用户关注列表
+    @GetMapping(value = "/api/getFollowed")
     @ResponseBody
-    public JSONObject searchSheet(String sheetName) {
+    public JSONObject getFollowed(String fromUserId) {
         JSONObject jsonObject = new JSONObject();
-        List<Sheet> sheets =  sheetService.searchSheetBySheetName("%" + sheetName + "%");
-        if (sheets.size()!=0){
-            jsonObject.put("code", ResultStatus.SUCCESS.value());
-            List<JSONObject> tmp = PackerController.transfromSheetsToJson(sheets);
-            jsonObject.put("data", tmp);
+        List<Follow> follows = followService.getFollowedUsers(fromUserId);
+        if (follows.size()==0){
+            jsonObject.put("code", ResultStatus.USER_NEVER_FOLLOW.value());
+            jsonObject.put("data", ResultStatus.USER_NEVER_FOLLOW.getReasonPhrase());
+            return jsonObject;
         }else{
-            jsonObject.put("code", ResultStatus.SHEET_NOT_EXIST.value());
-            jsonObject.put("data", ResultStatus.SHEET_NOT_EXIST.getReasonPhrase());
+            List<User> users = new ArrayList<>();
+            List<Boolean> isMutuals = new ArrayList<>();
+            for (Follow follow: follows) {
+                String userid = follow.getToUserId();
+                Follow mutual = followService.getFromMutual(follow.getToUserId(), follow.getFromUserId());
+                if (mutual == null){
+                    isMutuals.add(Boolean.FALSE);
+                }else {
+                    isMutuals.add(Boolean.TRUE);
+                }
+                User user = userService.findById(userid);
+                users.add(user);
+            }
+            List<JSONObject> data = PackerController.transfromUsersToJson(users, isMutuals);
+
+            jsonObject.put("code", ResultStatus.SUCCESS.value());
+            jsonObject.put("data", data);
+            jsonObject.put("total", users.size());
         }
+
         return jsonObject;
     }
 
-    // 搜索专辑
-    @GetMapping(value = "/api/searchAlbum")
+    // 查看粉丝列表（已关注用户）
+    @GetMapping(value = "/api/getFans")
     @ResponseBody
-    public JSONObject searchAlbum(String albumName) {
+    public JSONObject getFans(String toUserId) {
         JSONObject jsonObject = new JSONObject();
-        List<Album> albums =  albumService.searchAlbumByAlbumName("%" + albumName + "%");
-        if (albums.size()!=0){
-            jsonObject.put("code", ResultStatus.SUCCESS.value());
-            List<JSONObject> tmp = PackerController.transfromAlbumsToJson(albums);
-            jsonObject.put("data", tmp);
+        List<Follow> follows = followService.getFansUsers(toUserId);
+        if (follows.size()==0){
+            jsonObject.put("code", ResultStatus.USER_NEVER_BE_FOLLOWED.value());
+            jsonObject.put("data", ResultStatus.USER_NEVER_BE_FOLLOWED.getReasonPhrase());
+            return jsonObject;
         }else{
-            jsonObject.put("code", ResultStatus.ALBUM_NOT_EXIST.value());
-            jsonObject.put("data", ResultStatus.ALBUM_NOT_EXIST.getReasonPhrase());
+            List<User> users = new ArrayList<>();
+            List<Boolean> isMutuals = new ArrayList<>();
+            for (Follow follow: follows) {
+                String userid = follow.getFromUserId();
+                Follow mutual = followService.getFromMutual(follow.getToUserId(), follow.getFromUserId());
+                if (mutual == null){
+                    isMutuals.add(Boolean.FALSE);
+                }else {
+                    isMutuals.add(Boolean.TRUE);
+                }
+                User user = userService.findById(userid);
+                users.add(user);
+            }
+            List<JSONObject> data = PackerController.transfromUsersToJson(users, isMutuals);
+
+            jsonObject.put("code", ResultStatus.SUCCESS.value());
+            jsonObject.put("data", data);
+            jsonObject.put("total", users.size());
         }
         return jsonObject;
     }

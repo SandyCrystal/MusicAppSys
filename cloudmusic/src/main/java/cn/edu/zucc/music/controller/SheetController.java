@@ -40,10 +40,9 @@ public class SheetController {
         String id = sheetService.findMaxSheetId();
         String sheet_id = String.valueOf(Integer.parseInt(id)+1);
         Date date = new Date();
-
+        sheet.setSheetPicUrl("http://p2.music.126.net/thk687j27THlDlfSP6nJtQ==/19087521858479839.jpg");
         sheet.setSheetId(sheet_id);
         sheet.setSheetName(sheetname);
-        sheet.setSheetPicUrl(null);
         sheet.setPlayCount(0);
         sheet.setSheetType(1);
         sheet.setCreateTime(date);
@@ -141,11 +140,16 @@ public class SheetController {
         JSONObject jsonObject = new JSONObject();
         User user = userService.findById(user_id);
         List<Sheet> list = sheetService.findByUserID(user_id);
+        int[] tracksCount=new int[list.size()];
+        for (int i=0;i<list.size();i++){
+            tracksCount[i]=sheetSongService.getSongsBySheetId(list.get(i).getSheetId()).size();
+        }
         if(user.getUserId().equals("") || user.getUserId()==null || list.size()==0) {
             jsonObject.put("code", 666);
             jsonObject.put("data", null);
         } else {
-            List<JSONObject> data = PackerController.transformPersonalSheetToJson(list, user);
+
+            List<JSONObject> data = PackerController.transformPersonalSheetToJson(list, user,tracksCount);
             jsonObject.put("code", 200);
             jsonObject.put("data", data);
         }

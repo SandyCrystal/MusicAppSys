@@ -12,4 +12,6 @@ public interface DynamicService {
     int updateDynamic(Dynamic comment);
     Dynamic findById(int id);
     List<Dynamic> findAll();
+    List<Dynamic> getMostTenDynamic();
+    List<Dynamic> getDynamicByUserId(String user_id);
 }

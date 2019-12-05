@@ -1,6 +1,9 @@
 package cn.edu.zucc.music.controller;
 
+import cn.edu.zucc.music.Until.JsonUtil;
 import cn.edu.zucc.music.model.*;
+import cn.edu.zucc.music.service.AlbumService;
+import cn.edu.zucc.music.service.SheetSongService;
 import cn.edu.zucc.music.service.UserService;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
@@ -9,6 +12,8 @@ import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.io.IOException;
 import java.io.Reader;
@@ -16,6 +21,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class PackerController {
+    @Autowired
+    private SheetSongService sheetSongService;
+    @Autowired
+    private UserService userService;
+
     public static JSONObject transformSheetToJson(Sheet sheet, User user) {
         JSONObject json = new JSONObject();
         json.put("id", sheet.getSheetId());
@@ -44,6 +54,23 @@ public class PackerController {
             json.put("create_time", user.getCreateTime().getTime());
         json.put("introduction", user.getIntroduction());
         return json;
+    }
+
+    public static List<JSONObject> transfromUsersToJson(List<User> users, List<Boolean> isMutuals){
+        List<JSONObject> lists = new ArrayList<JSONObject>();
+        for(int i=0; i<users.size(); i++){
+            JSONObject tmp = new JSONObject();
+            tmp.put("user_id", users.get(i).getUserId());
+            tmp.put("user_name", users.get(i).getUserName());
+            tmp.put("avatar_url", users.get(i).getAvatarUrl());
+            tmp.put("user_type", users.get(i).getUserType());
+            tmp.put("create_time", users.get(i).getCreateTime());
+            tmp.put("introduction", users.get(i).getIntroduction());
+            tmp.put("is_followed", isMutuals.get(i));
+            lists.add(tmp);
+        }
+
+        return lists;
     }
 
     public static JSONObject transformSongToJson(Song song, Album album, Artist artist) {
@@ -138,14 +165,17 @@ public class PackerController {
         return list;
     }
 
-    public static List<JSONObject> transformPersonalSheetToJson(List<Sheet> Sheets, User user) {
+    public static List<JSONObject> transformPersonalSheetToJson(List<Sheet> Sheets, User user,int[] trackCount) {
         List<JSONObject> list = new ArrayList<JSONObject>();
+        int coun=0;
         for(Sheet sheet : Sheets) {
             JSONObject tmp = new JSONObject();
             tmp.put("id", sheet.getSheetId());
             tmp.put("name", sheet.getSheetName());
             tmp.put("picUrl", sheet.getSheetPicUrl());
             tmp.put("createTime", sheet.getCreateTime().getTime());
+            tmp.put("trackCount",trackCount[coun]);
+            coun++;
             tmp.put("creator", transformUserToJson(user));
             list.add(tmp);
         }
@@ -179,16 +209,21 @@ public class PackerController {
         return jsonComment;
     }
 
-
-    public static List<JSONObject> transfromSongsToJson(List<Song> songs){
+    public static List<JSONObject> transfromSongsToJson(List<Song> songs,List<Album> albums,List<Artist> artists,int len){
         List<JSONObject> list = new ArrayList<JSONObject>();
-        for(Song song : songs) {
+        for(int i=0;i< len;i++) {
+            Song song=songs.get(i);
+            Album album=albums.get(i);
+            Artist artist=artists.get(i);
             JSONObject tmp = new JSONObject();
-            tmp.put("song_id", song.getSongId());
-            tmp.put("song_name", song.getSongName());
-            tmp.put("album_id", song.getAlbumId());
-            tmp.put("artist", song.getArtistId());
-            tmp.put("comment_count", song.getCommentCount());
+            JSONObject albumjson=new JSONObject();
+            albumjson.put("id",album.getAlbumId());
+            albumjson.put("name",album.getAlbumName());
+            albumjson.put("picUrl",album.getAlbumPicUrl());
+            tmp.put("id", song.getSongId());
+            tmp.put("name", song.getSongName());
+            tmp.put("album", albumjson);
+            tmp.put("artist", artist.getArtistName());
             list.add(tmp);
         }
 
@@ -244,6 +279,76 @@ public class PackerController {
         json.put("sheet_id", sheetSong.getSheetId());
         json.put("song_id", sheetSong.getSongId());
 
+        return json;
+    }
+
+    public static List<JSONObject> transformDynamicToJson(List<Dynamic> dynamics, List<User> users) {
+        List<JSONObject> list = new ArrayList<JSONObject>();
+        for(int i = 0; i < dynamics.size(); i++) {
+            JSONObject json = new JSONObject();
+            Dynamic dynamic = dynamics.get(i);
+            User user = users.get(i);
+            json.put("dynamic_id", dynamic.getDynamicId());
+            json.put("content", dynamic.getIntroducion());
+            json.put("pic_url", dynamic.getDynamicPath());
+            json.put("create_time", dynamic.getCreateTime().toString());
+            json.put("like_count", dynamic.getLikeCount());
+            json.put("user", transformUserToJson(user));
+            list.add(json);
+        }
+
+        return list;
+    }
+
+    public static JSONObject transformArtistToJson(Artist artist) {
+        JSONObject json = new JSONObject();
+        json.put("artist_id", artist.getArtistId());
+        json.put("artist_name", artist.getArtistName());
+        json.put("artist_pic_url", artist.getArtistPicUrl());
+
+        return json;
+    }
+
+    public static List<JSONObject> transformSongsToJson(List<Song> songs, JSONObject jsonAlbum, List<Artist> artists) {
+        List<JSONObject> json = new ArrayList<JSONObject>();
+        for(int i = 0; i < songs.size(); i++) {
+            Song song = songs.get(i);
+            Artist artist = artists.get(i);
+            JSONObject jsonTmp = new JSONObject();
+            jsonTmp.put("id", song.getSongId());
+            jsonTmp.put("name", song.getSongName());
+            jsonTmp.put("artist", artist.getArtistName());
+            jsonTmp.put("album", jsonAlbum);
+            json.add(jsonTmp);
+        }
+
+        return json;
+    }
+
+    public static List<JSONObject> transformAlbumsToJSON(List<Album> albums, List<Artist> artists) {
+        List<JSONObject> list = new ArrayList<JSONObject>();
+        for(int i = 0; i < albums.size(); i++) {
+            Album album = albums.get(i);
+            Artist artist = artists.get(i);
+            JSONObject json = new JSONObject();
+
+            json.put("id", album.getAlbumId());
+            json.put("name", album.getAlbumName());
+            json.put("picUrl", album.getAlbumPicUrl());
+            json.put("publishTime", album.getPublishTime().getTime());
+            json.put("artist", transformArtistToJson(artist));
+
+            list.add(json);
+        }
+
+        return list;
+    }
+
+    public static JSONObject transfromFollowToJson(Follow follow){
+        JSONObject json = new JSONObject();
+        json.put("follow_id", follow.getFollowId());
+        json.put("from_user_id", follow.getFromUserId());
+        json.put("to_user_id", follow.getToUserId());
         return json;
     }
 }

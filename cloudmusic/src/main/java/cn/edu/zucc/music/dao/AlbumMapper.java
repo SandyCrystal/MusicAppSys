@@ -21,4 +21,6 @@ public interface AlbumMapper {
     int updateByPrimaryKeySelective(Album record);
 
     int updateByPrimaryKey(Album record);
+
+    List<Album> getTwentyAlbums();
 }

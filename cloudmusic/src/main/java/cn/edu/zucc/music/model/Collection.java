@@ -3,20 +3,22 @@ package cn.edu.zucc.music.model;
 import java.io.Serializable;
 
 public class Collection implements Serializable {
-    private Integer collection;
+    private Integer collectionId;
 
     private String userId;
 
-    private String sheetId;
+    private String beCollectionedId;
+
+    private Integer collectionType;
 
     private static final long serialVersionUID = 1L;
 
-    public Integer getCollection() {
-        return collection;
+    public Integer getCollectionId() {
+        return collectionId;
     }
 
-    public void setCollection(Integer collection) {
-        this.collection = collection;
+    public void setCollectionId(Integer collectionId) {
+        this.collectionId = collectionId;
     }
 
     public String getUserId() {
@@ -27,12 +29,20 @@ public class Collection implements Serializable {
         this.userId = userId == null ? null : userId.trim();
     }
 
-    public String getSheetId() {
-        return sheetId;
+    public String getBeCollectionedId() {
+        return beCollectionedId;
     }
 
-    public void setSheetId(String sheetId) {
-        this.sheetId = sheetId == null ? null : sheetId.trim();
+    public void setBeCollectionedId(String beCollectionedId) {
+        this.beCollectionedId = beCollectionedId == null ? null : beCollectionedId.trim();
+    }
+
+    public Integer getCollectionType() {
+        return collectionType;
+    }
+
+    public void setCollectionType(Integer collectionType) {
+        this.collectionType = collectionType;
     }
 
     @Override
@@ -41,9 +51,10 @@ public class Collection implements Serializable {
         sb.append(getClass().getSimpleName());
         sb.append(" [");
         sb.append("Hash = ").append(hashCode());
-        sb.append(", collection=").append(collection);
+        sb.append(", collectionId=").append(collectionId);
         sb.append(", userId=").append(userId);
-        sb.append(", sheetId=").append(sheetId);
+        sb.append(", beCollectionedId=").append(beCollectionedId);
+        sb.append(", collectionType=").append(collectionType);
         sb.append(", serialVersionUID=").append(serialVersionUID);
         sb.append("]");
         return sb.toString();

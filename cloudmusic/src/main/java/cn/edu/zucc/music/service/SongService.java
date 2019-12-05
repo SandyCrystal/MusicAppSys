@@ -14,5 +14,5 @@ public interface SongService {
     List<Song> selectTenSongs();
     List<Song> findAll();
     List<Song> searchSongBySongName(String songName);
-
+    List<Song> getSongByAlbumId(String albumId);
 }

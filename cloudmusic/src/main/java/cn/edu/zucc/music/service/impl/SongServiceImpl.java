@@ -48,4 +48,9 @@ public class SongServiceImpl implements SongService {
     public List<Song> selectTenSongs() {
         return songMapper.selectTenSongs();
     }
+
+    @Override
+    public List<Song> getSongByAlbumId(String albumId) {
+        return songMapper.getSongByAlbumId(albumId);
+    }
 }

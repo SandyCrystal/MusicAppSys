@@ -9,6 +9,8 @@ public enum ResultStatus {
     USER_PWD_COMFIRM_ERROR(302, "pwd comfirm error"),
     USER_NOT_EXISTS(303, "user not exists"),
     USER_INFO_NOT_CHANGED(304, "user info not changed"),
+    USER_ALREADY_FOLLOW_THIS_USER(305, "user already follow this user"),
+    USER_NOT_FOLLOW_THIS_USER(306, "user not follow this user"),
 
     // 上传图片
     UPLOAD_PIC_ERROR(401, "upload pic error"),
@@ -43,6 +45,10 @@ public enum ResultStatus {
     ALBUM_NOT_EXIST(1407, "album not exist"),
 
     SHEET_SONG_NOT_EXIST(1408, "sheet_song not exist"),
+
+    USER_NEVER_FOLLOW(1409, "user never follow"),
+
+    USER_NEVER_BE_FOLLOWED(1410, "user never be followed"),
 
     //参数类型缺失
 
