@@ -14,13 +14,13 @@ public class DynamicServiceImpl implements DynamicService {
     @Resource
     private DynamicMapper dynamicMapper;
     @Override
-    public int addDynamic(Dynamic comment) {
-        return 0;
+    public int addDynamic(Dynamic dynamic) {
+        return dynamicMapper.insert(dynamic);
     }
 
     @Override
-    public int deleteDynamic(Dynamic comment) {
-        return 0;
+    public int deleteDynamic(Dynamic dynamic) {
+        return dynamicMapper.deleteByPrimaryKey(dynamic.getDynamicId());
     }
 
     @Override
@@ -47,4 +47,9 @@ public class DynamicServiceImpl implements DynamicService {
     public List<Dynamic> getDynamicByUserId(String user_id) {
         return dynamicMapper.getDynamicByUserId(user_id);
     }
+
+    @Override
+    public int getMaxDynamicId(){
+        return dynamicMapper.getMaxDynamicId();
+    };
 }

@@ -351,4 +351,15 @@ public class PackerController {
         json.put("to_user_id", follow.getToUserId());
         return json;
     }
+
+    public static JSONObject transformTheDynamicToJson(Dynamic dynamic, User user) {
+        JSONObject json = new JSONObject();
+        json.put("dynamic_id", dynamic.getDynamicId());
+        json.put("content", dynamic.getIntroducion());
+        json.put("pic_url", dynamic.getDynamicPath());
+        json.put("create_time", dynamic.getCreateTime().toString());
+        json.put("like_count", dynamic.getLikeCount());
+        json.put("user", transformUserToJson(user));
+        return json;
+    }
 }

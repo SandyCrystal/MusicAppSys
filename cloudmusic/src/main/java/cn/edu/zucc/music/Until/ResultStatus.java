@@ -50,6 +50,8 @@ public enum ResultStatus {
 
     USER_NEVER_BE_FOLLOWED(1410, "user never be followed"),
 
+    DYNAMIC_NOT_EXIST(1411, "dynamic not exist"),
+
     //参数类型缺失
 
     PARAMETER_ILLEGAL(1501, "parameter illegal");
