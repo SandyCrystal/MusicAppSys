@@ -196,4 +196,44 @@ public class MusicController {
 
         return json;
     }
+
+    @CrossOrigin
+    @GetMapping(value = "/api/getAlbumDetails")
+    @ResponseBody
+    public JSONObject getAlbumDetails(String album_id) {
+        JSONObject json = new JSONObject();
+        Album album = albumService.findById(album_id);
+        if(album==null) {
+            json.put("code", 666);
+            json.put("data", null);
+        } else {
+            JSONObject jsonData = new JSONObject();
+            List<JSONObject> jsonSong = new ArrayList<JSONObject>();
+            JSONObject jsonAlbum = new JSONObject();
+
+            jsonAlbum.put("id", album.getAlbumId());
+            jsonAlbum.put("name", album.getAlbumName());
+            jsonAlbum.put("picUrl", album.getAlbumPicUrl());
+
+            List<Song> songs = songService.getSongByAlbumId(album_id);
+            List<Artist> artists = new ArrayList<Artist>();
+            for(Song song : songs) {
+                Artist artist = artistService.findById(song.getArtistId());
+                artists.add(artist);
+            }
+            jsonSong = PackerController.transformSongsToJson(songs, jsonAlbum, artists);
+
+            jsonData.put("id", album.getAlbumId());
+            jsonData.put("name", album.getAlbumName());
+            Artist artist = artistService.findById(album.getArtistId());
+            jsonData.put("artist", PackerController.transformArtistToJson(artist));
+            jsonData.put("picurl", album.getAlbumPicUrl());
+            jsonData.put("songs", jsonSong);
+
+            json.put("code", 200);
+            json.put("data", jsonData);
+        }
+
+        return json;
+    }
 }

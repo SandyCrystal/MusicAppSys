@@ -29,8 +29,5 @@ public interface SongMapper {
     //    Integer getYearSongCount();
     java.lang.Integer getYearSongCount(@Param("start") String start,@Param("end") String end);
 
-
-
-
-
+    List<Song> getSongByAlbumId(String albumId);
 }
