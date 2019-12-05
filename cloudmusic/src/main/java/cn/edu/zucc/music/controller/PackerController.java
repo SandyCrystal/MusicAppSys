@@ -261,8 +261,8 @@ public class PackerController {
 
     public static List<JSONObject> transformDynamicToJson(List<Dynamic> dynamics, List<User> users) {
         List<JSONObject> list = new ArrayList<JSONObject>();
-        JSONObject json = new JSONObject();
         for(int i = 0; i < dynamics.size(); i++) {
+            JSONObject json = new JSONObject();
             Dynamic dynamic = dynamics.get(i);
             User user = users.get(i);
             json.put("dynamic_id", dynamic.getDynamicId());
