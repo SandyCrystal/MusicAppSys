@@ -192,15 +192,21 @@ public class PackerController {
     }
 
 
-    public static List<JSONObject> transfromSongsToJson(List<Song> songs){
+    public static List<JSONObject> transfromSongsToJson(List<Song> songs,List<Album> albums,List<Artist> artists,int len){
         List<JSONObject> list = new ArrayList<JSONObject>();
-        for(Song song : songs) {
+        for(int i=0;i< len;i++) {
+            Song song=songs.get(i);
+            Album album=albums.get(i);
+            Artist artist=artists.get(i);
             JSONObject tmp = new JSONObject();
-            tmp.put("song_id", song.getSongId());
-            tmp.put("song_name", song.getSongName());
-            tmp.put("album_id", song.getAlbumId());
-            tmp.put("artist", song.getArtistId());
-            tmp.put("comment_count", song.getCommentCount());
+            JSONObject albumjson=new JSONObject();
+            albumjson.put("id",album.getAlbumId());
+            albumjson.put("name",album.getAlbumName());
+            albumjson.put("picUrl",album.getAlbumPicUrl());
+            tmp.put("id", song.getSongId());
+            tmp.put("name", song.getSongName());
+            tmp.put("album", albumjson);
+            tmp.put("artist", artist.getArtistName());
             list.add(tmp);
         }
 
@@ -312,7 +318,7 @@ public class PackerController {
             json.put("id", album.getAlbumId());
             json.put("name", album.getAlbumName());
             json.put("picUrl", album.getAlbumPicUrl());
-            json.put("createTime", album.getPublishTime().getTime());
+            json.put("publishTime", album.getPublishTime().getTime());
             json.put("artist", transformArtistToJson(artist));
 
             list.add(json);

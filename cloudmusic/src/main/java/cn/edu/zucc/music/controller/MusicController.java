@@ -64,8 +64,7 @@ public class MusicController {
             sheetSongNew.setSheetSongId(sheetSongId);
             sheetSongService.addSheet(sheetSongNew);
             jsonObject.put("code", ResultStatus.SUCCESS.value());
-            JSONObject tmp = PackerController.transfromSheetSong(sheetSongNew);
-            jsonObject.put("data", tmp);
+            jsonObject.put("data", "添加成功");
         }
 
         return jsonObject;
@@ -84,8 +83,7 @@ public class MusicController {
             return jsonObject;
         }else {
             jsonObject.put("code", ResultStatus.SUCCESS.value());
-            JSONObject tmp = PackerController.transfromSheetSong(sheetSong);
-            jsonObject.put("data", tmp);
+            jsonObject.put("data", 1);
             sheetSongService.deleteSheet(sheetSong);
         }
 
@@ -196,7 +194,7 @@ public class MusicController {
 
         return json;
     }
-
+    @Cacheable(value = "getAlbumDetails")
     @CrossOrigin
     @GetMapping(value = "/api/getAlbumDetails")
     @ResponseBody
@@ -218,7 +216,7 @@ public class MusicController {
             List<Song> songs = songService.getSongByAlbumId(album_id);
             List<Artist> artists = new ArrayList<Artist>();
             for(Song song : songs) {
-                Artist artist = artistService.findById(song.getArtistId());
+                Artist artist = artistService.findById(album.getArtistId());
                 artists.add(artist);
             }
             jsonSong = PackerController.transformSongsToJson(songs, jsonAlbum, artists);
@@ -236,7 +234,7 @@ public class MusicController {
 
         return json;
     }
-
+    @Cacheable(value = "getAlbumList")
     @CrossOrigin
     @GetMapping(value = "/api/getAlbumList")
     @ResponseBody
@@ -253,7 +251,69 @@ public class MusicController {
 
         json.put("code", 200);
         json.put("data", data);
-
+        json.put("total",data.size());
         return json;
+    }
+    // 搜索歌曲
+    @GetMapping(value = "/api/searchSong")
+    @ResponseBody
+    public JSONObject searchSong(String keywords) {
+        JSONObject jsonObject = new JSONObject();
+        List<Song> songs =  songService.searchSongBySongName("%" + keywords + "%");
+        if (songs.size()!=0){
+            jsonObject.put("code", ResultStatus.SUCCESS.value());
+            List<Artist> artists=new ArrayList<>();
+            List<Album> albums=new ArrayList<>();
+            int len;
+            if (songs.size()>10){
+                len=10;
+            }else len=songs.size();
+            for(int i=0;i<len;i++){
+                Song song=songs.get(i);
+                Album album=albumService.findById(song.getAlbumId());
+                albums.add(album);
+                artists.add(artistService.findById(album.getArtistId()));
+            }
+            List<JSONObject> tmp = PackerController.transfromSongsToJson(songs,albums,artists,len);
+            jsonObject.put("data", tmp);
+        }else{
+            jsonObject.put("code", ResultStatus.SONG_NOT_EXIST.value());
+            jsonObject.put("data", ResultStatus.SONG_NOT_EXIST.getReasonPhrase());
+        }
+        return jsonObject;
+    }
+
+    // 搜索歌单
+    @GetMapping(value = "/api/searchSheet")
+    @ResponseBody
+    public JSONObject searchSheet(String sheetName) {
+        JSONObject jsonObject = new JSONObject();
+        List<Sheet> sheets =  sheetService.searchSheetBySheetName("%" + sheetName + "%");
+        if (sheets.size()!=0){
+            jsonObject.put("code", ResultStatus.SUCCESS.value());
+            List<JSONObject> tmp = PackerController.transfromSheetsToJson(sheets);
+            jsonObject.put("data", tmp);
+        }else{
+            jsonObject.put("code", ResultStatus.SHEET_NOT_EXIST.value());
+            jsonObject.put("data", ResultStatus.SHEET_NOT_EXIST.getReasonPhrase());
+        }
+        return jsonObject;
+    }
+
+    // 搜索专辑
+    @GetMapping(value = "/api/searchAlbum")
+    @ResponseBody
+    public JSONObject searchAlbum(String albumName) {
+        JSONObject jsonObject = new JSONObject();
+        List<Album> albums =  albumService.searchAlbumByAlbumName("%" + albumName + "%");
+        if (albums.size()!=0){
+            jsonObject.put("code", ResultStatus.SUCCESS.value());
+            List<JSONObject> tmp = PackerController.transfromAlbumsToJson(albums);
+            jsonObject.put("data", tmp);
+        }else{
+            jsonObject.put("code", ResultStatus.ALBUM_NOT_EXIST.value());
+            jsonObject.put("data", ResultStatus.ALBUM_NOT_EXIST.getReasonPhrase());
+        }
+        return jsonObject;
     }
 }

@@ -1,10 +1,7 @@
 package cn.edu.zucc.music.controller;
 
 import cn.edu.zucc.music.Until.*;
-import cn.edu.zucc.music.model.Album;
-import cn.edu.zucc.music.model.Sheet;
-import cn.edu.zucc.music.model.Song;
-import cn.edu.zucc.music.model.User;
+import cn.edu.zucc.music.model.*;
 import cn.edu.zucc.music.service.*;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
@@ -13,6 +10,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -166,54 +164,5 @@ public class UserController {
         return "还没做";
     }
 
-    // 搜索歌曲
-    @GetMapping(value = "/api/searchSong")
-    @ResponseBody
-    public JSONObject searchSong(String songName) {
-        JSONObject jsonObject = new JSONObject();
-        List<Song> songs =  songService.searchSongBySongName("%" + songName + "%");
-        if (songs.size()!=0){
-            jsonObject.put("code", ResultStatus.SUCCESS.value());
-            List<JSONObject> tmp = PackerController.transfromSongsToJson(songs);
-            jsonObject.put("data", tmp);
-        }else{
-            jsonObject.put("code", ResultStatus.SONG_NOT_EXIST.value());
-            jsonObject.put("data", ResultStatus.SONG_NOT_EXIST.getReasonPhrase());
-        }
-        return jsonObject;
-    }
 
-    // 搜索歌单
-    @GetMapping(value = "/api/searchSheet")
-    @ResponseBody
-    public JSONObject searchSheet(String sheetName) {
-        JSONObject jsonObject = new JSONObject();
-        List<Sheet> sheets =  sheetService.searchSheetBySheetName("%" + sheetName + "%");
-        if (sheets.size()!=0){
-            jsonObject.put("code", ResultStatus.SUCCESS.value());
-            List<JSONObject> tmp = PackerController.transfromSheetsToJson(sheets);
-            jsonObject.put("data", tmp);
-        }else{
-            jsonObject.put("code", ResultStatus.SHEET_NOT_EXIST.value());
-            jsonObject.put("data", ResultStatus.SHEET_NOT_EXIST.getReasonPhrase());
-        }
-        return jsonObject;
-    }
-
-    // 搜索专辑
-    @GetMapping(value = "/api/searchAlbum")
-    @ResponseBody
-    public JSONObject searchAlbum(String albumName) {
-        JSONObject jsonObject = new JSONObject();
-        List<Album> albums =  albumService.searchAlbumByAlbumName("%" + albumName + "%");
-        if (albums.size()!=0){
-            jsonObject.put("code", ResultStatus.SUCCESS.value());
-            List<JSONObject> tmp = PackerController.transfromAlbumsToJson(albums);
-            jsonObject.put("data", tmp);
-        }else{
-            jsonObject.put("code", ResultStatus.ALBUM_NOT_EXIST.value());
-            jsonObject.put("data", ResultStatus.ALBUM_NOT_EXIST.getReasonPhrase());
-        }
-        return jsonObject;
-    }
 }
