@@ -236,4 +236,24 @@ public class MusicController {
 
         return json;
     }
+
+    @CrossOrigin
+    @GetMapping(value = "/api/getAlbumList")
+    @ResponseBody
+    public JSONObject getAlbumList() {
+        JSONObject json = new JSONObject();
+
+        List<Album> albums = albumService.getTwentyAlbums();
+        List<Artist> artists = new ArrayList<Artist>();
+        for(Album album : albums) {
+            Artist artist = artistService.findById(album.getArtistId());
+            artists.add(artist);
+        }
+        List<JSONObject> data = PackerController.transformAlbumsToJSON(albums, artists);
+
+        json.put("code", 200);
+        json.put("data", data);
+
+        return json;
+    }
 }

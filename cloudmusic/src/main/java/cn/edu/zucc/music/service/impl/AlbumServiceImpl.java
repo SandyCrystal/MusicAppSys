@@ -41,4 +41,9 @@ public class AlbumServiceImpl implements AlbumService {
     public List<Album> findAll() {
         return null;
     }
+
+    @Override
+    public List<Album> getTwentyAlbums() {
+        return albumMapper.getTwentyAlbums();
+    }
 }

@@ -25,6 +25,10 @@
     where album_id = #{albumId,jdbcType=VARCHAR}
   </select>
 
+  <select id="getTwentyAlbums" resultMap="BaseResultMap">
+    SELECT <include refid="Base_Column_List" /> FROM album ORDER BY rand() limit 20
+  </select>
+
   <select id="selectAlbumByAlbumName" resultMap="BaseResultMap" parameterType="java.lang.String">
     select
     <include refid="Base_Column_List" />

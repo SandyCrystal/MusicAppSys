@@ -301,4 +301,23 @@ public class PackerController {
 
         return json;
     }
+
+    public static List<JSONObject> transformAlbumsToJSON(List<Album> albums, List<Artist> artists) {
+        List<JSONObject> list = new ArrayList<JSONObject>();
+        for(int i = 0; i < albums.size(); i++) {
+            Album album = albums.get(i);
+            Artist artist = artists.get(i);
+            JSONObject json = new JSONObject();
+
+            json.put("id", album.getAlbumId());
+            json.put("name", album.getAlbumName());
+            json.put("picUrl", album.getAlbumPicUrl());
+            json.put("createTime", album.getPublishTime().getTime());
+            json.put("artist", transformArtistToJson(artist));
+
+            list.add(json);
+        }
+
+        return list;
+    }
 }

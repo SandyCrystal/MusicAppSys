@@ -13,4 +13,5 @@ public interface AlbumService {
     Album findById(String id);
     List<Album> findAll();
     List<Album> searchAlbumByAlbumName(String albumName);
+    List<Album> getTwentyAlbums();
 }
