@@ -2,51 +2,58 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="cn.edu.zucc.music.dao.CollectionMapper" >
   <resultMap id="BaseResultMap" type="cn.edu.zucc.music.model.Collection" >
-    <id column="collection" property="collection" jdbcType="INTEGER" />
+    <id column="collection_id" property="collectionId" jdbcType="INTEGER" />
     <result column="user_id" property="userId" jdbcType="VARCHAR" />
-    <result column="sheet_id" property="sheetId" jdbcType="VARCHAR" />
+    <result column="be_collectioned_id" property="beCollectionedId" jdbcType="VARCHAR" />
+    <result column="collection_type" property="collectionType" jdbcType="INTEGER" />
   </resultMap>
   <sql id="Base_Column_List" >
-    collection, user_id, sheet_id
+    collection_id, user_id, be_collectioned_id, collection_type
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
     select 
     <include refid="Base_Column_List" />
     from collection
-    where collection = #{collection,jdbcType=INTEGER}
+    where collection_id = #{collectionId,jdbcType=INTEGER}
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
     delete from collection
-    where collection = #{collection,jdbcType=INTEGER}
+    where collection_id = #{collectionId,jdbcType=INTEGER}
   </delete>
   <insert id="insert" parameterType="cn.edu.zucc.music.model.Collection" >
-    insert into collection (collection, user_id, sheet_id
-      )
-    values (#{collection,jdbcType=INTEGER}, #{userId,jdbcType=VARCHAR}, #{sheetId,jdbcType=VARCHAR}
-      )
+    insert into collection (collection_id, user_id, be_collectioned_id, 
+      collection_type)
+    values (#{collectionId,jdbcType=INTEGER}, #{userId,jdbcType=VARCHAR}, #{beCollectionedId,jdbcType=VARCHAR}, 
+      #{collectionType,jdbcType=INTEGER})
   </insert>
   <insert id="insertSelective" parameterType="cn.edu.zucc.music.model.Collection" >
     insert into collection
     <trim prefix="(" suffix=")" suffixOverrides="," >
-      <if test="collection != null" >
-        collection,
+      <if test="collectionId != null" >
+        collection_id,
       </if>
       <if test="userId != null" >
         user_id,
       </if>
-      <if test="sheetId != null" >
-        sheet_id,
+      <if test="beCollectionedId != null" >
+        be_collectioned_id,
+      </if>
+      <if test="collectionType != null" >
+        collection_type,
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
-      <if test="collection != null" >
-        #{collection,jdbcType=INTEGER},
+      <if test="collectionId != null" >
+        #{collectionId,jdbcType=INTEGER},
       </if>
       <if test="userId != null" >
         #{userId,jdbcType=VARCHAR},
       </if>
-      <if test="sheetId != null" >
-        #{sheetId,jdbcType=VARCHAR},
+      <if test="beCollectionedId != null" >
+        #{beCollectionedId,jdbcType=VARCHAR},
+      </if>
+      <if test="collectionType != null" >
+        #{collectionType,jdbcType=INTEGER},
       </if>
     </trim>
   </insert>
@@ -56,16 +63,20 @@
       <if test="userId != null" >
         user_id = #{userId,jdbcType=VARCHAR},
       </if>
-      <if test="sheetId != null" >
-        sheet_id = #{sheetId,jdbcType=VARCHAR},
+      <if test="beCollectionedId != null" >
+        be_collectioned_id = #{beCollectionedId,jdbcType=VARCHAR},
+      </if>
+      <if test="collectionType != null" >
+        collection_type = #{collectionType,jdbcType=INTEGER},
       </if>
     </set>
-    where collection = #{collection,jdbcType=INTEGER}
+    where collection_id = #{collectionId,jdbcType=INTEGER}
   </update>
   <update id="updateByPrimaryKey" parameterType="cn.edu.zucc.music.model.Collection" >
     update collection
     set user_id = #{userId,jdbcType=VARCHAR},
-      sheet_id = #{sheetId,jdbcType=VARCHAR}
-    where collection = #{collection,jdbcType=INTEGER}
+      be_collectioned_id = #{beCollectionedId,jdbcType=VARCHAR},
+      collection_type = #{collectionType,jdbcType=INTEGER}
+    where collection_id = #{collectionId,jdbcType=INTEGER}
   </update>
 </mapper>

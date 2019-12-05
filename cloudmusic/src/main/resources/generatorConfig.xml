@@ -42,7 +42,7 @@
         </javaClientGenerator>
 
         <!-- 配置需要生成代码的数据库&表结构信息，如果多张表生成代码赋值多次填写即可 -->
-        <table  tableName="%"
+        <table  tableName="collection"
                enableCountByExample="false" enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false"
                enableSelectByPrimaryKey="true" enableUpdateByPrimaryKey="true" enableInsert="true" enableDeleteByPrimaryKey="true"
         />
