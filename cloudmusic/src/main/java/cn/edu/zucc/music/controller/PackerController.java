@@ -1,6 +1,7 @@
 package cn.edu.zucc.music.controller;
 
 import cn.edu.zucc.music.model.*;
+import cn.edu.zucc.music.service.AlbumService;
 import cn.edu.zucc.music.service.SheetSongService;
 import cn.edu.zucc.music.service.UserService;
 import com.alibaba.fastjson.JSON;
@@ -10,6 +11,8 @@ import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.io.IOException;
 import java.io.Reader;
@@ -18,7 +21,10 @@ import java.util.List;
 
 public class PackerController {
     @Autowired
-     SheetSongService sheetSongService;
+    private SheetSongService sheetSongService;
+    @Autowired
+    private UserService userService;
+
     public static JSONObject transformSheetToJson(Sheet sheet, User user) {
         JSONObject json = new JSONObject();
         json.put("id", sheet.getSheetId());
@@ -251,5 +257,22 @@ public class PackerController {
         json.put("song_id", sheetSong.getSongId());
 
         return json;
+    }
+
+    public static List<JSONObject> transformDynamicToJson(List<Dynamic> dynamics, List<User> users) {
+        List<JSONObject> list = new ArrayList<JSONObject>();
+        JSONObject json = new JSONObject();
+        for(int i = 0; i < dynamics.size(); i++) {
+            Dynamic dynamic = dynamics.get(i);
+            User user = users.get(i);
+            json.put("dynamic_id", dynamic.getDynamicId());
+            json.put("content", dynamic.getIntroducion());
+            json.put("create_time", dynamic.getCreateTime().toString());
+            json.put("like_count", dynamic.getLikeCount());
+            json.put("user", transformUserToJson(user));
+            list.add(json);
+        }
+
+        return list;
     }
 }

@@ -58,7 +58,7 @@ class PlayListData {
     data['code'] = this._code;
     data['relatedVideos'] = this._relatedVideos;
     if (this._playlist != null) {
-      data['playlist'] = this._playlist.toJson();
+          data['playlist'] = this._playlist.toJson();
     }
     return data;
   }

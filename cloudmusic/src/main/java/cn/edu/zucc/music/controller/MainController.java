@@ -6,7 +6,6 @@ import cn.edu.zucc.music.Until.ResultStatus;
 import cn.edu.zucc.music.model.Banner;
 import cn.edu.zucc.music.model.User;
 import cn.edu.zucc.music.service.BannerService;
-import cn.edu.zucc.music.service.GraphService;
 import cn.edu.zucc.music.service.UserService;
 import com.alibaba.fastjson.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,8 +23,8 @@ public class MainController {
     private UserService userService;
     @Autowired
     private BannerService bannerService;
-    @Autowired
-    private GraphService graphService;
+//    @Autowired
+//    private GraphService graphService;
 
     // 登录
     @CrossOrigin

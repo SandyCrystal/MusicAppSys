@@ -18,6 +18,11 @@
     from dynamic
     where dynamic_id = #{dynamicId,jdbcType=INTEGER}
   </select>
+
+  <select id="getMostTenDynamic" resultMap="BaseResultMap">
+    SELECT <include refid="Base_Column_List" /> FROM dynamic group by like_count DESC limit 10
+  </select>
+
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
     delete from dynamic
     where dynamic_id = #{dynamicId,jdbcType=INTEGER}

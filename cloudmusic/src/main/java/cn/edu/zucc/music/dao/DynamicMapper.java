@@ -3,6 +3,8 @@ package cn.edu.zucc.music.dao;
 import cn.edu.zucc.music.model.Dynamic;
 import org.apache.ibatis.annotations.Mapper;
 
+import java.util.List;
+
 @Mapper
 
 public interface DynamicMapper {
@@ -17,4 +19,6 @@ public interface DynamicMapper {
     int updateByPrimaryKeySelective(Dynamic record);
 
     int updateByPrimaryKey(Dynamic record);
+
+    List<Dynamic> getMostTenDynamic();
 }
