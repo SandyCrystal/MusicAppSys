@@ -19,6 +19,10 @@
     where dynamic_id = #{dynamicId,jdbcType=INTEGER}
   </select>
 
+  <select id="getDynamicByUserId" resultMap="BaseResultMap" parameterType="java.lang.String">
+    SELECT * FROM dynamic WHERE user_id = #{userId, jdbcType=VARCHAR}
+  </select>
+
   <select id="getMostTenDynamic" resultMap="BaseResultMap">
     SELECT <include refid="Base_Column_List" /> FROM dynamic group by like_count DESC limit 10
   </select>

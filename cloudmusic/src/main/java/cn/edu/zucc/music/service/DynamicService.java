@@ -13,4 +13,5 @@ public interface DynamicService {
     Dynamic findById(int id);
     List<Dynamic> findAll();
     List<Dynamic> getMostTenDynamic();
+    List<Dynamic> getDynamicByUserId(String user_id);
 }

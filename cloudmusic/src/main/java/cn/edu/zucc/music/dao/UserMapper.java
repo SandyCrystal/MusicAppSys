@@ -3,6 +3,8 @@ package cn.edu.zucc.music.dao;
 import cn.edu.zucc.music.model.User;
 import org.apache.ibatis.annotations.Mapper;
 
+import java.util.List;
+
 @Mapper
 
 public interface UserMapper {
@@ -23,5 +25,4 @@ public interface UserMapper {
     int updateByPrimaryKey(User record);
 
     int updateByUserName(User userName);
-
 }

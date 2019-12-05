@@ -14,5 +14,4 @@ public interface UserService {
     User findByName(String userName);
     String findMaxId();
     List<User> findAll();
-
 }

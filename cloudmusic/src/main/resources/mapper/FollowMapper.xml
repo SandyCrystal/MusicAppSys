@@ -15,6 +15,11 @@
     from Follow
     where follow_id = #{followId,jdbcType=INTEGER}
   </select>
+
+  <select id="getFollowedUsers" resultMap="BaseResultMap" parameterType="java.lang.String">
+    SELECT * FROM Follow WHERE from_user_id = #{fromUserId, jdbcType=VARCHAR}
+  </select>
+
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
     delete from Follow
     where follow_id = #{followId,jdbcType=INTEGER}

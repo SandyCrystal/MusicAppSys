@@ -21,4 +21,6 @@ public interface DynamicMapper {
     int updateByPrimaryKey(Dynamic record);
 
     List<Dynamic> getMostTenDynamic();
+
+    List<Dynamic> getDynamicByUserId(String user_id);
 }

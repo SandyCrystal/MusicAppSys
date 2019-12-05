@@ -2,6 +2,7 @@ package cn.edu.zucc.music.service.impl;
 
 
 import cn.edu.zucc.music.dao.FollowMapper;
+import cn.edu.zucc.music.model.Dynamic;
 import cn.edu.zucc.music.model.Follow;
 import cn.edu.zucc.music.service.FollowService;
 import org.springframework.stereotype.Service;
@@ -36,5 +37,10 @@ public class FollowServiceImpl implements FollowService {
     @Override
     public List<Follow> findAll() {
         return null;
+    }
+
+    @Override
+    public List<Follow> getFollowedUsers(String user_id) {
+        return followMapper.getFollowedUsers(user_id);
     }
 }
