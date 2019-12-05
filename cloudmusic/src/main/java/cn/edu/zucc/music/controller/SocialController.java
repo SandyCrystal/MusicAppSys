@@ -139,4 +139,24 @@ public class SocialController {
 
         return jsonObject;
     }
+
+    @CrossOrigin
+    @GetMapping(value = "/api/getPersonalDynamic")
+    @ResponseBody
+    public JSONObject getPersonalDynamic(String user_id) {
+        JSONObject jsonObject = new JSONObject();
+        User user = userService.findById(user_id);
+        if(user==null) {
+            jsonObject.put("code", 666);
+            jsonObject.put("data", null);
+        } else {
+            List<Dynamic> dynamics = dynamicService.getDynamicByUserId(user_id);
+
+            jsonObject.put("code", 200);
+            jsonObject.put("data", dynamics);
+            jsonObject.put("total", dynamics.size());
+        }
+
+        return jsonObject;
+    }
 }
