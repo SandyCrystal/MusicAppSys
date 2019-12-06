@@ -420,20 +420,54 @@ public class MusicController {
     public JSONObject getCollectionSong(String user_id) {
         JSONObject json = new JSONObject();
         List<Collection> collections = collectionService.getSongsByUserId(user_id);
-        List<Song> songs = new ArrayList<Song>();
-        List<Album> albums = new ArrayList<Album>();
-        List<Artist> artists = new ArrayList<Artist>();
-        for (Collection collection : collections) {
-            Song song = songService.findById(collection.getBeCollectionedId());
-            Artist artist = artistService.findById(song.getArtistId());
-            Album album = albumService.findById(song.getAlbumId());
-            songs.add(song);
-            albums.add(album);
-            artists.add(artist);
+        if(collections == null) {
+            json.put("code", 666);
+            json.put("data", null);
+        } else {
+            List<Song> songs = new ArrayList<Song>();
+            List<Album> albums = new ArrayList<Album>();
+            List<Artist> artists = new ArrayList<Artist>();
+            for (Collection collection : collections) {
+                Song song = songService.findById(collection.getBeCollectionedId());
+                Artist artist = artistService.findById(song.getArtistId());
+                Album album = albumService.findById(song.getAlbumId());
+                songs.add(song);
+                albums.add(album);
+                artists.add(artist);
+            }
+            List<JSONObject> jsonData = PackerController.transformCollectionSongsToJson(songs, albums, artists);
+            json.put("code", 200);
+            json.put("data", jsonData);
         }
-        List<JSONObject> jsonData = PackerController.transformCollectionSongsToJson(songs, albums, artists);
-        json.put("code", 200);
-        json.put("data", jsonData);
+
+        return json;
+    }
+
+    @GetMapping(value = "/api/getCollectionSheet")
+    @ResponseBody
+    public JSONObject getCollectionSheet(String user_id) {
+        JSONObject json = new JSONObject();
+        List<Collection> collections = collectionService.getSheetsByUserId(user_id);
+        List<Sheet> sheets = new ArrayList<Sheet>();
+        List<User> users = new ArrayList<User>();
+
+        if(collections == null) {
+            json.put("code", 666);
+            json.put("data", null);
+        } else {
+            for (Collection collection : collections) {
+                Sheet sheet = sheetService.findById(collection.getBeCollectionedId());
+                User user = userService.findById(sheet.getUserId());
+
+                sheets.add(sheet);
+                users.add(user);
+            }
+            List<JSONObject> jsonData = PackerController.transformCollectionSheetsToJson(sheets, users);
+            json.put("code", 200);
+            json.put("data", jsonData);
+        }
+
+
         return json;
     }
 }

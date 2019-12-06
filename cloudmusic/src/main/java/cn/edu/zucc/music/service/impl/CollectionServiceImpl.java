@@ -48,4 +48,9 @@ public class CollectionServiceImpl implements CollectionService {
     public List<Collection> getSongsByUserId(String user_id) {
         return collectionMapper.getSongsByUserId(user_id);
     }
+
+    @Override
+    public List<Collection> getSheetsByUserId(String user_id) {
+        return collectionMapper.getSheetsByUserId(user_id);
+    }
 }

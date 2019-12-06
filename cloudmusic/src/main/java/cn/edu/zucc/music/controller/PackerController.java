@@ -386,4 +386,25 @@ public class PackerController {
 
         return json;
     }
+
+    public static List<JSONObject> transformCollectionSheetsToJson(List<Sheet> sheets, List<User> users) {
+        List<JSONObject> json = new ArrayList<JSONObject>();
+        for (int i = 0; i < sheets.size(); i++) {
+            Sheet sheet = sheets.get(i);
+            User user = users.get(i);
+            JSONObject jsonUser = transformUserToJson(user);
+            JSONObject jsonSheet = new JSONObject();
+
+            jsonSheet.put("id", sheet.getSheetId());
+            jsonSheet.put("name", sheet.getSheetName());
+            jsonSheet.put("picUrl", sheet.getSheetPicUrl());
+            jsonSheet.put("playCount", sheet.getPlayCount());
+            jsonSheet.put("createTime", sheet.getCreateTime().getTime());
+            jsonSheet.put("creator", jsonUser);
+
+            json.add(jsonSheet);
+        }
+
+        return json;
+    }
 }
