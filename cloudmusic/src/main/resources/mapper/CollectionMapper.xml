@@ -18,7 +18,11 @@
   </select>
 
   <select id="findPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String">
-    SELECT <include refid="Base_Column_List" /> from collection WHERE user_id = #{user_id,jdbcType=VARCHAR} and be_collectioned_id = #{be_collectioned_id, jdbcType=VARCHAR}
+    SELECT <include refid="Base_Column_List" /> from collection WHERE user_id = #{user_id,jdbcType=VARCHAR} AND be_collectioned_id = #{be_collectioned_id, jdbcType=VARCHAR}
+  </select>
+
+  <select id="getSongsByUserId" resultMap="BaseResultMap" parameterType="java.lang.String">
+    SELECT <include refid="Base_Column_List" /> FROM collection WHERE user_id = #{user_id, jdbcType=VARCHAR} AND collection_type = 1
   </select>
 
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >

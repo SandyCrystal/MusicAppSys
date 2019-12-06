@@ -362,4 +362,28 @@ public class PackerController {
         json.put("user", transformUserToJson(user));
         return json;
     }
+
+    public static List<JSONObject> transformCollectionSongsToJson(List<Song> songs, List<Album> albums, List<Artist> artists) {
+        List<JSONObject> json = new ArrayList<JSONObject>();
+        for (int i = 0; i < songs.size(); i++) {
+            Song song = songs.get(i);
+            Album album = albums.get(i);
+            Artist artist = artists.get(i);
+            JSONObject jsonAlbum = new JSONObject();
+            JSONObject jsonSong = new JSONObject();
+
+            jsonAlbum.put("id", album.getAlbumId());
+            jsonAlbum.put("name", album.getAlbumName());
+            jsonAlbum.put("picUrl", album.getAlbumPicUrl());
+
+            jsonSong.put("id", song.getSongId());
+            jsonSong.put("name", song.getSongName());
+            jsonSong.put("artist", artist.getArtistName());
+            jsonSong.put("album", jsonAlbum);
+
+            json.add(jsonSong);
+        }
+
+        return json;
+    }
 }

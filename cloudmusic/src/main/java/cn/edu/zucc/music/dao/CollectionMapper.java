@@ -3,6 +3,8 @@ package cn.edu.zucc.music.dao;
 import cn.edu.zucc.music.model.Collection;
 import org.apache.ibatis.annotations.Mapper;
 
+import java.util.List;
+
 @Mapper
 
 public interface CollectionMapper {
@@ -19,4 +21,6 @@ public interface CollectionMapper {
     int updateByPrimaryKey(Collection record);
 
     Collection findPrimaryKey(String user_id, String be_collectioned_id);
+
+    List<Collection> getSongsByUserId(String user_id);
 }

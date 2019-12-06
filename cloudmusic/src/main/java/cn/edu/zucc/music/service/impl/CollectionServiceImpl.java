@@ -43,4 +43,9 @@ public class CollectionServiceImpl implements CollectionService {
     public Collection findPrimaryKey(String user_id, String be_collectioned_id) {
         return collectionMapper.findPrimaryKey(user_id, be_collectioned_id);
     }
+
+    @Override
+    public List<Collection> getSongsByUserId(String user_id) {
+        return collectionMapper.getSongsByUserId(user_id);
+    }
 }

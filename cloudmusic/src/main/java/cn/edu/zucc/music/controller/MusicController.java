@@ -43,22 +43,22 @@ public class MusicController {
         JSONObject jsonObject = new JSONObject();
         Sheet sheet = sheetService.findById(sheetId);
         Song song = songService.findById(songId);
-        if (sheet == null){
+        if (sheet == null) {
             jsonObject.put("code", ResultStatus.SHEET_NOT_EXIST.value());
             jsonObject.put("data", ResultStatus.SHEET_NOT_EXIST.getReasonPhrase());
             return jsonObject;
         }
-        if (song == null){
+        if (song == null) {
             jsonObject.put("code", ResultStatus.SONG_NOT_EXIST.value());
             jsonObject.put("data", ResultStatus.SONG_NOT_EXIST.getReasonPhrase());
             return jsonObject;
         }
         SheetSong sheetSong = sheetSongService.findBySheetIdSongId(sheetId, songId);
-        if (sheetSong != null){
+        if (sheetSong != null) {
             jsonObject.put("code", ResultStatus.SHEET_SONG_ALREADY_EXISTS.value());
             jsonObject.put("data", ResultStatus.SHEET_SONG_ALREADY_EXISTS.getReasonPhrase());
             return jsonObject;
-        }else {
+        } else {
             SheetSong sheetSongNew = new SheetSong();
             sheetSongNew.setSheetId(sheetId);
             sheetSongNew.setSongId(songId);
@@ -79,11 +79,11 @@ public class MusicController {
     public JSONObject delSong(String sheetId, String songId) {
         JSONObject jsonObject = new JSONObject();
         SheetSong sheetSong = sheetSongService.findBySheetIdSongId(sheetId, songId);
-        if (sheetSong == null){
+        if (sheetSong == null) {
             jsonObject.put("code", ResultStatus.SHEET_SONG_NOT_EXIST.value());
             jsonObject.put("data", ResultStatus.SHEET_SONG_NOT_EXIST.getReasonPhrase());
             return jsonObject;
-        }else {
+        } else {
             jsonObject.put("code", ResultStatus.SUCCESS.value());
             jsonObject.put("data", 1);
             sheetSongService.deleteSheet(sheetSong);
@@ -124,7 +124,7 @@ public class MusicController {
             list = songService.selectTenSongs();
             jsonObject.put("code", 200);
             List<JSONObject> data = new ArrayList<JSONObject>();
-            for(Song song : list) {
+            for (Song song : list) {
                 Album album = albumService.findById(song.getAlbumId());
                 Artist artist = artistService.findById(album.getArtistId());
                 JSONObject tmp = PackerController.transformSongToJson(song, album, artist);
@@ -151,7 +151,7 @@ public class MusicController {
         List<SongComment> songComments = songCommentService.findBySongId(id);
         List<User> users = new ArrayList<User>();
         jsonObject.put("total", songComments.size());
-        for(int i = 0; i < songComments.size(); i++) {
+        for (int i = 0; i < songComments.size(); i++) {
             SongComment songComment = songComments.get(i);
             User user = userService.findById(songComment.getUserId());
             users.add(user);
@@ -174,7 +174,7 @@ public class MusicController {
         Date date = new Date();
 
         String id = songCommentService.findMaxSongCommentId();
-        String comment_id = String.valueOf(Integer.parseInt(id)+1);
+        String comment_id = String.valueOf(Integer.parseInt(id) + 1);
 
         songComment.setSongCommentId(comment_id);
         songComment.setCommentContent(content);
@@ -185,7 +185,7 @@ public class MusicController {
 
         songCommentService.addSongComment(songComment);
 
-        if(user==null || song==null) {
+        if (user == null || song == null) {
             json.put("code", 666);
             json.put("data", null);
         } else {
@@ -196,6 +196,7 @@ public class MusicController {
 
         return json;
     }
+
     @Cacheable(value = "getAlbumDetails")
     @CrossOrigin
     @GetMapping(value = "/api/getAlbumDetails")
@@ -203,7 +204,7 @@ public class MusicController {
     public JSONObject getAlbumDetails(String album_id) {
         JSONObject json = new JSONObject();
         Album album = albumService.findById(album_id);
-        if(album==null) {
+        if (album == null) {
             json.put("code", 666);
             json.put("data", null);
         } else {
@@ -217,7 +218,7 @@ public class MusicController {
 
             List<Song> songs = songService.getSongByAlbumId(album_id);
             List<Artist> artists = new ArrayList<Artist>();
-            for(Song song : songs) {
+            for (Song song : songs) {
                 Artist artist = artistService.findById(album.getArtistId());
                 artists.add(artist);
             }
@@ -236,6 +237,7 @@ public class MusicController {
 
         return json;
     }
+
     @Cacheable(value = "getAlbumList")
     @CrossOrigin
     @GetMapping(value = "/api/getAlbumList")
@@ -245,7 +247,7 @@ public class MusicController {
 
         List<Album> albums = albumService.getTwentyAlbums();
         List<Artist> artists = new ArrayList<Artist>();
-        for(Album album : albums) {
+        for (Album album : albums) {
             Artist artist = artistService.findById(album.getArtistId());
             artists.add(artist);
         }
@@ -253,32 +255,33 @@ public class MusicController {
 
         json.put("code", 200);
         json.put("data", data);
-        json.put("total",data.size());
+        json.put("total", data.size());
         return json;
     }
+
     // 搜索歌曲
     @GetMapping(value = "/api/searchSong")
     @ResponseBody
     public JSONObject searchSong(String keywords) {
         JSONObject jsonObject = new JSONObject();
-        List<Song> songs =  songService.searchSongBySongName("%" + keywords + "%");
-        if (songs.size()!=0){
+        List<Song> songs = songService.searchSongBySongName("%" + keywords + "%");
+        if (songs.size() != 0) {
             jsonObject.put("code", ResultStatus.SUCCESS.value());
-            List<Artist> artists=new ArrayList<>();
-            List<Album> albums=new ArrayList<>();
+            List<Artist> artists = new ArrayList<>();
+            List<Album> albums = new ArrayList<>();
             int len;
-            if (songs.size()>10){
-                len=10;
-            }else len=songs.size();
-            for(int i=0;i<len;i++){
-                Song song=songs.get(i);
-                Album album=albumService.findById(song.getAlbumId());
+            if (songs.size() > 10) {
+                len = 10;
+            } else len = songs.size();
+            for (int i = 0; i < len; i++) {
+                Song song = songs.get(i);
+                Album album = albumService.findById(song.getAlbumId());
                 albums.add(album);
                 artists.add(artistService.findById(album.getArtistId()));
             }
-            List<JSONObject> tmp = PackerController.transfromSongsToJson(songs,albums,artists,len);
+            List<JSONObject> tmp = PackerController.transfromSongsToJson(songs, albums, artists, len);
             jsonObject.put("data", tmp);
-        }else{
+        } else {
             jsonObject.put("code", ResultStatus.SONG_NOT_EXIST.value());
             jsonObject.put("data", ResultStatus.SONG_NOT_EXIST.getReasonPhrase());
         }
@@ -290,12 +293,12 @@ public class MusicController {
     @ResponseBody
     public JSONObject searchSheet(String sheetName) {
         JSONObject jsonObject = new JSONObject();
-        List<Sheet> sheets =  sheetService.searchSheetBySheetName("%" + sheetName + "%");
-        if (sheets.size()!=0){
+        List<Sheet> sheets = sheetService.searchSheetBySheetName("%" + sheetName + "%");
+        if (sheets.size() != 0) {
             jsonObject.put("code", ResultStatus.SUCCESS.value());
             List<JSONObject> tmp = PackerController.transfromSheetsToJson(sheets);
             jsonObject.put("data", tmp);
-        }else{
+        } else {
             jsonObject.put("code", ResultStatus.SHEET_NOT_EXIST.value());
             jsonObject.put("data", ResultStatus.SHEET_NOT_EXIST.getReasonPhrase());
         }
@@ -307,12 +310,12 @@ public class MusicController {
     @ResponseBody
     public JSONObject searchAlbum(String albumName) {
         JSONObject jsonObject = new JSONObject();
-        List<Album> albums =  albumService.searchAlbumByAlbumName("%" + albumName + "%");
-        if (albums.size()!=0){
+        List<Album> albums = albumService.searchAlbumByAlbumName("%" + albumName + "%");
+        if (albums.size() != 0) {
             jsonObject.put("code", ResultStatus.SUCCESS.value());
             List<JSONObject> tmp = PackerController.transfromAlbumsToJson(albums);
             jsonObject.put("data", tmp);
-        }else{
+        } else {
             jsonObject.put("code", ResultStatus.ALBUM_NOT_EXIST.value());
             jsonObject.put("data", ResultStatus.ALBUM_NOT_EXIST.getReasonPhrase());
         }
@@ -325,21 +328,21 @@ public class MusicController {
         JSONObject json = new JSONObject();
         int flag = 1;
         User user = userService.findById(user_id);
-        if(user == null) {
+        if (user == null) {
             flag = 0;
         }
-        if(type == 1) {
+        if (type == 1) {
             Song song = songService.findById(target_id);
-            if(song == null) {
+            if (song == null) {
                 flag = 0;
             }
-        } else if(type == 2){
+        } else if (type == 2) {
             Sheet sheet = sheetService.findById(target_id);
-            if(sheet == null) {
+            if (sheet == null) {
                 flag = 0;
             }
         }
-        if(flag == 0) {
+        if (flag == 0) {
             json.put("code", 666);
             JSONObject jsonType = new JSONObject();
             jsonType.put("type", 0);
@@ -347,7 +350,7 @@ public class MusicController {
         } else {
             Collection collection = collectionService.findPrimaryKey(user_id, target_id);
 
-            if(collection == null) {
+            if (collection == null) {
                 json.put("code", 200);
                 JSONObject jsonType = new JSONObject();
                 jsonType.put("type", 1);
@@ -364,7 +367,6 @@ public class MusicController {
                 jsonType.put("type", 0);
                 json.put("data", jsonType);
             }
-
         }
 
         return json;
@@ -376,28 +378,28 @@ public class MusicController {
         JSONObject json = new JSONObject();
         int flag = 1;
         User user = userService.findById(user_id);
-        if(user == null) {
+        if (user == null) {
             flag = 0;
         }
-        if(type == 1) {
+        if (type == 1) {
             Song song = songService.findById(target_id);
-            if(song == null) {
+            if (song == null) {
                 flag = 0;
             }
-        } else if(type == 2){
+        } else if (type == 2) {
             Sheet sheet = sheetService.findById(target_id);
-            if(sheet == null) {
+            if (sheet == null) {
                 flag = 0;
             }
         }
-        if(flag == 0) {
+        if (flag == 0) {
             json.put("code", 666);
             JSONObject jsonType = new JSONObject();
             jsonType.put("type", 0);
             json.put("data", jsonType);
         } else {
             Collection collection = collectionService.findPrimaryKey(user_id, target_id);
-            if(collection == null) {
+            if (collection == null) {
                 json.put("code", 666);
                 JSONObject jsonType = new JSONObject();
                 jsonType.put("type", 0);
@@ -410,6 +412,28 @@ public class MusicController {
             }
         }
 
+        return json;
+    }
+
+    @GetMapping(value = "/api/getCollectionSong")
+    @ResponseBody
+    public JSONObject getCollectionSong(String user_id) {
+        JSONObject json = new JSONObject();
+        List<Collection> collections = collectionService.getSongsByUserId(user_id);
+        List<Song> songs = new ArrayList<Song>();
+        List<Album> albums = new ArrayList<Album>();
+        List<Artist> artists = new ArrayList<Artist>();
+        for (Collection collection : collections) {
+            Song song = songService.findById(collection.getBeCollectionedId());
+            Artist artist = artistService.findById(song.getArtistId());
+            Album album = albumService.findById(song.getAlbumId());
+            songs.add(song);
+            albums.add(album);
+            artists.add(artist);
+        }
+        List<JSONObject> jsonData = PackerController.transformCollectionSongsToJson(songs, albums, artists);
+        json.put("code", 200);
+        json.put("data", jsonData);
         return json;
     }
 }
