@@ -72,7 +72,7 @@ public class MusicController {
         return jsonObject;
     }
 
-    // 删除歌曲
+    // 删除歌单
     // 把歌曲移出歌单
     @GetMapping(value = "/api/delSong")
     @ResponseBody
@@ -95,7 +95,7 @@ public class MusicController {
     // 获得歌曲信息 根据音乐代码获取音乐(用于播放等)
     @GetMapping(value = "/api/getSong")
     @ResponseBody
-    public String getSong() {
+    public String getSong(String songId) {
         return "还没做";
     }
 

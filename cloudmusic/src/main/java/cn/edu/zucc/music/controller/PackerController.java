@@ -1,5 +1,6 @@
 package cn.edu.zucc.music.controller;
 
+import cn.edu.zucc.music.Until.JsonUtil;
 import cn.edu.zucc.music.model.*;
 import cn.edu.zucc.music.service.AlbumService;
 import cn.edu.zucc.music.service.SheetSongService;
@@ -53,6 +54,23 @@ public class PackerController {
             json.put("create_time", user.getCreateTime().getTime());
         json.put("introduction", user.getIntroduction());
         return json;
+    }
+
+    public static List<JSONObject> transfromUsersToJson(List<User> users, List<Boolean> isMutuals){
+        List<JSONObject> lists = new ArrayList<JSONObject>();
+        for(int i=0; i<users.size(); i++){
+            JSONObject tmp = new JSONObject();
+            tmp.put("user_id", users.get(i).getUserId());
+            tmp.put("user_name", users.get(i).getUserName());
+            tmp.put("avatar_url", users.get(i).getAvatarUrl());
+            tmp.put("user_type", users.get(i).getUserType());
+            tmp.put("create_time", users.get(i).getCreateTime());
+            tmp.put("introduction", users.get(i).getIntroduction());
+            tmp.put("is_followed", isMutuals.get(i));
+            lists.add(tmp);
+        }
+
+        return lists;
     }
 
     public static JSONObject transformSongToJson(Song song, Album album, Artist artist) {
@@ -191,7 +209,6 @@ public class PackerController {
         return jsonComment;
     }
 
-
     public static List<JSONObject> transfromSongsToJson(List<Song> songs,List<Album> albums,List<Artist> artists,int len){
         List<JSONObject> list = new ArrayList<JSONObject>();
         for(int i=0;i< len;i++) {
@@ -325,5 +342,24 @@ public class PackerController {
         }
 
         return list;
+    }
+
+    public static JSONObject transfromFollowToJson(Follow follow){
+        JSONObject json = new JSONObject();
+        json.put("follow_id", follow.getFollowId());
+        json.put("from_user_id", follow.getFromUserId());
+        json.put("to_user_id", follow.getToUserId());
+        return json;
+    }
+
+    public static JSONObject transformTheDynamicToJson(Dynamic dynamic, User user) {
+        JSONObject json = new JSONObject();
+        json.put("dynamic_id", dynamic.getDynamicId());
+        json.put("content", dynamic.getIntroducion());
+        json.put("pic_url", dynamic.getDynamicPath());
+        json.put("create_time", dynamic.getCreateTime().toString());
+        json.put("like_count", dynamic.getLikeCount());
+        json.put("user", transformUserToJson(user));
+        return json;
     }
 }

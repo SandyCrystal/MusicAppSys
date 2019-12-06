@@ -1,11 +1,14 @@
 package cn.edu.zucc.music.controller;
 
+import cn.edu.zucc.music.Until.Result;
+import cn.edu.zucc.music.Until.ResultStatus;
 import cn.edu.zucc.music.model.Dynamic;
 import cn.edu.zucc.music.model.Follow;
 import cn.edu.zucc.music.model.User;
 import cn.edu.zucc.music.service.DynamicService;
 import cn.edu.zucc.music.service.FollowService;
 import cn.edu.zucc.music.service.UserService;
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -13,10 +16,9 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 @Controller
 
@@ -28,6 +30,8 @@ public class SocialController {
     private UserService userService;
     @Autowired
     private FollowService followService;
+
+
 
     // 获取歌曲评论
     @GetMapping(value = "/api/getSongComment")
@@ -43,32 +47,87 @@ public class SocialController {
         return "还没做";
     }
 
-    // 给评论点赞
-    @GetMapping(value = "/api/likeComment")
+    // 点赞（动态、音乐评论、音乐、歌单）
+    @GetMapping(value = "/api/like")
     @ResponseBody
-    public String likeComment() {
-        return "还没做";
+    public JSONObject like(String userId, String targetId, int type) {
+        JSONObject jsonObject = new JSONObject();
+        if (type == 1){
+            System.out.println("动态 dynamic");
+        }else if (type == 2){
+            System.out.println("音乐评论 song_comment");
+        }else if (type == 3){
+            System.out.println("音乐 song");
+        }else {
+            System.out.println("歌单 sheet");
+        }
+        return jsonObject;
     }
 
-    // 给评论取消点赞
-    @GetMapping(value = "/api/unlikeComment")
+    // 取消点赞（动态、歌曲、歌单、评论）
+    @GetMapping(value = "/api/unlike")
     @ResponseBody
-    public String unlikeComment() {
-        return "还没做";
+    public JSONObject unlike(String userId, String targetId, int type) {
+        JSONObject jsonObject = new JSONObject();
+        if (type == 1){
+            System.out.println("动态 dynamic");
+        }else if (type == 2){
+            System.out.println("音乐评论 song_comment");
+        }else if (type == 3){
+            System.out.println("音乐 song");
+        }else {
+            System.out.println("歌单 sheet");
+        }
+        return jsonObject;
     }
 
-    // 查看个人动态
-    @GetMapping(value = "/api/viewUserDynamic")
+    // 发表动态
+    @GetMapping(value = "/api/createDynamic")
     @ResponseBody
-    public String viewUserDynamic() {
-        return "还没做";
+    public JSONObject createDynamic(String userId, String content, String picUrl) throws ParseException {
+        JSONObject jsonObject = new JSONObject();
+        Dynamic dynamic = new Dynamic();
+        User user = userService.findById(userId);
+
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        sdf.setTimeZone(TimeZone.getTimeZone("Asia/Shanghai"));
+        Date date = new Date(); // java.util.Date
+        String dateStr = sdf.format(date);
+        Date dateSql = sdf.parse(dateStr);
+
+        int maxDynamicId = dynamicService.getMaxDynamicId() + 1;
+        dynamic.setDynamicId(maxDynamicId);
+        dynamic.setUserId(userId);
+        dynamic.setIntroducion(content);
+        dynamic.setDynamicPath(picUrl);
+        dynamic.setCreateTime(dateSql);
+        dynamic.setLikeCount(0);
+
+        dynamicService.addDynamic(dynamic);
+        JSONObject tmp = PackerController.transformTheDynamicToJson(dynamic, user);
+        jsonObject.put("code", ResultStatus.SUCCESS.value());
+        jsonObject.put("data", tmp);
+        return jsonObject;
     }
 
-    // 发布动态
-    @GetMapping(value = "/api/dynamic")
+    // 删除动态
+    @GetMapping(value = "/api/deleteDynamic")
     @ResponseBody
-    public String dynamic() {
-        return "还没做";
+    public JSONObject deleteDynamic(int dynamicId) {
+        JSONObject jsonObject = new JSONObject();
+        Dynamic dynamic = dynamicService.findById(dynamicId);
+        if (dynamic == null){
+            jsonObject.put("code", ResultStatus.DYNAMIC_NOT_EXIST.value());
+            jsonObject.put("data", ResultStatus.DYNAMIC_NOT_EXIST.getReasonPhrase());
+            return jsonObject;
+        }else{
+            dynamicService.deleteDynamic(dynamic);
+            JSONObject tmp = PackerController.transformTheDynamicToJson(dynamic, userService.findById(dynamic.getUserId()));
+            jsonObject.put("code", ResultStatus.SUCCESS.value());
+            jsonObject.put("data", tmp);
+        }
+
+        return jsonObject;
     }
 
     // 获取热门动态接口
@@ -159,4 +218,5 @@ public class SocialController {
 
         return jsonObject;
     }
+
 }

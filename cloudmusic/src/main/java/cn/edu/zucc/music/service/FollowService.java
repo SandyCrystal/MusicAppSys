@@ -12,5 +12,8 @@ public interface FollowService {
     int updateFollow(Follow comment);
     Follow findById(int id);
     List<Follow> findAll();
-    List<Follow> getFollowedUsers(String user_id);
+    List<Follow> getFollowedUsers(String userId);
+    List<Follow> getFansUsers(String userId);
+    Follow getFromMutual(String fromUserId, String toUserId);
+    int getMaxFollowId();
 }

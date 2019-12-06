@@ -20,5 +20,11 @@ public interface FollowMapper {
 
     int updateByPrimaryKey(Follow record);
 
-    List<Follow> getFollowedUsers(String user_id);
+    List<Follow> getFollowedUsers(String userId);
+
+    List<Follow> getFansUsers(String userId);
+
+    Follow getFromMutual(String fromUserId, String toUserId);
+
+    int getMaxFollowId();
 }

@@ -10,7 +10,7 @@ import java.util.List;
 public interface DynamicMapper {
     int deleteByPrimaryKey(Integer dynamicId);
 
-    int insert(Dynamic record);
+    int insert(Dynamic dynamic);
 
     int insertSelective(Dynamic record);
 
@@ -23,4 +23,6 @@ public interface DynamicMapper {
     List<Dynamic> getMostTenDynamic();
 
     List<Dynamic> getDynamicByUserId(String user_id);
+
+    int getMaxDynamicId();
 }
