@@ -102,9 +102,10 @@ public class SocialController {
         dynamic.setDynamicPath(picUrl);
         dynamic.setCreateTime(dateSql);
         dynamic.setLikeCount(0);
-
+        int follow=followService.getFollowedUsers(user.getUserId()).size();
+        int fans=followService.getFansUsers(user.getUserId()).size();
         dynamicService.addDynamic(dynamic);
-        JSONObject tmp = PackerController.transformTheDynamicToJson(dynamic, user);
+        JSONObject tmp = PackerController.transformTheDynamicToJson(dynamic, user,follow,fans);
         jsonObject.put("code", ResultStatus.SUCCESS.value());
         jsonObject.put("data", tmp);
         return jsonObject;
@@ -113,18 +114,18 @@ public class SocialController {
     // 删除动态
     @GetMapping(value = "/api/deleteDynamic")
     @ResponseBody
-    public JSONObject deleteDynamic(int dynamicId) {
+    public JSONObject deleteDynamic(String  dynamicId) {
+        int id=Integer.parseInt(dynamicId);
         JSONObject jsonObject = new JSONObject();
-        Dynamic dynamic = dynamicService.findById(dynamicId);
+        Dynamic dynamic = dynamicService.findById(id);
         if (dynamic == null){
             jsonObject.put("code", ResultStatus.DYNAMIC_NOT_EXIST.value());
             jsonObject.put("data", ResultStatus.DYNAMIC_NOT_EXIST.getReasonPhrase());
             return jsonObject;
         }else{
             dynamicService.deleteDynamic(dynamic);
-            JSONObject tmp = PackerController.transformTheDynamicToJson(dynamic, userService.findById(dynamic.getUserId()));
             jsonObject.put("code", ResultStatus.SUCCESS.value());
-            jsonObject.put("data", tmp);
+            jsonObject.put("data", "删除成功");
         }
 
         return jsonObject;
@@ -138,14 +139,18 @@ public class SocialController {
         JSONObject jsonObject = new JSONObject();
 
         List<Dynamic> dynamics = dynamicService.getMostTenDynamic();
-        List<User> users = new ArrayList<User>();
+        int[] follow=new int[dynamics.size()];
+        int[] fans=new int[dynamics.size()];
+         List<User> users = new ArrayList<User>();
         for(int i = 0; i < dynamics.size(); i++) {
             Dynamic dynamic = dynamics.get(i);
             User user = userService.findById(dynamic.getUserId());
+            follow[i]=followService.getFollowedUsers(user.getUserId()).size();
+            fans[i]=followService.getFansUsers(user.getUserId()).size();
             users.add(user);
         }
 
-        List<JSONObject> data = PackerController.transformDynamicToJson(dynamics, users);
+        List<JSONObject> data = PackerController.transformDynamicToJson(dynamics, users,follow,fans);
         jsonObject.put("code", 200);
         jsonObject.put("data", data);
         jsonObject.put("total", dynamics.size());
@@ -184,12 +189,16 @@ public class SocialController {
                     return 0;
                 }
             });
+            int[] follow=new int[dynamics.size()];
+            int[] fans=new int[dynamics.size()];
             for(int i = 0; i < dynamics.size(); i++) {
                 Dynamic dynamic = dynamics.get(i);
                 User tmpUser = userService.findById(dynamic.getUserId());
+                follow[i]=followService.getFollowedUsers(user.getUserId()).size();
+                fans[i]=followService.getFansUsers(user.getUserId()).size();
                 users.add(tmpUser);
             }
-            List<JSONObject> data = PackerController.transformDynamicToJson(dynamics, users);
+            List<JSONObject> data = PackerController.transformDynamicToJson(dynamics, users,follow,fans);
 
             jsonObject.put("code", 200);
             jsonObject.put("data", data);
@@ -210,9 +219,11 @@ public class SocialController {
             jsonObject.put("data", null);
         } else {
             List<Dynamic> dynamics = dynamicService.getDynamicByUserId(user_id);
-
+            int follow=followService.getFollowedUsers(user.getUserId()).size();
+            int fans=followService.getFansUsers(user.getUserId()).size();
+            List<JSONObject> data=PackerController.transformUserDynamicToJson(dynamics,user,follow,fans);
             jsonObject.put("code", 200);
-            jsonObject.put("data", dynamics);
+            jsonObject.put("data", data);
             jsonObject.put("total", dynamics.size());
         }
 

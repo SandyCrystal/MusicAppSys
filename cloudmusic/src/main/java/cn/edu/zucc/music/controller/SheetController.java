@@ -29,7 +29,8 @@ public class SheetController {
     private ArtistService artistService;
     @Autowired
     private AlbumService albumService;
-
+    @Autowired
+    private FollowService followService;
     @CrossOrigin
     @GetMapping(value = "/api/createSheet")
     @ResponseBody
@@ -49,9 +50,10 @@ public class SheetController {
         sheet.setUserId(user_id);
         sheet.setUserName(user.getUserName());
         sheetService.addSheet(sheet);
-
+        int follow=followService.getFollowedUsers(user.getUserId()).size();
+        int fans=followService.getFansUsers(user.getUserId()).size();
         jsonObject.put("code", 200);
-        JSONObject data = PackerController.transformCreateSheetToJson(user, sheet);
+        JSONObject data = PackerController.transformCreateSheetToJson(user, sheet,follow,fans);
         jsonObject.put("data", data);
         return jsonObject;
     }
@@ -86,8 +88,9 @@ public class SheetController {
             List<JSONObject> data = new ArrayList<JSONObject>();
             for(Sheet sheet : list) {
                 User user = userService.findById(sheet.getUserId());
-
-                JSONObject tmp = PackerController.transformSheetToJson(sheet,user);
+                int follow=followService.getFollowedUsers(user.getUserId()).size();
+                int fans=followService.getFansUsers(user.getUserId()).size();
+                JSONObject tmp = PackerController.transformSheetToJson(sheet,user,follow,fans);
                 data.add(tmp);
             }
 
@@ -148,8 +151,9 @@ public class SheetController {
             jsonObject.put("code", 666);
             jsonObject.put("data", null);
         } else {
-
-            List<JSONObject> data = PackerController.transformPersonalSheetToJson(list, user,tracksCount);
+            int follow=followService.getFollowedUsers(user.getUserId()).size();
+            int fans=followService.getFansUsers(user.getUserId()).size();
+            List<JSONObject> data = PackerController.transformPersonalSheetToJson(list, user,tracksCount,follow,fans);
             jsonObject.put("code", 200);
             jsonObject.put("data", data);
         }

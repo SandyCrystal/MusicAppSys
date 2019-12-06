@@ -33,7 +33,8 @@ public class MusicController {
     private SheetSongService sheetSongService;
     @Autowired
     private CollectionService collectionService;
-
+    @Autowired
+    private FollowService followService;
 
     // 添加歌曲（收藏）
     // 把歌曲加入歌单
@@ -190,7 +191,9 @@ public class MusicController {
             json.put("data", null);
         } else {
             json.put("code", 200);
-            JSONObject data = PackerController.transformOneSongCommentToJson(user, songComment);
+            int follow=followService.getFollowedUsers(user.getUserId()).size();
+            int fans=followService.getFansUsers(user.getUserId()).size();
+            JSONObject data = PackerController.transformOneSongCommentToJson(user, songComment,follow,fans);
             json.put("data", data);
         }
 
@@ -450,19 +453,22 @@ public class MusicController {
         List<Collection> collections = collectionService.getSheetsByUserId(user_id);
         List<Sheet> sheets = new ArrayList<Sheet>();
         List<User> users = new ArrayList<User>();
-
+        int[] follow=new int[collections.size()];
+        int[] fans=new int[collections.size()];
         if(collections == null) {
             json.put("code", 666);
             json.put("data", null);
         } else {
-            for (Collection collection : collections) {
+            for (int i=0;i<collections.size();i++) {
+                Collection collection=collections.get(i);
                 Sheet sheet = sheetService.findById(collection.getBeCollectionedId());
                 User user = userService.findById(sheet.getUserId());
-
-                sheets.add(sheet);
+                follow[i]=followService.getFollowedUsers(user.getUserId()).size();
+               fans[i]=followService.getFansUsers(user.getUserId()).size();                sheets.add(sheet);
                 users.add(user);
             }
-            List<JSONObject> jsonData = PackerController.transformCollectionSheetsToJson(sheets, users);
+
+            List<JSONObject> jsonData = PackerController.transformCollectionSheetsToJson(sheets, users,follow,fans);
             json.put("code", 200);
             json.put("data", jsonData);
         }

@@ -56,8 +56,10 @@ public class UserController {
 
         if (hasChanged == true){
             userService.updateUser(user);
+            int follow=followService.getFollowedUsers(user.getUserId()).size();
+            int fans=followService.getFansUsers(user.getUserId()).size();
             jsonObject.put("code", ResultStatus.SUCCESS.value());
-            JSONObject tmp = PackerController.transformUserToJson(user);
+            JSONObject tmp = PackerController.transformUserToJson(user,follow,fans);
             jsonObject.put("data", tmp);
         }else{
             jsonObject.put("code", ResultStatus.USER_INFO_NOT_CHANGED.value());
@@ -97,8 +99,10 @@ public class UserController {
 
         if (hasChanged == true){
             userService.updateUser(user);
+            int follow=followService.getFollowedUsers(user.getUserId()).size();
+            int fans=followService.getFansUsers(user.getUserId()).size();
             jsonObject.put("code", ResultStatus.SUCCESS.value());
-            JSONObject tmp = PackerController.transformUserToJson(user);
+            JSONObject tmp = PackerController.transformUserToJson(user,follow,fans);
             jsonObject.put("data", tmp);
         }else {
             jsonObject.put("code", ResultStatus.USER_INFO_NOT_CHANGED.value());

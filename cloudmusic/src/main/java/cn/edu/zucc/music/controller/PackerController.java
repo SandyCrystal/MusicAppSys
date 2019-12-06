@@ -26,7 +26,7 @@ public class PackerController {
     @Autowired
     private UserService userService;
 
-    public static JSONObject transformSheetToJson(Sheet sheet, User user) {
+    public static JSONObject transformSheetToJson(Sheet sheet, User user,int follow,int fans) {
         JSONObject json = new JSONObject();
         json.put("id", sheet.getSheetId());
         json.put("name", sheet.getSheetName());
@@ -35,7 +35,7 @@ public class PackerController {
         json.put("createTime", sheet.getCreateTime().getTime());
 
         try {
-            JSONObject tmp = PackerController.transformUserToJson(user);
+            JSONObject tmp = PackerController.transformUserToJson(user,follow,fans);
             json.put("creator", tmp);
         } catch (Exception e) {
             e.printStackTrace();
@@ -43,12 +43,14 @@ public class PackerController {
         return json;
     }
 
-    public static JSONObject transformUserToJson(User user) {
+    public static JSONObject transformUserToJson(User user,int follow,int fans) {
         JSONObject json = new JSONObject();
         json.put("user_id", user.getUserId());
         json.put("user_name", user.getUserName());
         json.put("avatar_url", user.getAvatarUrl());
         json.put("user_type", user.getUserType());
+        json.put("follow",follow);
+        json.put("fans",fans);
         if (user.getCreateTime()==null) json.put("create_time", null);
         else
             json.put("create_time", user.getCreateTime().getTime());
@@ -165,7 +167,7 @@ public class PackerController {
         return list;
     }
 
-    public static List<JSONObject> transformPersonalSheetToJson(List<Sheet> Sheets, User user,int[] trackCount) {
+    public static List<JSONObject> transformPersonalSheetToJson(List<Sheet> Sheets, User user,int[] trackCount,int follow,int fans) {
         List<JSONObject> list = new ArrayList<JSONObject>();
         int coun=0;
         for(Sheet sheet : Sheets) {
@@ -176,30 +178,30 @@ public class PackerController {
             tmp.put("createTime", sheet.getCreateTime().getTime());
             tmp.put("trackCount",trackCount[coun]);
             coun++;
-            tmp.put("creator", transformUserToJson(user));
+            tmp.put("creator", transformUserToJson(user,follow,fans));
             list.add(tmp);
         }
 
         return list;
     }
 
-    public static JSONObject transformCreateSheetToJson(User user, Sheet sheet) {
+    public static JSONObject transformCreateSheetToJson(User user, Sheet sheet,int follow,int fans) {
         JSONObject json = new JSONObject();
         json.put("id", sheet.getSheetId());
         json.put("name", sheet.getSheetName());
         json.put("picUrl", sheet.getSheetPicUrl());
         json.put("playCount", sheet.getPlayCount());
         json.put("createTime", sheet.getCreateTime().getTime());
-        json.put("creator", transformUserToJson(user));
+        json.put("creator", transformUserToJson(user,follow,fans));
 
         return json;
     }
 
-    public static JSONObject transformOneSongCommentToJson(User user, SongComment songComment) {
+    public static JSONObject transformOneSongCommentToJson(User user, SongComment songComment,int follow,int fans) {
         JSONObject json = new JSONObject();
         JSONObject jsonComment = new JSONObject();
 
-        jsonComment.put("user", transformUserToJson(user));
+        jsonComment.put("user", transformUserToJson(user,follow,fans));
         jsonComment.put("comment_id", songComment.getSongCommentId());
         jsonComment.put("content", songComment.getCommentContent());
         jsonComment.put("time", songComment.getCommentTime().getTime());
@@ -282,7 +284,7 @@ public class PackerController {
         return json;
     }
 
-    public static List<JSONObject> transformDynamicToJson(List<Dynamic> dynamics, List<User> users) {
+    public static List<JSONObject> transformDynamicToJson(List<Dynamic> dynamics, List<User> users,int[] follow,int[] fans) {
         List<JSONObject> list = new ArrayList<JSONObject>();
         for(int i = 0; i < dynamics.size(); i++) {
             JSONObject json = new JSONObject();
@@ -293,7 +295,24 @@ public class PackerController {
             json.put("pic_url", dynamic.getDynamicPath());
             json.put("create_time", dynamic.getCreateTime().toString());
             json.put("like_count", dynamic.getLikeCount());
-            json.put("user", transformUserToJson(user));
+            json.put("user", transformUserToJson(user,follow[i],fans[i]));
+            list.add(json);
+        }
+
+        return list;
+    }
+    public static List<JSONObject> transformUserDynamicToJson(List<Dynamic> dynamics,User user,int follow,int fans) {
+        List<JSONObject> list = new ArrayList<JSONObject>();
+        JSONObject userj=transformUserToJson(user,follow,fans);
+        for(int i = 0; i < dynamics.size(); i++) {
+            JSONObject json = new JSONObject();
+            Dynamic dynamic = dynamics.get(i);
+            json.put("dynamic_id", dynamic.getDynamicId());
+            json.put("content", dynamic.getIntroducion());
+            json.put("pic_url", dynamic.getDynamicPath());
+            json.put("create_time", dynamic.getCreateTime().toString());
+            json.put("like_count", dynamic.getLikeCount());
+            json.put("user",userj );
             list.add(json);
         }
 
@@ -352,14 +371,14 @@ public class PackerController {
         return json;
     }
 
-    public static JSONObject transformTheDynamicToJson(Dynamic dynamic, User user) {
+    public static JSONObject transformTheDynamicToJson(Dynamic dynamic, User user,int follow,int fans) {
         JSONObject json = new JSONObject();
         json.put("dynamic_id", dynamic.getDynamicId());
         json.put("content", dynamic.getIntroducion());
         json.put("pic_url", dynamic.getDynamicPath());
         json.put("create_time", dynamic.getCreateTime().toString());
         json.put("like_count", dynamic.getLikeCount());
-        json.put("user", transformUserToJson(user));
+        json.put("user", transformUserToJson(user,follow,fans));
         return json;
     }
 
@@ -387,12 +406,12 @@ public class PackerController {
         return json;
     }
 
-    public static List<JSONObject> transformCollectionSheetsToJson(List<Sheet> sheets, List<User> users) {
+    public static List<JSONObject> transformCollectionSheetsToJson(List<Sheet> sheets, List<User> users,int[] follow,int[] fans) {
         List<JSONObject> json = new ArrayList<JSONObject>();
         for (int i = 0; i < sheets.size(); i++) {
             Sheet sheet = sheets.get(i);
             User user = users.get(i);
-            JSONObject jsonUser = transformUserToJson(user);
+            JSONObject jsonUser = transformUserToJson(user,follow[i],fans[i]);
             JSONObject jsonSheet = new JSONObject();
 
             jsonSheet.put("id", sheet.getSheetId());

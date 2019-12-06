@@ -6,6 +6,7 @@ import cn.edu.zucc.music.Until.ResultStatus;
 import cn.edu.zucc.music.model.Banner;
 import cn.edu.zucc.music.model.User;
 import cn.edu.zucc.music.service.BannerService;
+import cn.edu.zucc.music.service.FollowService;
 import cn.edu.zucc.music.service.UserService;
 import com.alibaba.fastjson.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,8 +24,8 @@ public class MainController {
     private UserService userService;
     @Autowired
     private BannerService bannerService;
-//    @Autowired
-//    private GraphService graphService;
+    @Autowired
+    private FollowService followService;
 
     // 登录
     @CrossOrigin
@@ -38,18 +39,20 @@ public class MainController {
 
         if (user == null){
             jsonObject.put("code", ResultStatus.USER_NOT_EXISTS.value());
-            jsonObject.put("data", ResultStatus.USER_NOT_EXISTS.getReasonPhrase());
+            jsonObject.put("message", ResultStatus.USER_NOT_EXISTS.getReasonPhrase());
             return jsonObject;
         }
 
         if (user.getUserPwd().equals(pwd_md5)){
             jsonObject.put("code", ResultStatus.SUCCESS.value());
-            JSONObject tmp = PackerController.transformUserToJson(user);
+            int follow=followService.getFollowedUsers(user.getUserId()).size();
+            int fans=followService.getFansUsers(user.getUserId()).size();
+            JSONObject tmp = PackerController.transformUserToJson(user,follow,fans);
             jsonObject.put("data", tmp);
             return jsonObject;
         } else {
             jsonObject.put("code", ResultStatus.USER_PWD_COMFIRM_ERROR.value());
-            jsonObject.put("data", ResultStatus.USER_PWD_COMFIRM_ERROR.getReasonPhrase());
+            jsonObject.put("message", ResultStatus.USER_PWD_COMFIRM_ERROR.getReasonPhrase());
             return jsonObject;
         }
     }
@@ -91,22 +94,11 @@ public class MainController {
             userService.addUser(userNew);
 
             jsonObject.put("code", ResultStatus.SUCCESS.value());
-            JSONObject tmp = PackerController.transformUserToJson(userNew);
+            JSONObject tmp = PackerController.transformUserToJson(userNew,0,0);
             jsonObject.put("data", tmp);
 
             return jsonObject;
         }
-    }
-
-    // 测试代码，没有实际用处的
-    @GetMapping(value = "/api/findmaxid")
-    @ResponseBody
-    public JSONObject getLogup() {
-        JSONObject jsonObject = new JSONObject();
-        String maxId = userService.findMaxId();
-        jsonObject.put("code", ResultStatus.SUCCESS);
-        jsonObject.put("data", maxId);
-        return jsonObject;
     }
 
     @CrossOrigin
