@@ -17,4 +17,6 @@ public interface CollectionMapper {
     int updateByPrimaryKeySelective(Collection record);
 
     int updateByPrimaryKey(Collection record);
+
+    Collection findPrimaryKey(String user_id, String be_collectioned_id);
 }

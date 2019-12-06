@@ -21,7 +21,7 @@ public class CollectionServiceImpl implements CollectionService {
 
     @Override
     public int deleteCollection(Collection collection) {
-        return 0;
+        return collectionMapper.deleteByPrimaryKey(collection.getCollectionId());
     }
 
     @Override
@@ -39,5 +39,8 @@ public class CollectionServiceImpl implements CollectionService {
         return null;
     }
 
-
+    @Override
+    public Collection findPrimaryKey(String user_id, String be_collectioned_id) {
+        return collectionMapper.findPrimaryKey(user_id, be_collectioned_id);
+    }
 }

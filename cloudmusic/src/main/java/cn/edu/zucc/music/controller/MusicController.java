@@ -31,6 +31,8 @@ public class MusicController {
     private UserService userService;
     @Autowired
     private SheetSongService sheetSongService;
+    @Autowired
+    private CollectionService collectionService;
 
 
     // 添加歌曲（收藏）
@@ -315,5 +317,99 @@ public class MusicController {
             jsonObject.put("data", ResultStatus.ALBUM_NOT_EXIST.getReasonPhrase());
         }
         return jsonObject;
+    }
+
+    @GetMapping(value = "/api/collection")
+    @ResponseBody
+    public JSONObject collection(String user_id, String target_id, int type) {
+        JSONObject json = new JSONObject();
+        int flag = 1;
+        User user = userService.findById(user_id);
+        if(user == null) {
+            flag = 0;
+        }
+        if(type == 1) {
+            Song song = songService.findById(target_id);
+            if(song == null) {
+                flag = 0;
+            }
+        } else if(type == 2){
+            Sheet sheet = sheetService.findById(target_id);
+            if(sheet == null) {
+                flag = 0;
+            }
+        }
+        if(flag == 0) {
+            json.put("code", 666);
+            JSONObject jsonType = new JSONObject();
+            jsonType.put("type", 0);
+            json.put("data", jsonType);
+        } else {
+            Collection collection = collectionService.findPrimaryKey(user_id, target_id);
+
+            if(collection == null) {
+                json.put("code", 200);
+                JSONObject jsonType = new JSONObject();
+                jsonType.put("type", 1);
+                json.put("data", jsonType);
+
+                Collection c = new Collection();
+                c.setUserId(user_id);
+                c.setBeCollectionedId(target_id);
+                c.setCollectionType(type);
+                collectionService.addCollection(c);
+            } else {
+                json.put("code", 666);
+                JSONObject jsonType = new JSONObject();
+                jsonType.put("type", 0);
+                json.put("data", jsonType);
+            }
+
+        }
+
+        return json;
+    }
+
+    @GetMapping(value = "/api/uncollection")
+    @ResponseBody
+    public JSONObject uncollection(String user_id, String target_id, int type) {
+        JSONObject json = new JSONObject();
+        int flag = 1;
+        User user = userService.findById(user_id);
+        if(user == null) {
+            flag = 0;
+        }
+        if(type == 1) {
+            Song song = songService.findById(target_id);
+            if(song == null) {
+                flag = 0;
+            }
+        } else if(type == 2){
+            Sheet sheet = sheetService.findById(target_id);
+            if(sheet == null) {
+                flag = 0;
+            }
+        }
+        if(flag == 0) {
+            json.put("code", 666);
+            JSONObject jsonType = new JSONObject();
+            jsonType.put("type", 0);
+            json.put("data", jsonType);
+        } else {
+            Collection collection = collectionService.findPrimaryKey(user_id, target_id);
+            if(collection == null) {
+                json.put("code", 666);
+                JSONObject jsonType = new JSONObject();
+                jsonType.put("type", 0);
+                json.put("data", jsonType);
+            } else {
+                json.put("code", 200);
+                JSONObject jsonType = new JSONObject();
+                jsonType.put("type", 1);
+                json.put("data", jsonType);
+            }
+        }
+
+        return json;
     }
 }

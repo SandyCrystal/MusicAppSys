@@ -10,4 +10,5 @@ public interface CollectionService {
     int updateCollection(Collection collection);
     Collection findById(int id);
     List<Collection> findAll();
+    Collection findPrimaryKey(String user_id, String be_collectioned_id);
 }
