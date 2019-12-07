@@ -30,7 +30,7 @@ class _EditPlayListWidgetState extends State<EditPlayListWidget> {
   void initState() {
     super.initState();
     _editingController = TextEditingController(text: widget.playlist.name);
-    _descTextController = TextEditingController(text: widget.playlist.description ?? "");
+    _descTextController = TextEditingController(text: "");
     _editingController.addListener((){
       if(_editingController.text.isEmpty){
         setState(() {

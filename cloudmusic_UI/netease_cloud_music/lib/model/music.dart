@@ -4,12 +4,12 @@ class MusicData {
   String songName;
   String artists;
   int index;
-
-  MusicData({
-    this.mvid,
-    this.picUrl,
-    this.songName,
-    this.artists,
-    this.index,
-  });
+  bool iscollected;
+  MusicData(
+      {this.mvid,
+      this.picUrl,
+      this.songName,
+      this.artists,
+      this.index,
+      this.iscollected});
 }

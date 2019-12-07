@@ -1,112 +1,119 @@
 import 'dart:convert';
 
-import 'package:common_utils/common_utils.dart';
-import 'package:extended_image/extended_image.dart';
+
 import 'package:flutter/material.dart';
 import 'package:netease_cloud_music/application.dart';
 import 'package:netease_cloud_music/model/user.dart';
-import 'package:netease_cloud_music/provider/play_list_model.dart';
-import 'package:netease_cloud_music/provider/user_model.dart';
+import 'package:netease_cloud_music/pages/person/followed_page.dart';
+import 'package:netease_cloud_music/pages/person/followed_page.dart';
+import 'package:netease_cloud_music/pages/person/followed_page.dart';
 import 'package:netease_cloud_music/utils/utils.dart';
 import 'package:netease_cloud_music/widgets/common_text_style.dart';
-import 'package:netease_cloud_music/model/album.dart';
-import 'package:netease_cloud_music/model/banner.dart' as prefix0;
-import 'package:netease_cloud_music/model/mv.dart';
-import 'package:netease_cloud_music/model/recommend.dart';
+
 import 'package:netease_cloud_music/utils/navigator_util.dart';
-import 'package:netease_cloud_music/utils/net_utils.dart';
 import 'package:netease_cloud_music/widgets/h_empty_view.dart';
 import 'package:netease_cloud_music/widgets/v_empty_view.dart';
-import 'package:netease_cloud_music/widgets/widget_banner.dart';
-import 'package:netease_cloud_music/widgets/widget_future_builder.dart';
-import 'package:netease_cloud_music/widgets/widget_play_list.dart';
+
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class AccountPage extends StatefulWidget{
   @override
   _AccountPageState createState() => _AccountPageState();
 }
-User _user = User.fromJson(json.decode(Application.sp.getString('user')));
 class _AccountPageState extends State<AccountPage> with AutomaticKeepAliveClientMixin{
-  Map<String, String> MenuData = {
-    '编辑资料': 'images/icon_music.png',
-    '我的消息': 'images/icon_late_play.png',
-    '设置': 'images/icon_download_black.png',
-    '关于': 'images/icon_broadcast.png',
-  };
-  List<String> MenuKeys;
   void initState(){
     super.initState();
-    MenuKeys = MenuData.keys.toList();
   }
-  Widget _buildMenu(){
-    return ListView.separated(
-      shrinkWrap: true,
-      padding: EdgeInsets.zero,
-      physics: NeverScrollableScrollPhysics(),
-      itemBuilder: (context, index) {
-        var curKey = MenuKeys[index];
-        var curValue = MenuData[MenuKeys[index]];
-        return Container(
-          height: ScreenUtil().setWidth(110),
-          alignment: Alignment.center,
-          child: Row(
-            children: <Widget>[
-              Container(
-                width: ScreenUtil().setWidth(140),
-                child: Align(
-                  child: Image.asset(
-                    curValue,
-                    width: ScreenUtil().setWidth(100),
-                    fit: BoxFit.fitWidth,
-                  ),
-                ),
-              ),
-              Expanded(
-                child: Text(
-                  curKey,
-                  style: commonTextStyle,
-                ),
-              )
-            ],
-          ),
-        );
-      },
-      separatorBuilder: (context, index) {
-        return Container(
-          color: Colors.grey,
-          margin: EdgeInsets.only(left: ScreenUtil().setWidth(140)),
-          height: ScreenUtil().setWidth(0.3),
-        );
-      },
-      itemCount: 4,
-    );
+  User _user = User.fromJson(json.decode(Application.sp.getString('user')));
+  Widget buildMenu(){
+    return  Column(crossAxisAlignment: CrossAxisAlignment.start,
+      children: <Widget>[
+        Container(width: double.infinity, height: 1.0, color: Color(0xFFF3F3F3),),
+        MaterialButton(
+          child: new Text('编辑资料',
+            style: TextStyle(
+              fontSize: 18,
+              color: Colors.black54,
+            ),),
+          onPressed: () {NavigatorUtil.goChange_account(context);},
+        ),
+        Container(width: double.infinity, height: 1.0, color: Color(0xFFF3F3F3),),
+        MaterialButton(
+          child: new Text('修改密码',
+            style: TextStyle(
+              fontSize: 18,
+              color: Colors.black54,
+            ),),
+          onPressed: () {NavigatorUtil.goChange_pwd(context);},
+        ),
+        Container(width: double.infinity, height: 1.0, color: Color(0xFFF3F3F3),),
+        MaterialButton(
+          child: new Text('设置',
+            style: TextStyle(
+              fontSize: 18,
+              color: Colors.black54,
+            ),),
+          onPressed: () {NavigatorUtil.goHomePage(context);},
+        ),
+        Container(width: double.infinity, height: 1.0, color: Color(0xFFF3F3F3),),
+        MaterialButton(
+          child: new Text('关于我们',
+            style: TextStyle(
+              fontSize: 18,
+              color: Colors.black54,
+            ),),
+          onPressed: () {NavigatorUtil.goHomePage(context);},
+        ),
+        Container(width: double.infinity, height: 8.0, color: Color(0xFFF3F3F3),),
+      ],);
+
   }
   Widget _buildMiddleMessage(){
     return Container(
       padding: EdgeInsets.only(left: 40,top: 10,right: 0,bottom: 0),
       child: Column(
-       children: <Widget>[
-         Row(
-           children: <Widget>[
-             Text('动态'),
-             HEmptyView(100),
-             Text('关注'),
-             HEmptyView(100),
-             Text('粉丝'),
-           ],
-         ),
-         Row(
-           children: <Widget>[
-             HEmptyView(10),
-             Text('0'),
-             HEmptyView(120),
-             Text('0'),
-             HEmptyView(110),
-             Text('0'),
-           ],
-         )
-       ],
+        children: <Widget>[
+          Row(
+            children: <Widget>[
+              MaterialButton(
+                child: new Text('动态',
+                  style: TextStyle(
+                    fontSize: 14,
+                    color: Colors.black54,
+                  ),),
+                onPressed: () {NavigatorUtil.goPerson(context);},
+              ),
+              HEmptyView(10),
+              MaterialButton(
+                child: new Text('关注',
+                  style: TextStyle(
+                    fontSize: 14,
+                    color: Colors.black54,
+                  ),),
+                onPressed: () {NavigatorUtil.goFollowed(context);},
+              ),
+              HEmptyView(10),
+              MaterialButton(
+                child: new Text('粉丝',
+                  style: TextStyle(
+                    fontSize: 14,
+                    color: Colors.black54,
+                  ),),
+                onPressed: () {NavigatorUtil.goFans(context);},
+              ),
+            ],
+          ),
+          Row(
+            children: <Widget>[
+              HEmptyView(40),
+              Text(_user.account.dynamicSize.toString()),
+              HEmptyView(90),
+              Text(_user.account.follow.toString()),
+              HEmptyView(90),
+              Text(_user.account.fans.toString()),
+            ],
+          )
+        ],
       ),
     );
   }
@@ -161,7 +168,7 @@ class _AccountPageState extends State<AccountPage> with AutomaticKeepAliveClient
               color: Color(0xfff5f5f5),
               height: ScreenUtil().setWidth(40),
             ),
-            _buildMenu(),
+            buildMenu(),
             VEmptyView(200),
            Center(
 

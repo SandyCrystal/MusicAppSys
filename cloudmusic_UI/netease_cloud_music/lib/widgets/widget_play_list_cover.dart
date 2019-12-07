@@ -10,9 +10,12 @@ class PlayListCoverWidget extends StatelessWidget {
   final String url;
   final int playCount;
   final double width;
+  final double height;
+  final double radius;
 
 
-  PlayListCoverWidget(this.url, {this.playCount, this.width = 200});
+  PlayListCoverWidget(this.url,
+      {this.playCount, this.width = 200, this.height, this.radius = 16});
 
   @override
   Widget build(BuildContext context) {

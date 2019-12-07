@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:netease_cloud_music/application.dart';
 import 'package:netease_cloud_music/model/user.dart';
+import 'package:netease_cloud_music/pages/home/account/account_page.dart';
+import 'package:netease_cloud_music/provider/AccountModel.dart';
 import 'package:netease_cloud_music/provider/play_list_model.dart';
 import 'package:netease_cloud_music/provider/user_model.dart';
 import 'package:netease_cloud_music/utils/navigator_util.dart';
@@ -46,7 +48,8 @@ class _SplashPageState extends State<SplashPage> with TickerProviderStateMixin {
     await Application.initSp();
     UserModel userModel = Provider.of<UserModel>(context);
     userModel.initUser();
-    Provider.of<PlayListModel>(context).user = userModel.user;
+    Provider.of<PlayListModel>( context).user = userModel.user;
+//    Provider.of<AccountModel>(context).user=userModel.user;
     if (userModel.user != null) {
       await NetUtils.refreshLogin(context).then((value){
         if(value.data != -1){
@@ -59,11 +62,11 @@ class _SplashPageState extends State<SplashPage> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-   // ScreenUtil.instance = ScreenUtil(width: 750, height: 1334)..init(context);
-   // final size = MediaQuery.of(context).size;
-   // Application.screenWidth = size.width;
-    //Application.screenHeight = size.height;
-   // Application.statusBarHeight = MediaQuery.of(context).padding.top;
+   ScreenUtil.instance = ScreenUtil(width: 750, height: 1334)..init(context);
+   final size = MediaQuery.of(context).size;
+    Application.screenWidth = size.width;
+    Application.screenHeight = size.height;
+    Application.statusBarHeight = MediaQuery.of(context).padding.top;
     return Scaffold(
       backgroundColor: Colors.white,
       body: Container(

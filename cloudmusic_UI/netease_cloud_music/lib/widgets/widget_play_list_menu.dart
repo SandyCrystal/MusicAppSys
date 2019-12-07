@@ -75,18 +75,22 @@ class _PlayListMenuWidgetState extends State<PlayListMenuWidget> {
             color: Colors.black26,
           ),
           Offstage(
-            offstage: widget._playlist.creator.userId != widget._model.user.account.userid,
+            offstage: widget._playlist.creator.userid !=
+                widget._model.user.account.userid,
             child: _buildMenuItem('images/icon_edit.png', '编辑歌单信息', () {
-
-              showDialog(context: context, builder: (context){
-                return EditPlayListWidget(submitCallback: (String name, String desc) {
-
-                }, playlist: widget._playlist,);
-              });
+              showDialog(
+                  context: context,
+                  builder: (context) {
+                    return EditPlayListWidget(
+                      submitCallback: (String name, String desc) {},
+                      playlist: widget._playlist,
+                    );
+                  });
             }),
           ),
           Offstage(
-            offstage: widget._playlist.creator.userId != widget._model.user.account.userid,
+            offstage: widget._playlist.creator.userid !=
+                widget._model.user.account.userid,
             child: Container(
               color: Colors.grey,
               margin: EdgeInsets.only(left: ScreenUtil().setWidth(140)),
@@ -94,9 +98,13 @@ class _PlayListMenuWidgetState extends State<PlayListMenuWidget> {
             ),
           ),
           _buildMenuItem('images/icon_del.png', '删除', () async {
-            NetUtils.deletePlaylist(context, params: {'id': widget._playlist.id}).then((v){
-              if(v.code == 200) Navigator.pop(context, widget._playlist..type = 1);
-              else Utils.showToast('删除失败，请重试');
+            NetUtils.deletePlaylist(context,
+                params: {'sheet_id': widget._playlist.id}).then((v) {
+              if (v.code == 200) {
+                Navigator.pop(context, widget._playlist..type=1);
+                Utils.showToast('删除成功');
+              } else
+                Utils.showToast('删除失败，请重试');
             });
           }),
           Container(

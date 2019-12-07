@@ -3,9 +3,7 @@ import 'package:flutter/foundation.dart';
 class RecommendData {
   int _code;
   List<Recommend> _recommend;
-  RecommendData(
-      {int code,
-        List<Recommend> recommend}) {
+  RecommendData({int code, List<Recommend> recommend}) {
     this._code = code;
     this._recommend = recommend;
   }
@@ -18,7 +16,6 @@ class RecommendData {
 
   RecommendData.fromJson(Map<String, dynamic> json) {
     _code = json['code'];
-
     if (json['data'] != null) {
       _recommend = new List<Recommend>();
       json['data'].forEach((v) {
@@ -38,39 +35,38 @@ class RecommendData {
 }
 
 class Recommend {
-  int _id;
+  String _id;
   String _name;
-  String _copywriter;
   String _picUrl;
   int _playcount;
   int _createTime;
   Creator _creator;
-
-
+  int _type;
+  bool _iscollected;
   Recommend(
-      {int id,
-        String name,
-        String copywriter,
-        String picUrl,
-        int playcount,
-        int createTime,
-        Creator creator
-      }) {
+      {String id,
+      String name,
+      String picUrl,
+      int playcount,
+      int createTime,
+      Creator creator,
+      int type,
+      bool iscollected}) {
     this._id = id;
     this._name = name;
-    this._copywriter = copywriter;
     this._picUrl = picUrl;
     this._playcount = playcount;
     this._createTime = createTime;
     this._creator = creator;
+    this._type = 1;
+    this._iscollected = iscollected;
   }
 
-  int get id => _id;
-  set id(int id) => _id = id;
+  String get id => _id;
+  set id(String id) => _id = id;
   String get name => _name;
   set name(String name) => _name = name;
-  String get copywriter => _copywriter;
-  set copywriter(String copywriter) => _copywriter = copywriter;
+
   String get picUrl => _picUrl;
   set picUrl(String picUrl) => _picUrl = picUrl;
   int get playcount => _playcount;
@@ -79,89 +75,121 @@ class Recommend {
   set createTime(int createTime) => _createTime = createTime;
   Creator get creator => _creator;
   set creator(Creator creator) => _creator = creator;
-
+  int get type => _type;
+  set type(int type) => _type = type;
+  bool get iscollected => _iscollected;
+  set iscollected(bool iscollected) => _iscollected = iscollected;
   Recommend.fromJson(Map<String, dynamic> json) {
     _id = json['id'];
     _name = json['name'];
-    _copywriter = json['copywriter'];
     _picUrl = json['picUrl'];
-    _playcount = json['playcount'];
+    _playcount = json['playCount'];
     _createTime = json['createTime'];
     _creator =
-    json['creator'] != null ? new Creator.fromJson(json['creator']) : null;
+        json['creator'] != null ? new Creator.fromJson(json['creator']) : null;
+    _iscollected = json['iscollected'];
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['id'] = this._id;
     data['name'] = this._name;
-    data['copywriter'] = this._copywriter;
     data['picUrl'] = this._picUrl;
-    data['playcount'] = this._playcount;
+    data['playCount'] = this._playcount;
     data['createTime'] = this._createTime;
     if (this._creator != null) {
       data['creator'] = this._creator.toJson();
     }
+    data['iscollected'] = this._iscollected;
     return data;
   }
 }
 
 class Creator {
-
-
-  int _userId;
+  String _userid;
+  String _userName;
+  String _introduction;
   String _avatarUrl;
-  String _nickname;
-  String _description;
-
+  int _userType;
+  int _follow;
+  int _fans;
+  bool _isfollowed;
   Creator(
-      {
-        int userId,
-
-        String avatarUrl,
-
-        String nickname,
-
-        String description}) {
-
-    this._userId = userId;
+      {String userid,
+      String userName,
+      int userType,
+      String introduction,
+      String avatarUrl,
+//    DateTime createTime,
+      String picUrl,
+      int follow,
+      int fans,
+      bool isfollowed}) {
+    this._userid = userid;
+    this._userName = userName;
+    this._userType = userType;
+//    this._createTime = createTime;
     this._avatarUrl = avatarUrl;
-    this._nickname = nickname;
-
-    this._description = description;
-
+    this._introduction = introduction;
+    this._fans = fans;
+    this._follow = follow;
+    this._isfollowed = isfollowed;
   }
 
+  String get userid => _userid;
 
+  set userid(String userid) => _userid = userid;
 
-  int get userId => _userId;
-  set userId(int userId) => _userId = userId;
+  String get userName => _userName;
+
+  set userName(String userName) => _userName = userName;
+
+  int get userType => _userType;
+
+  set userType(int userType) => _userType = userType;
 
   String get avatarUrl => _avatarUrl;
+
   set avatarUrl(String avatarUrl) => _avatarUrl = avatarUrl;
-  String get nickname => _nickname;
-  set nickname(String nickname) => _nickname = nickname;
 
-  String get description => _description;
-  set description(String description) => _description = description;
+  String get introduction => _introduction;
 
+  set introduction(String introduction) => _introduction = introduction;
+  int get follow => _follow;
+
+  set follow(int follow) => _follow = follow;
+
+  int get fans => _fans;
+
+  set fans(int fans) => _fans = fans;
+  bool get isfollowed => _isfollowed;
+
+//  DateTime get createTime => _createTime;
+//
+//  set createTime(DateTime createTime) => _createTime = createTime;
 
   Creator.fromJson(Map<String, dynamic> json) {
-    _userId = json['userId'];
-    _avatarUrl = json['avatarUrl'];
-    _nickname = json['nickname'];
-    _description = json['description'];
+    _userid = json['user_id'];
+    _userName = json['user_name'];
+    _userType = json['user_type'];
+    _avatarUrl = json['avatar_url'];
+    _introduction = json['introduction'];
+//    _createTime = json['createTime'];
+    _follow = json['follow'];
+    _fans = json['fans'];
+    _isfollowed = json['isfollowed'];
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
-
-    data['userId'] = this._userId;
-
-    data['avatarUrl'] = this._avatarUrl;
-
-    data['nickname'] = this._nickname;
-    data['description'] = this._description;
+    data['user_id'] = this._userid;
+    data['user_name'] = this._userName;
+    data['user_type'] = this._userType;
+    data['avatar_url'] = this.avatarUrl;
+    data['introduction'] = this._introduction;
+    data['follow'] = this._follow;
+    data['fans'] = this._fans;
+    data['isfollowed'] = this._isfollowed;
     return data;
   }
 }

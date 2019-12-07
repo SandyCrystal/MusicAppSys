@@ -34,7 +34,7 @@ class PlaySongsModel with ChangeNotifier{
       _curState = state;
       /// 先做顺序播放
       if(state == AudioPlayerState.COMPLETED){
-        nextPlay();
+//        nextPlay();
       }
       // 其实也只有在播放状态更新时才需要通知。
       notifyListeners();
@@ -56,14 +56,14 @@ class PlaySongsModel with ChangeNotifier{
   // 播放一首歌
   void playSong(Song song) {
     _songs.insert(curIndex, song);
-    play();
+//    play();
   }
 
   // 播放很多歌
   void playSongs(List<Song> songs, {int index}) {
     this._songs = songs;
     if (index != null) curIndex = index;
-    play();
+//    play();
   }
 
   // 添加歌曲

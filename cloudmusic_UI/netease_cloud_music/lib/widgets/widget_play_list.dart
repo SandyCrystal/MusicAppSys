@@ -15,7 +15,7 @@ class PlayListWidget extends StatelessWidget {
   final int maxLines;
   final VoidCallback onTap;
   final int index;
-
+  final bool iscollected;
   PlayListWidget({
     this.picUrl,
     @required this.text,
@@ -24,6 +24,7 @@ class PlayListWidget extends StatelessWidget {
     this.onTap,
     this.maxLines = -1,
     this.index,
+    this.iscollected,
   });
 
   @override
@@ -37,11 +38,18 @@ class PlayListWidget extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisSize: MainAxisSize.min,
           children: <Widget>[
-            picUrl == null ? Container() : PlayListCoverWidget(
-              picUrl,
-              playCount: playCount,
-            ),
-            index == null ? Container() : Text(index.toString(), style: commonGrayTextStyle,),
+            picUrl == null
+                ? Container()
+                : PlayListCoverWidget(
+                    picUrl,
+                    playCount: playCount,
+                  ),
+            index == null
+                ? Container()
+                : Text(
+                    index.toString(),
+                    style: commonGrayTextStyle,
+                  ),
             VEmptyView(5),
             Text(
               text,

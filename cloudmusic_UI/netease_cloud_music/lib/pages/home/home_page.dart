@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:netease_cloud_music/application.dart';
+import 'package:netease_cloud_music/pages/home/account/account_page.dart';
+import 'package:netease_cloud_music/utils/navigator_util.dart';
 import 'package:netease_cloud_music/widgets/v_empty_view.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:netease_cloud_music/widgets/widget_play.dart';
-import '../login_page.dart';
+import 'community/community_page.dart';
 import 'discover/discover_page.dart';
 import 'my/my_page.dart';
 
@@ -62,7 +64,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                             text: '我的',
                           ),
                           Tab(
-                            text: '动态',
+                            text: '社区',
                           ),
                           Tab(
                             text: '账号',
@@ -71,14 +73,14 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                       ),
                     ),
                     Positioned(
-                      right: ScreenUtil().setWidth(20),
+                      right: ScreenUtil().setWidth(10),
                       child: IconButton(
                         icon: Icon(
                           Icons.search,
                           size: ScreenUtil().setWidth(50),
                           color: Colors.black87,
                         ),
-                        onPressed: () {},
+                        onPressed: () { NavigatorUtil.gonewSearchPage(context);},
                       ),
                     ),
                   ],
@@ -90,8 +92,8 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                     children: [
                       DiscoverPage(),
                       MyPage(),
-                      DiscoverPage(),
-                      LoginPage(),
+                      CommunityPage(),
+                      AccountPage(),
                     ],
                   ),
                 ),

@@ -194,6 +194,6 @@ class _TopListPageState extends State<TopListPage> {
   }
 
   void toPlayListPage(TopList data){
-    NavigatorUtil.goPlayListPage(context, data: Recommend(picUrl: data.coverImgUrl, name: data.name, playcount: data.playCount, id: data.id));
+    NavigatorUtil.goPlayListPage(context, data: Recommend(picUrl: data.coverImgUrl, name: data.name, playcount: data.playCount, id: data.id.toString()));
   }
 }

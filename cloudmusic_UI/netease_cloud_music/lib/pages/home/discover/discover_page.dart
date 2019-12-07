@@ -1,6 +1,9 @@
+import 'dart:convert';
+
 import 'package:common_utils/common_utils.dart';
 import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart';
+import 'package:netease_cloud_music/model/user.dart';
 import 'package:netease_cloud_music/utils/utils.dart';
 import 'package:netease_cloud_music/widgets/common_text_style.dart';
 import 'package:netease_cloud_music/model/album.dart';
@@ -16,14 +19,16 @@ import 'package:netease_cloud_music/widgets/widget_future_builder.dart';
 import 'package:netease_cloud_music/widgets/widget_play_list.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
+import '../../../application.dart';
+
 class DiscoverPage extends StatefulWidget {
   @override
   _HomePrePageState createState() => _HomePrePageState();
 }
 
 class _HomePrePageState extends State<DiscoverPage>
-    with TickerProviderStateMixin,  AutomaticKeepAliveClientMixin {
-
+    with TickerProviderStateMixin, AutomaticKeepAliveClientMixin {
+  User _user = User.fromJson(json.decode(Application.sp.getString('user')));
 
   /// 构建轮播图
   Widget _buildBanner() {
@@ -40,7 +45,7 @@ class _HomePrePageState extends State<DiscoverPage>
     var map = {
       '每日推荐': 'images/icon_daily.png',
       '歌单': 'images/icon_playlist.png',
-      '排行榜': 'images/icon_rank.png',
+      '专辑': 'images/icon_rank.png',
     };
 
     var keys = map.keys.toList();
@@ -55,7 +60,7 @@ class _HomePrePageState extends State<DiscoverPage>
         childAspectRatio: 1 / 1.1,
       ),
       childrenDelegate: SliverChildBuilderDelegate(
-            (context, index) {
+        (context, index) {
           return GestureDetector(
             behavior: HitTestBehavior.translucent,
             onTap: () {
@@ -63,8 +68,11 @@ class _HomePrePageState extends State<DiscoverPage>
                 case 0:
                   NavigatorUtil.goDailySongsPage(context);
                   break;
+                case 1:
+                  NavigatorUtil.goListSongPage(context);
+                  break;
                 case 2:
-                  NavigatorUtil.goTopListPage(context);
+                  NavigatorUtil.goAlbumPage(context);
                   break;
               }
             },
@@ -98,11 +106,11 @@ class _HomePrePageState extends State<DiscoverPage>
                       padding: EdgeInsets.only(top: 3),
                       child: keys[index] == '每日推荐'
                           ? Text(
-                        '${DateUtil.formatDate(DateTime.now(), format: 'dd')}',
-                        style: TextStyle(
-                            color: Colors.red,
-                            fontWeight: FontWeight.bold),
-                      )
+                              '${DateUtil.formatDate(DateTime.now(), format: 'dd')}',
+                              style: TextStyle(
+                                  color: Colors.red,
+                                  fontWeight: FontWeight.bold),
+                            )
                           : Text(''),
                     )
                   ],
@@ -125,108 +133,35 @@ class _HomePrePageState extends State<DiscoverPage>
   Widget _buildRecommendPlayList() {
     return CustomFutureBuilder<RecommendData>(
       futureFunc: NetUtils.getRecommendData,
+      params: {'user_id': _user.account.userid},
       builder: (context, snapshot) {
         var data = snapshot.recommend;
+        print(data[0].name);
         return Container(
-            height: ScreenUtil().setWidth(300),
-            child: ListView.separated(
-              separatorBuilder: (context, index) {
-                return HEmptyView(ScreenUtil().setWidth(30));
-              },
-              padding: EdgeInsets.symmetric(
-                  horizontal: ScreenUtil().setWidth(15)),
+            height: ScreenUtil().setWidth(600),
+            child: GridView.builder(
+              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 3,
+                mainAxisSpacing: 10,
+                //childAspectRatio: 50,
+              ),
               itemBuilder: (context, index) {
                 return PlayListWidget(
                   text: data[index].name,
                   picUrl: data[index].picUrl,
                   playCount: data[index].playcount,
-                  maxLines: 2,
-                  onTap: (){
+                  maxLines: 1,
+                  onTap: () {
                     NavigatorUtil.goPlayListPage(context, data: data[index]);
                   },
                 );
               },
               shrinkWrap: true,
-              scrollDirection: Axis.horizontal,
+              scrollDirection: Axis.vertical,
               itemCount: data.length,
             ));
       },
     );
-  }
-
-  /// 构建新碟上架
-  Widget _buildNewAlbum() {
-    return CustomFutureBuilder<AlbumData>(
-        futureFunc: NetUtils.getAlbumData,
-        builder: (context, snapshot) {
-          var data = snapshot.albums;
-          return Container(
-              height: ScreenUtil().setWidth(300),
-              child: ListView.separated(
-                separatorBuilder: (context, index) {
-                  return HEmptyView(ScreenUtil().setWidth(30));
-                },
-                padding: EdgeInsets.symmetric(
-                    horizontal: ScreenUtil().setWidth(15)),
-                itemBuilder: (context, index) {
-                  return PlayListWidget(
-                    text: data[index].name,
-                    picUrl: data[index].picUrl,
-                    subText: data[index].artist.name ?? "",
-                    maxLines: 1,
-                  );
-                },
-                shrinkWrap: true,
-                scrollDirection: Axis.horizontal,
-                itemCount: data.length,
-              ));
-        });
-  }
-
-  /// 构建MV 排行榜
-  Widget _buildTopMv() {
-    return CustomFutureBuilder<MVData>(
-        futureFunc: NetUtils.getTopMvData,
-        builder: (context, snapshot) {
-          var data = snapshot.data;
-          return ListView.separated(
-            separatorBuilder: (context, index) {
-              return VEmptyView(ScreenUtil().setWidth(100));
-            },
-            padding: EdgeInsets.symmetric(
-                horizontal: ScreenUtil().setWidth(15)),
-            itemBuilder: (context, index) {
-              return Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  ClipRRect(
-                    borderRadius:
-                    BorderRadius.all(Radius.circular(8)),
-                    child: Utils.showNetImage(
-                      data[index].cover,
-                    ),
-                  ),
-                  VEmptyView(5),
-                  Text(
-                    data[index].name,
-                    style: commonTextStyle,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                  VEmptyView(2),
-                  Text(
-                    data[index].artistName,
-                    style: smallGrayTextStyle,
-                  ),
-                ],
-              );
-            },
-            shrinkWrap: true,
-            physics: NeverScrollableScrollPhysics(),
-            itemCount: data.length,
-          );
-        });
   }
 
   @override
@@ -259,30 +194,30 @@ class _HomePrePageState extends State<DiscoverPage>
             ),
             VEmptyView(20),
             _buildRecommendPlayList(),
-            VEmptyView(30),
-            Padding(
-              padding: EdgeInsets.symmetric(
-                horizontal: ScreenUtil().setWidth(15),
-              ),
-              child: Text(
-                '新碟上架',
-                style: commonTextStyle,
-              ),
-            ),
-            VEmptyView(20),
-            _buildNewAlbum(),
-            VEmptyView(30),
-            Padding(
-              padding: EdgeInsets.symmetric(
-                horizontal: ScreenUtil().setWidth(15),
-              ),
-              child: Text(
-                'MV 排行',
-                style: commonTextStyle,
-              ),
-            ),
-            VEmptyView(20),
-            _buildTopMv(),
+            //VEmptyView(30),
+            //Padding(
+            //   padding: EdgeInsets.symmetric(
+            //     horizontal: ScreenUtil().setWidth(15),
+            //   ),
+            //   child: Text(
+            //     '新碟上架',
+            //     style: commonTextStyle,
+            //   ),
+            //  ),
+            //  VEmptyView(20),
+            //_buildNewAlbum(),
+            //VEmptyView(30),
+            // Padding(
+            //padding: EdgeInsets.symmetric(
+            //   horizontal: ScreenUtil().setWidth(15),
+            //  ),
+            //  child: Text(
+            //    'MV 排行',
+            //    style: commonTextStyle,
+            //  ),
+            // ),
+            // VEmptyView(20),
+            //_buildTopMv(),
           ],
         ),
       ),
@@ -291,5 +226,4 @@ class _HomePrePageState extends State<DiscoverPage>
 
   @override
   bool get wantKeepAlive => true;
-
 }

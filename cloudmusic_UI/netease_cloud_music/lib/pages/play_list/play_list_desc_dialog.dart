@@ -25,7 +25,7 @@ class PlayListDescDialog extends StatelessWidget {
         child: Stack(
           children: <Widget>[
             Utils.showNetImage(
-              _data.coverImgUrl,
+              _data.picurl,
               width: double.infinity,
               height: double.infinity,
               fit: BoxFit.cover,
@@ -62,7 +62,7 @@ class PlayListDescDialog extends StatelessWidget {
                           Align(
                             alignment: Alignment.topCenter,
                             child: RoundedNetImage(
-                              _data.coverImgUrl,
+                              _data.picurl,
                               width: 400,
                               height: 400,
                             ),
@@ -80,23 +80,24 @@ class PlayListDescDialog extends StatelessWidget {
                             width: Application.screenWidth * 3 / 4,
                           ),
                           VEmptyView(20),
-                          _data.tags.isEmpty
-                              ? Container()
-                              : Row(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: <Widget>[
-                                    Text(
-                                      '标签：',
-                                      style: common14WhiteTextStyle,
-                                    ),
-                                    ..._data.tags
-                                        .map((t) => TagWidget(t))
-                                        .toList()
-                                  ],
-                                ),
-                          _data.tags.isEmpty ? Container() : VEmptyView(40),
+/* 有错 */
+//                          _data.tags.isEmpty
+//                              ? Container()
+//                              : Row(
+//                                  crossAxisAlignment: CrossAxisAlignment.start,
+//                                  children: <Widget>[
+//                                    Text(
+//                                      '标签：',
+//                                      style: common14WhiteTextStyle,
+//                                    ),
+//                                    ..._data.tags
+//                                        .map((t) => TagWidget(t))
+//                                        .toList()
+//                                  ],
+//                                ),
+//                          _data.tags.isEmpty ? Container() : VEmptyView(40),
                           Text(
-                            _data.description,
+                            '',
                             style: common14WhiteTextStyle,
                             softWrap: true,
                           ),

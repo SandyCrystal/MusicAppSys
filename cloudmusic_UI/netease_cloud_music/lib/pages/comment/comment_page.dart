@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:common_utils/common_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -5,6 +7,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:netease_cloud_music/model/comment_head.dart';
 import 'package:netease_cloud_music/model/song_comment.dart';
 import 'package:netease_cloud_music/pages/comment/comment_type.dart';
+import 'package:netease_cloud_music/provider/play_list_model.dart';
 import 'package:netease_cloud_music/utils/net_utils.dart';
 import 'package:netease_cloud_music/utils/number_utils.dart';
 import 'package:netease_cloud_music/utils/utils.dart';
@@ -15,24 +18,22 @@ import 'package:netease_cloud_music/widgets/v_empty_view.dart';
 import 'package:flutter_easyrefresh/easy_refresh.dart';
 import 'package:netease_cloud_music/widgets/widget_load_footer.dart';
 import 'package:netease_cloud_music/widgets/widget_ovar_img.dart';
+import 'package:netease_cloud_music/application.dart';
 
 import 'comment_input_widget.dart';
-
 class CommentPage extends StatefulWidget {
   final CommentHead commentHead;
 
   CommentPage(this.commentHead);
-
   @override
   _CommentPageState createState() => _CommentPageState();
 }
-
 class _CommentPageState extends State<CommentPage> {
-  Map<String, int> params;
+  Map<String, dynamic> params;
   List<Comments> commentData = [];
   EasyRefreshController _controller;
   FocusNode _blankNode = FocusNode();
-
+  String userId = json.decode(Application.sp.getString('user'))['data']['userId'];
   @override
   void initState() {
     super.initState();
@@ -46,10 +47,7 @@ class _CommentPageState extends State<CommentPage> {
   void _request() async {
     var r = await NetUtils.getCommentData(context, widget.commentHead.type, params: params);
     setState(() {
-      if (r.hotComments != null && r.hotComments.isNotEmpty) {
-        commentData.add(Comments(isTitle: true, title: "精彩评论"));
-        commentData.addAll(r.hotComments);
-      }
+
       if (commentData.where((d) => d.title == "最新评论").isEmpty) {
         commentData.add(Comments(isTitle: true, title: "最新评论"));
       }
@@ -123,15 +121,15 @@ class _CommentPageState extends State<CommentPage> {
             Align(
               child: CommentInputWidget((content){
                 // 提交评论
-                NetUtils.sendComment(context, params: {
-                  't': 1,
-                  'type': widget.commentHead.type,
-                  'id': widget.commentHead.id,
+                NetUtils.sendComment(context, params:  {
+                  'user_id': userId,
+                  'song_id': widget.commentHead.id,
                   'content': content
                 }).then((r){
                   Utils.showToast('评论成功！');
                   setState(() {
-                    commentData.insert(commentData.map((c) => c.title).toList().indexOf('最新评论')+1, r.comment);
+                    Comments a=new Comments(user: r.user,commentId: r.commentId,content: r.content,time: r.time,likedCount: r.likedCount,isTitle: false,title: '');
+                    commentData.insert(commentData.map((c) => c.title).toList().indexOf('最新评论')+1,a );
                   });
                 });
               }),

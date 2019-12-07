@@ -89,7 +89,9 @@ class _DailySongsPageState extends State<DailySongsPage> {
                               picUrl: d.album.picUrl,
                               songName: d.name,
                               artists:
-                                  "${d.artists.map((a) => a.name).toList().join('/')} - ${d.album.name}"),
+                                  "${d.artists} - ${d.album.name}",
+                              iscollected: d.iscollected
+                          ),
                           onTap: () {
                             playSongs(model, index);
                           },
@@ -114,7 +116,7 @@ class _DailySongsPageState extends State<DailySongsPage> {
                 r.id,
                 name: r.name,
                 picUrl: r.album.picUrl,
-                artists: '${r.artists.map((a) => a.name).toList().join('/')}',
+                artists: '${r.artists}',
               ))
           .toList(),
       index: index,

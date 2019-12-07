@@ -1,15 +1,18 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:netease_cloud_music/model/play_list.dart';
 import 'package:netease_cloud_music/model/user.dart';
 import 'package:netease_cloud_music/utils/net_utils.dart';
+
+import '../application.dart';
 
 class PlayListModel with ChangeNotifier {
   User user;
 
   List<Playlist> _selfCreatePlayList = []; // 我创建的歌单
   List<Playlist> _collectPlayList = []; // 收藏的歌单
-  List<Playlist> _allPlayList = []; // 所有的歌单
-
+  List<Playlist> _allPlayList = []; // 所有的
   List<Playlist> get selfCreatePlayList => _selfCreatePlayList;
 
   List<Playlist> get collectPlayList => _collectPlayList;
@@ -17,16 +20,19 @@ class PlayListModel with ChangeNotifier {
   List<Playlist> get allPlayList => _allPlayList;
 
 
+
   void setPlayList(List<Playlist> value) {
-    _allPlayList = value;
+    if (value!=null)
+      {_allPlayList = value;
+    }
     _splitPlayList();
   }
 
   void _splitPlayList() {
     _selfCreatePlayList =
-        _allPlayList.where((p) => p.creator.userId == user.account.userid).toList();
+        _allPlayList.where((p) => p.creator.userid ==  User.fromJson(json.decode(Application.sp.getString('user'))).account.userid).toList();
     _collectPlayList =
-        _allPlayList.where((p) => p.creator.userId != user.account.userid).toList();
+        _allPlayList.where((p) => p.creator.userid !=  User.fromJson(json.decode(Application.sp.getString('user'))).account.userid).toList();
     notifyListeners();
   }
 
@@ -41,7 +47,7 @@ class PlayListModel with ChangeNotifier {
   }
 
   void getSelfPlaylistData(BuildContext context) async{
-    var result = await NetUtils.getSelfPlaylistData(context, params: {'uid': user.account.userid});
+    var result = await NetUtils.getSelfPlaylistData(context, params: {'user_id':  User.fromJson(json.decode(Application.sp.getString('user'))).account.userid});
     setPlayList(result.playlist);
   }
 }

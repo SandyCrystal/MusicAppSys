@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
@@ -7,11 +8,13 @@ import 'package:netease_cloud_music/model/music.dart';
 import 'package:netease_cloud_music/model/play_list.dart';
 import 'package:netease_cloud_music/model/recommend.dart';
 import 'package:netease_cloud_music/model/song.dart';
+import 'package:netease_cloud_music/model/user.dart';
 import 'package:netease_cloud_music/pages/comment/comment_type.dart';
 import 'package:netease_cloud_music/pages/play_list/play_list_desc_dialog.dart';
 import 'package:netease_cloud_music/provider/play_songs_model.dart';
 import 'package:netease_cloud_music/utils/navigator_util.dart';
 import 'package:netease_cloud_music/utils/net_utils.dart';
+import 'package:netease_cloud_music/utils/utils.dart';
 import 'package:netease_cloud_music/widgets/common_text_style.dart';
 import 'package:netease_cloud_music/widgets/h_empty_view.dart';
 import 'package:netease_cloud_music/widgets/v_empty_view.dart';
@@ -22,6 +25,8 @@ import 'package:netease_cloud_music/widgets/widget_play_list_app_bar.dart';
 import 'package:netease_cloud_music/widgets/widget_play_list_cover.dart';
 import 'package:netease_cloud_music/widgets/widget_sliver_future_builder.dart';
 import 'package:provider/provider.dart';
+
+import '../../application.dart';
 
 class PlayListPage extends StatefulWidget {
   final Recommend data;
@@ -35,6 +40,7 @@ class PlayListPage extends StatefulWidget {
 class _PlayListPageState extends State<PlayListPage> {
   double _expandedHeight = ScreenUtil().setWidth(630);
   Playlist _data;
+  User _user = User.fromJson(json.decode(Application.sp.getString('user')));
 
   /// 构建歌单简介
   Widget buildDescription() {
@@ -53,12 +59,12 @@ class _PlayListPageState extends State<PlayListPage> {
           transitionBuilder: _buildMaterialDialogTransitions,
         );
       },
-      child: _data != null && _data.description != null
+      child: _data != null
           ? Row(
               children: <Widget>[
                 Expanded(
                   child: Text(
-                    _data.description,
+                    '',
                     style: smallWhite70TextStyle,
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
@@ -74,6 +80,8 @@ class _PlayListPageState extends State<PlayListPage> {
     );
   }
 
+  var count = 1; //标记是否已经收藏该歌单
+  var pic = 'images/icon_dislike.png';
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -128,7 +136,7 @@ class _PlayListPageState extends State<PlayListPage> {
                                     child: _data == null
                                         ? Container()
                                         : Text(
-                                            _data.creator.nickname,
+                                            _data.creator.userName,
                                             maxLines: 1,
                                             overflow: TextOverflow.ellipsis,
                                             style: commonWhite70TextStyle,
@@ -156,25 +164,55 @@ class _PlayListPageState extends State<PlayListPage> {
                       child: Row(
                         children: <Widget>[
                           FooterTabWidget('images/icon_comment.png',
-                              '${_data == null ? "评论" : _data.commentCount}',
-                              () {
+                              '${_data == null ? "评论" : _data.trackCount}', () {
                             NavigatorUtil.goCommentPage(context,
                                 data: CommentHead(
-                                    _data.coverImgUrl,
-                                    _data.name,
-                                    _data.creator.nickname,
-                                    _data.commentCount,
-                                    _data.id,
-                                    CommentType.playList.index));
+                                  _data.picurl,
+                                  _data.name,
+                                  _data.creator.userName,
+                                  _data.trackCount,
+                                  _data.id,
+                                  CommentType.playList.index,
+                                ));
                           }),
                           FooterTabWidget(
                               'images/icon_share.png',
-                              '${_data == null ? "分享" : _data.shareCount}',
+                              '${_data == null ? "分享" : _data.trackCount}',
                               () {}),
                           FooterTabWidget(
                               'images/icon_download.png', '下载', () {}),
                           FooterTabWidget(
                               'images/icon_multi_select.png', '多选', () {}),
+                          _data.iscollected
+                              ? FooterTabWidget('images/icon_like.png', '已收藏',
+                                  () {
+                                  NetUtils.uncollection(context, params: {
+                                    'user_id': _user.account.userid,
+                                    'target_id': _data.id,
+                                    'type': 2
+                                  })
+                                      .then((m) => ({
+                                            Utils.showToast(m.data),
+                                            _data.iscollected = false
+                                          }))
+                                      .catchError(
+                                          (m) => Utils.showToast("请求错误"));
+                                  Utils.showToast('取消收藏');
+                                })
+                              : FooterTabWidget('images/icon_liked.png', '收藏',
+                                  () {
+                                  NetUtils.collection(context, params: {
+                                    'user_id': _user.account.userid,
+                                    'target_id': _data.id,
+                                    'type': 2
+                                  })
+                                      .then((m) => ({
+                                            Utils.showToast(m.data),
+                                            _data.iscollected = true
+                                          }))
+                                      .catchError(
+                                          (m) => Utils.showToast("请求错误"));
+                                })
                         ],
                       ),
                     )
@@ -189,7 +227,10 @@ class _PlayListPageState extends State<PlayListPage> {
           ),
           CustomSliverFutureBuilder<PlayListData>(
             futureFunc: NetUtils.getPlayListData,
-            params: {'id': widget.data.id},
+            params: {
+              'sheet_id': widget.data.id,
+              'user_id': _user.account.userid
+            },
             builder: (context, data) {
               setData(data.playlist);
               return Consumer<PlaySongsModel>(builder: (context, model, child) {
@@ -198,17 +239,15 @@ class _PlayListPageState extends State<PlayListPage> {
                   var d = data.playlist.tracks[index];
                   return WidgetMusicListItem(
                     MusicData(
-                      mvid: d.mv,
                       index: index + 1,
                       songName: d.name,
-                      artists:
-                          '${d.ar.map((a) => a.name).toList().join('/')} - ${d.al.name}',
+                      artists: '${d.artist} - ${d.album.name}',
                     ),
                     onTap: () {
                       playSongs(model, index);
                     },
                   );
-                }, childCount: data.playlist.trackIds.length));
+                }, childCount: data.playlist.tracks.length));
               });
             },
           ),
@@ -223,8 +262,8 @@ class _PlayListPageState extends State<PlayListPage> {
           .map((r) => Song(
                 r.id,
                 name: r.name,
-                picUrl: r.al.picUrl,
-                artists: '${r.ar.map((a) => a.name).toList().join('/')}',
+                picUrl: r.album.picUrl,
+                artists: '${r.artist}',
               ))
           .toList(),
       index: index,

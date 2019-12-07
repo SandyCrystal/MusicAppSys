@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:ui';
 
 import 'package:audioplayers/audioplayers.dart';
@@ -7,7 +8,7 @@ import 'package:flutter/material.dart' as prefix0;
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:netease_cloud_music/application.dart';
 import 'package:netease_cloud_music/model/comment_head.dart';
-import 'package:netease_cloud_music/model/song.dart';
+import 'package:netease_cloud_music/model/user.dart' as prefix0;
 import 'package:netease_cloud_music/model/song_comment.dart';
 import 'package:netease_cloud_music/pages/comment/comment_type.dart';
 import 'package:netease_cloud_music/pages/play_songs/widget_lyric.dart';
@@ -38,6 +39,8 @@ class _PlaySongsPageState extends State<PlaySongsPage>
   AnimationController _stylusController; //唱针控制器
   Animation<double> _stylusAnimation;
   int switchIndex = 0; //用于切换歌词
+  prefix0.User _user =
+      prefix0.User.fromJson(json.decode(Application.sp.getString('user')));
 
   @override
   void initState() {
@@ -91,7 +94,6 @@ class _PlaySongsPageState extends State<PlaySongsPage>
                 height: double.infinity,
               ),
             ),
-
             AppBar(
               centerTitle: true,
               brightness: Brightness.dark,
@@ -112,17 +114,18 @@ class _PlaySongsPageState extends State<PlaySongsPage>
               ),
             ),
             Container(
-              margin: EdgeInsets.only(top: kToolbarHeight + Application.statusBarHeight),
+              margin: EdgeInsets.only(
+                  top: kToolbarHeight + Application.statusBarHeight),
               child: Column(
                 children: <Widget>[
                   Expanded(
                     child: GestureDetector(
                       behavior: HitTestBehavior.translucent,
-                      onTap: (){
+                      onTap: () {
                         setState(() {
-                          if(switchIndex == 0){
+                          if (switchIndex == 0) {
                             switchIndex = 1;
-                          }else{
+                          } else {
                             switchIndex = 0;
                           }
                         });
@@ -135,7 +138,8 @@ class _PlaySongsPageState extends State<PlaySongsPage>
                               Align(
                                 alignment: Alignment.topCenter,
                                 child: Container(
-                                  margin: EdgeInsets.only(top: ScreenUtil().setWidth(150)),
+                                  margin: EdgeInsets.only(
+                                      top: ScreenUtil().setWidth(150)),
                                   child: RotationTransition(
                                     turns: _controller,
                                     child: Stack(
@@ -176,11 +180,10 @@ class _PlaySongsPageState extends State<PlaySongsPage>
                       ),
                     ),
                   ),
-
                   buildSongsHandle(model),
                   Padding(
-                    padding:
-                    EdgeInsets.symmetric(horizontal: ScreenUtil().setWidth(30)),
+                    padding: EdgeInsets.symmetric(
+                        horizontal: ScreenUtil().setWidth(30)),
                     child: SongProgressWidget(model),
                   ),
                   PlayBottomMenuWidget(model),
@@ -194,12 +197,47 @@ class _PlaySongsPageState extends State<PlaySongsPage>
     });
   }
 
+  var count = 1; //count用于标记该歌曲是否已经添加到我的收藏中
+  var pic = 'images/icon_dislike.png';
+
   Widget buildSongsHandle(PlaySongsModel model) {
     return Container(
       height: ScreenUtil().setWidth(100),
       child: Row(
         children: <Widget>[
-          ImageMenuWidget('images/icon_dislike.png', 80),
+          model.curSong.iscollected
+              ? ImageMenuWidget(
+                  'images/icon_liked.png',
+                  80,
+                  onTap: () {
+                    NetUtils.collection(context, params: {
+                      'user_id': _user.account.userid,
+                      'target_id': model.curSong.id,
+                      'type': 1
+                    })
+                        .then((m) => ({
+                              Utils.showToast(m.data),
+                              model.curSong.iscollected = false
+                            }))
+                        .catchError((m) => Utils.showToast("请求错误"));
+                  },
+                )
+              : ImageMenuWidget(
+                  'images/icon_dislike.png',
+                  80,
+                  onTap: () {
+                    NetUtils.uncollection(context, params: {
+                      'user_id': _user.account.userid,
+                      'target_id': model.curSong.id,
+                      'type': 1
+                    })
+                        .then((m) => ({
+                              Utils.showToast(m.data),
+                              model.curSong.iscollected = true
+                            }))
+                        .catchError((m) => Utils.showToast("请求错误"));
+                  },
+                ),
           ImageMenuWidget(
             'images/icon_song_download.png',
             80,
@@ -217,7 +255,10 @@ class _PlaySongsPageState extends State<PlaySongsPage>
                 height: ScreenUtil().setWidth(80),
                 child: CustomFutureBuilder<SongCommentData>(
                   futureFunc: NetUtils.getSongCommentData,
-                  params: {'id': model.curSong.id, 'offset': 1},
+                  params: {
+                    'id': model.curSong.id,
+                    'user_id': _user.account.userid
+                  },
                   loadingWidget: Image.asset(
                     'images/icon_song_comment.png',
                     width: ScreenUtil().setWidth(80),
@@ -226,7 +267,14 @@ class _PlaySongsPageState extends State<PlaySongsPage>
                   builder: (context, data) {
                     return GestureDetector(
                       onTap: () {
-                        NavigatorUtil.goCommentPage(context, data: CommentHead(model.curSong.picUrl, model.curSong.name, model.curSong.artists, data.total, model.curSong.id, CommentType.song.index));
+                        NavigatorUtil.goCommentPage(context,
+                            data: CommentHead(
+                                model.curSong.picUrl,
+                                model.curSong.name,
+                                model.curSong.artists,
+                                data.total,
+                                model.curSong.id,
+                                CommentType.song.index));
                       },
                       child: Stack(
                         alignment: Alignment.center,
@@ -239,7 +287,8 @@ class _PlaySongsPageState extends State<PlaySongsPage>
                           Align(
                             alignment: Alignment.topRight,
                             child: Container(
-                              margin: EdgeInsets.only(top: ScreenUtil().setWidth(12)),
+                              margin: EdgeInsets.only(
+                                  top: ScreenUtil().setWidth(12)),
                               width: ScreenUtil().setWidth(58),
                               child: Text(
                                 '${NumberUtils.formatNum(data.total)}',
@@ -255,7 +304,13 @@ class _PlaySongsPageState extends State<PlaySongsPage>
               ),
             ),
           ),
-          ImageMenuWidget('images/icon_song_more.png', 80),
+          ImageMenuWidget(
+            'images/icon_song_more.png',
+            80,
+            onTap: () {
+              NavigatorUtil.goaddSongPage(context, data: model.curSong.id);
+            },
+          ),
         ],
       ),
     );

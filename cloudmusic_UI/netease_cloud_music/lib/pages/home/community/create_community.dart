@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:common_utils/common_utils.dart';
 import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart';
@@ -14,59 +16,92 @@ import 'package:netease_cloud_music/utils/navigator_util.dart';
 import 'package:netease_cloud_music/utils/net_utils.dart';
 import 'package:netease_cloud_music/widgets/h_empty_view.dart';
 import 'package:netease_cloud_music/widgets/v_empty_view.dart';
-import 'package:netease_cloud_music/widgets/widget_banner.dart';
-import 'package:netease_cloud_music/widgets/widget_future_builder.dart';
-import 'package:netease_cloud_music/widgets/widget_play_list.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:image_picker/image_picker.dart';
+
+import '../../../application.dart';
 
 class Create_CommunityPage extends StatefulWidget{
+  final String userId;
+  final String uid=json.decode(Application.sp.getString('user'))["data"]["user_id"];
+  Create_CommunityPage(this.userId);
   @override
   _Create_CommunityPageState createState() => _Create_CommunityPageState();
 }
+
 class _Create_CommunityPageState extends State<Create_CommunityPage> with TickerProviderStateMixin,AutomaticKeepAliveClientMixin{
-  Map<String, String> topMenuData = {
-    '所在位置': 'images/icon_song_more.png',
-    '谁可以看': 'images/icon_song_more.png',
-  };
-  List<String> topMenuKeys;
+  TextEditingController _conter = TextEditingController();
+  var _imgPath;
+
   @override
   void initState() {
 
     super.initState();
-    topMenuKeys = topMenuData.keys.toList();
   }
-  Widget _buildMenu() {
-    return ListView.separated(
-      shrinkWrap: true,
-      padding: EdgeInsets.zero,
-      physics: NeverScrollableScrollPhysics(),
-      itemBuilder: (context, index) {
-        var curKey = topMenuKeys[index];
-        var curValue = topMenuData[topMenuKeys[index]];
-        return Container(
-          height: ScreenUtil().setWidth(110),
-          alignment: Alignment.center,
-          child: Row(
-            children: <Widget>[
-              Expanded(
-                child: Text(
-                  curKey,
-                  style: commonTextStyle,
-                ),
-              )
-            ],
-          ),
-        );
-      },
-      separatorBuilder: (context, index) {
-        return Container(
-          color: Colors.grey,
-          margin: EdgeInsets.only(left: ScreenUtil().setWidth(140)),
-          height: ScreenUtil().setWidth(0.3),
-        );
-      },
-      itemCount: 2,
-    );
+  Widget buildMenu(){
+    return  Column(crossAxisAlignment: CrossAxisAlignment.start,
+      children: <Widget>[
+        Container(width: double.infinity, height: 1.0, color: Color(0xFFF3F3F3),),
+        Row(
+          children: <Widget>[
+            MaterialButton(
+              child: new Text('所在位置',
+                style: TextStyle(
+                  fontSize: 18,
+                  color: Colors.black54,
+                ),),
+              onPressed: () {},
+            ),
+            new Expanded(
+              flex: 1,
+              child: Row(
+                children: <Widget>[
+                  HEmptyView(10),
+                ],
+              ),
+            ),
+            new  IconButton(
+              icon: Icon(
+                Icons.arrow_forward_ios,
+                size: ScreenUtil().setWidth(50),
+                color: Colors.black54,
+              ),
+              onPressed: () {},
+            ),
+          ],
+        ),
+        Container(width: double.infinity, height: 1.0, color: Color(0xFFF3F3F3),),
+        Row(
+          children: <Widget>[
+            MaterialButton(
+              child: new Text('谁可以看',
+                style: TextStyle(
+                  fontSize: 18,
+                  color: Colors.black54,
+                ),),
+              onPressed: () {},
+            ),
+            new Expanded(
+              flex: 1,
+              child: Row(
+                children: <Widget>[
+                  HEmptyView(10),
+                ],
+              ),
+            ),
+            new  IconButton(
+              icon: Icon(
+                Icons.arrow_forward_ios,
+                size: ScreenUtil().setWidth(50),
+                color: Colors.black54,
+              ),
+              onPressed: () {},
+            ),
+          ],
+        ),
+        Container(width: double.infinity, height: 8.0, color: Color(0xFFF3F3F3),),
+      ],);
+
   }
   @override
   Widget build(BuildContext context){
@@ -79,8 +114,8 @@ class _Create_CommunityPageState extends State<Create_CommunityPage> with Ticker
           preferredSize: Size.zero,
         ),
         backgroundColor: Colors.white,
-        body: SafeArea(
-          bottom: false,
+        body: SingleChildScrollView(
+         // bottom: false,
           child: Column(
             children: <Widget>[
               Row(
@@ -91,44 +126,112 @@ class _Create_CommunityPageState extends State<Create_CommunityPage> with Ticker
                         fontSize: 14,
                         color: Colors.black87,
                       ),),
-                    onPressed: () {},
+                    onPressed: () {Navigator.pop(context);},
                   ),
-                  HEmptyView(230),
+                  new Expanded(
+                    flex: 1,
+                    child: Row(
+                      children: <Widget>[
+                        HEmptyView(10),
+                      ],
+                    ),
+                  ),
                   MaterialButton (
                     child: new Text('发送',
                       style: TextStyle(
                         fontSize: 14,
                         color: Colors.black87,
                       ),),
-                    onPressed: () {},
+                    onPressed: () {
+                      String conter = _conter.text;
+                      conter == null ?
+                          Utils.showToast('输入内容不能为空'):
+                          {
+                            NetUtils.sendDynamic(context, params: {"userId":widget.uid,"content":conter,"picUrl":_imgPath})
+                                .then((m)=>(Utils.showToast('发送成功')))
+                                .catchError((err)=>(Utils.showToast('发送失败'))),
+                            Navigator.pop(context)};
+                    },
                   )
                 ],
               ),
+              Container(
+                color: Color(0xfff5f5f5),
+                height: ScreenUtil().setWidth(40),
+              ),
               VEmptyView(20),
-
-                  TextField(
-                    decoration: InputDecoration(
-                      hintText: '随便聊一聊',
-                      border: OutlineInputBorder(),
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 4.0),
+                // 表单输入框，参数同 TextField 基本类似
+                child: TextFormField(
+                  controller: _conter,
+                  style: TextStyle(color: Colors.black, fontSize: 16.0),
+                  decoration: InputDecoration(
+                      labelText: '随便聊一聊',
+                      labelStyle: TextStyle(color: Colors.grey),
+                      helperStyle: TextStyle(color: Colors.grey)),
+                ),
+              ),
+                    _ImageView(_imgPath),
+                    RaisedButton(
+                      onPressed: _takePhoto,
+                      child: Text("拍照"),
                     ),
-                  ),
-              VEmptyView(200),
+                    RaisedButton(
+                      onPressed: _openGallery,
+                      child: Text("选择照片"),
+                    ),
+
+
+              /*VEmptyView(100),
               IconButton(icon: Icon(
-                Icons.border_inner
+                  Icons.border_inner
               ),
                   iconSize: 50,
-                  onPressed: (){}),
-              VEmptyView(100),
-              _buildMenu(),
-                ],
+                  onPressed: (){
+                    ImagePickerWidget();
+                  }),*/
+              //VEmptyView(100),
+              //buildMenu(),
+            ],
 
 
-              crossAxisAlignment: CrossAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
           ),
-    )
+        )
     );
   }
   // TODO: implement wantKeepAlive
   bool get wantKeepAlive => true;
+  Widget _ImageView(imgPath) {
+    if (imgPath == null) {
+      return Center(
+        child: Text("请选择图片或拍照"),
+      );
+    } else {
+      return Image.file(
+        imgPath,
+        height: 250,
+        width: 250,
+      );
+    }
+  }
 
+
+  /*拍照*/
+  _takePhoto() async {
+    var image = await ImagePicker.pickImage(source: ImageSource.camera);
+
+    setState(() {
+      _imgPath = image;
+    });
+  }
+
+  /*相册*/
+  _openGallery() async {
+    var image = await ImagePicker.pickImage(source: ImageSource.gallery);
+    setState(() {
+      _imgPath = image;
+    });
+  }
 }

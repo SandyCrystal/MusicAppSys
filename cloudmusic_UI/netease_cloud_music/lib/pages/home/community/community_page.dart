@@ -1,24 +1,13 @@
-import 'package:common_utils/common_utils.dart';
-import 'package:extended_image/extended_image.dart';
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
-import 'package:netease_cloud_music/model/user.dart';
 import 'package:netease_cloud_music/pages/home/community/commnuity_item/attention.dart';
 import 'package:netease_cloud_music/pages/home/community/commnuity_item/dynamic.dart';
-import 'package:netease_cloud_music/utils/utils.dart';
-import 'package:netease_cloud_music/widgets/common_text_style.dart';
-import 'package:netease_cloud_music/model/album.dart';
-import 'package:netease_cloud_music/model/banner.dart' as prefix0;
-import 'package:netease_cloud_music/model/mv.dart';
-import 'package:netease_cloud_music/model/recommend.dart';
 import 'package:netease_cloud_music/utils/navigator_util.dart';
-import 'package:netease_cloud_music/utils/net_utils.dart';
-import 'package:netease_cloud_music/widgets/h_empty_view.dart';
 import 'package:netease_cloud_music/widgets/v_empty_view.dart';
-import 'package:netease_cloud_music/widgets/widget_banner.dart';
-import 'package:netease_cloud_music/widgets/widget_future_builder.dart';
-import 'package:netease_cloud_music/widgets/widget_play_list.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
+import '../../../application.dart';
 
 
 class CommunityPage extends StatefulWidget{
@@ -28,6 +17,8 @@ class CommunityPage extends StatefulWidget{
 
 class _CommunityPageState extends State<CommunityPage> with TickerProviderStateMixin,AutomaticKeepAliveClientMixin{
   TabController _tabController;
+  var userId=json.decode(Application.sp.getString('user'));
+
   @override
   void initState() {
     super.initState();
@@ -52,18 +43,6 @@ class _CommunityPageState extends State<CommunityPage> with TickerProviderStateM
               children: <Widget>[
                 Stack(
                   children: <Widget>[
-                    Positioned(
-                      left: ScreenUtil().setWidth(10),
-                      child: IconButton(
-                        icon: Icon(
-                          Icons.add,
-                          size: ScreenUtil().setWidth(50),
-                          color: Colors.black87,
-                        ),
-                        onPressed: () {NavigatorUtil.goCreate_commnuityPage(context);},
-                      ),
-                    ),
-
                     Padding(
                       padding: EdgeInsets.symmetric(
                           horizontal: ScreenUtil().setWidth(50)),
@@ -103,7 +82,7 @@ class _CommunityPageState extends State<CommunityPage> with TickerProviderStateM
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
       floatingActionButton: FloatingActionButton(
-        onPressed: () {NavigatorUtil.goCreate_commnuityPage(context);},
+        onPressed: () {NavigatorUtil.goCreate_commnuityPage(context,data: userId["data"]["user_id"]);},
         child: new Icon(Icons.add_a_photo),
         elevation: 3.0,
         highlightElevation: 2.0,

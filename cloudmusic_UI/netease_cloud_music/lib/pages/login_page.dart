@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:netease_cloud_music/provider/user_model.dart';
+import 'package:netease_cloud_music/utils/navigator_util.dart';
 import 'package:netease_cloud_music/utils/utils.dart';
 import 'package:netease_cloud_music/widgets/common_button.dart';
 import 'package:netease_cloud_music/widgets/v_empty_view.dart';
@@ -82,7 +83,7 @@ class __LoginWidgetState extends State<_LoginWidget> {
   @override
   Widget build(BuildContext context) {
     return Theme(
-      data: ThemeData(primaryColor: Colors.red),
+      data: ThemeData(primaryColor: Colors.blue),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisSize: MainAxisSize.min,
@@ -101,7 +102,7 @@ class __LoginWidgetState extends State<_LoginWidget> {
           Container(
             margin: EdgeInsets.only(top: ScreenUtil().setWidth(3)),
             child: Text(
-              'The Flutter Netease Cloud Music App',
+              ' Music App',
               style: TextStyle(
                 color: Colors.grey,
                 fontSize: 14,
@@ -129,20 +130,29 @@ class __LoginWidgetState extends State<_LoginWidget> {
                   color: Colors.grey,
                 )),
           ),
+          VEmptyView(40),
+          MaterialButton(
+            child: new Text('还没有账号吧!注册一个',
+              style: TextStyle(
+                fontSize: 10,
+                color: Colors.black54,
+              ),),
+            onPressed: () {NavigatorUtil.goRegister(context);},
+          ),
           VEmptyView(120),
           Consumer<UserModel>(
             builder: (BuildContext context, UserModel value, Widget child) {
               return CommonButton(
                 callback: () {
-                  String userid = _phoneController.text;
+                  String phone = _phoneController.text;
                   String pwd = _pwdController.text;
-                  if (userid.isEmpty || pwd.isEmpty) {
+                  if (phone.isEmpty || pwd.isEmpty) {
                     Utils.showToast('请输入账号或者密码');
                     return;
                   }
                   value.login(
                     context,
-                    userid,
+                    phone,
                     pwd,
                   );
                 },

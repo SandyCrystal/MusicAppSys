@@ -34,7 +34,7 @@ class _SearchOtherResultPageState extends State<SearchOtherResultPage>
     super.initState();
     _controller = EasyRefreshController();
     WidgetsBinding.instance.addPostFrameCallback((d) {
-      _params = {'keywords': widget.keywords, 'offset': '1'};
+      _params = {'keywords': widget.keywords};
       _request();
     });
   }

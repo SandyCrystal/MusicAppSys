@@ -25,7 +25,7 @@ class _LyricPageState extends State<LyricPage> with TickerProviderStateMixin {
   LyricData _lyricData;
   List<Lyric> lyrics;
   AnimationController _lyricOffsetYController;
-  int curSongId;
+  String curSongId;
   Timer dragEndTimer; // 拖动结束任务
   Function dragEndFunc;
   Duration dragEndDuration = Duration(milliseconds: 1000);
@@ -51,7 +51,7 @@ class _LyricPageState extends State<LyricPage> with TickerProviderStateMixin {
     _lyricData =
         await NetUtils.getLyricData(context, params: {'id': curSongId});
     setState(() {
-      lyrics = Utils.formatLyric(_lyricData.lrc.lyric);
+      lyrics = Utils.formatLyric(_lyricData.lrc);
       _lyricWidget = LyricWidget(lyrics, 0);
     });
   }

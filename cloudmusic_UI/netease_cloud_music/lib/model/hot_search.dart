@@ -40,12 +40,10 @@ dynamic convertValueByType(value, Type type, {String stack: ""}) {
 class HotSearchData {
   int code;
   List<Data> data;
-  String message;
 
   HotSearchData({
     this.code,
     this.data,
-    this.message,
   });
 
   factory HotSearchData.fromJson(jsonRes) {
@@ -63,15 +61,12 @@ class HotSearchData {
       code:
           convertValueByType(jsonRes['code'], int, stack: "HotSearchData-code"),
       data: data,
-      message: convertValueByType(jsonRes['message'], String,
-          stack: "HotSearchData-message"),
     );
   }
 
   Map<String, dynamic> toJson() => {
         'code': code,
         'data': data,
-        'message': message,
       };
 
   @override
@@ -84,21 +79,12 @@ class Data {
   String searchWord;
   int score;
   String content;
-  int source;
-  int iconType;
   String iconUrl;
-  String url;
-  String alg;
-
   Data({
     this.searchWord,
     this.score,
     this.content,
-    this.source,
-    this.iconType,
     this.iconUrl,
-    this.url,
-    this.alg,
   });
 
   factory Data.fromJson(jsonRes) => jsonRes == null
@@ -109,25 +95,16 @@ class Data {
           score: convertValueByType(jsonRes['score'], int, stack: "Data-score"),
           content: convertValueByType(jsonRes['content'], String,
               stack: "Data-content"),
-          source:
-              convertValueByType(jsonRes['source'], int, stack: "Data-source"),
-          iconType: convertValueByType(jsonRes['iconType'], int,
-              stack: "Data-iconType"),
           iconUrl: convertValueByType(jsonRes['iconUrl'], String,
               stack: "Data-iconUrl"),
-          url: convertValueByType(jsonRes['url'], String, stack: "Data-url"),
-          alg: convertValueByType(jsonRes['alg'], String, stack: "Data-alg"),
         );
 
   Map<String, dynamic> toJson() => {
         'searchWord': searchWord,
         'score': score,
         'content': content,
-        'source': source,
-        'iconType': iconType,
+
         'iconUrl': iconUrl,
-        'url': url,
-        'alg': alg,
       };
 
   @override
