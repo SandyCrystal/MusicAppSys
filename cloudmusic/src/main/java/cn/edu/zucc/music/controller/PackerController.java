@@ -26,16 +26,16 @@ public class PackerController {
     @Autowired
     private UserService userService;
 
-    public static JSONObject transformSheetToJson(Sheet sheet, User user,int follow,int fans) {
+    public static JSONObject transformSheetToJson(Sheet sheet, User user,int follow,int fans,boolean isFollowed,boolean isCollectioned) {
         JSONObject json = new JSONObject();
         json.put("id", sheet.getSheetId());
         json.put("name", sheet.getSheetName());
         json.put("picUrl", sheet.getSheetPicUrl());
         json.put("playCount", sheet.getPlayCount());
         json.put("createTime", sheet.getCreateTime().getTime());
-
+        json.put("is_collected",isCollectioned);
         try {
-            JSONObject tmp = PackerController.transformUserToJson(user,follow,fans);
+            JSONObject tmp = PackerController.transformUserToJson(user,follow,fans,isFollowed);
             json.put("creator", tmp);
         } catch (Exception e) {
             e.printStackTrace();
@@ -43,7 +43,7 @@ public class PackerController {
         return json;
     }
 
-    public static JSONObject transformUserToJson(User user,int follow,int fans) {
+    public static JSONObject transformUserToJson(User user,int follow,int fans,boolean isFollowed) {
         JSONObject json = new JSONObject();
         json.put("user_id", user.getUserId());
         json.put("user_name", user.getUserName());
@@ -51,6 +51,7 @@ public class PackerController {
         json.put("user_type", user.getUserType());
         json.put("follow",follow);
         json.put("fans",fans);
+        json.put("is_followed",isFollowed);
         if (user.getCreateTime()==null) json.put("create_time", null);
         else
             json.put("create_time", user.getCreateTime().getTime());
@@ -75,14 +76,14 @@ public class PackerController {
         return lists;
     }
 
-    public static JSONObject transformSongToJson(Song song, Album album, Artist artist) {
+    public static JSONObject transformSongToJson(Song song, Album album, Artist artist,boolean isCollectioned) {
         JSONObject json = new JSONObject();
         JSONObject tmp = new JSONObject();
 
         tmp.put("id", album.getAlbumId());
         tmp.put("name", album.getAlbumName());
         tmp.put("picUrl", album.getAlbumPicUrl());
-
+        json.put("is_collected", isCollectioned);
         json.put("id", song.getSongId());
         json.put("name", song.getSongName());
         if (artist==null)json.put("artist", null);
@@ -93,7 +94,7 @@ public class PackerController {
         return json;
     }
 
-    public static JSONObject transformSheetDetailsToJson(Sheet sheet, User user, List<Song> songs, List<Album> albums) {
+    public static JSONObject transformSheetDetailsToJson(Sheet sheet, User user, List<Song> songs, List<Album> albums,boolean sheetisCollected,List<Boolean> isCollectioned,int follow,int fans,boolean isFollowed) {
         JSONObject json = new JSONObject();
         JSONObject jsonUser = new JSONObject();
         List<JSONObject> list = new ArrayList<JSONObject>();
@@ -103,7 +104,9 @@ public class PackerController {
         jsonUser.put("user_type", user.getUserType());
         jsonUser.put("avatar_url", user.getAvatarUrl());
         jsonUser.put("introduction", user.getIntroduction());
-
+        jsonUser.put("follow",follow);
+        jsonUser.put("fans",fans);
+        jsonUser.put("is_followed",isFollowed);
         for (int i = 0; i < songs.size(); i++) {
             Song song = songs.get(i);
             Album album = albums.get(i);
@@ -113,11 +116,12 @@ public class PackerController {
             jsonAlbum.put("id", album.getAlbumId());
             jsonAlbum.put("name", album.getAlbumName());
             jsonAlbum.put("picUrl", album.getAlbumPicUrl());
-
+            jsonSong.put("is_collected", isCollectioned.get(i));
             jsonSong.put("id", song.getSongId());
             jsonSong.put("name", song.getSongName());
             jsonSong.put("artist", song.getArtistId());
             jsonSong.put("album", jsonAlbum);
+
 
             list.add(jsonSong);
         }
@@ -127,6 +131,7 @@ public class PackerController {
         json.put("creator", jsonUser);
         json.put("picUrl", sheet.getSheetPicUrl());
         json.put("playCount", sheet.getPlayCount());
+        json.put("is_collected",sheetisCollected);
         json.put("subCount", 0);
         json.put("tracks", list);
 
@@ -184,7 +189,7 @@ public class PackerController {
             tmp.put("createTime", sheet.getCreateTime().getTime());
             tmp.put("trackCount",trackCount[coun]);
             coun++;
-            tmp.put("creator", transformUserToJson(user,follow,fans));
+            tmp.put("creator", transformUserToJson(user,follow,fans, false));
             tmp.put("is_collected", flag);
 
             list.add(tmp);
@@ -193,28 +198,29 @@ public class PackerController {
         return list;
     }
 
-    public static JSONObject transformCreateSheetToJson(User user, Sheet sheet,int follow,int fans) {
+    public static JSONObject transformCreateSheetToJson(User user, Sheet sheet,int follow,int fans,boolean isFollowed) {
         JSONObject json = new JSONObject();
         json.put("id", sheet.getSheetId());
         json.put("name", sheet.getSheetName());
         json.put("picUrl", sheet.getSheetPicUrl());
         json.put("playCount", sheet.getPlayCount());
         json.put("createTime", sheet.getCreateTime().getTime());
-        json.put("creator", transformUserToJson(user,follow,fans));
+        json.put("is_collected",false);
+        json.put("creator", transformUserToJson(user,follow,fans,isFollowed));
 
         return json;
     }
 
-    public static JSONObject transformOneSongCommentToJson(User user, SongComment songComment,int follow,int fans) {
+    public static JSONObject transformOneSongCommentToJson(User user, SongComment songComment,int follow,int fans,boolean isFollowed,boolean isLiked) {
         JSONObject json = new JSONObject();
         JSONObject jsonComment = new JSONObject();
 
-        jsonComment.put("user", transformUserToJson(user,follow,fans));
+        jsonComment.put("user", transformUserToJson(user,follow,fans,isFollowed));
         jsonComment.put("comment_id", songComment.getSongCommentId());
         jsonComment.put("content", songComment.getCommentContent());
         jsonComment.put("time", songComment.getCommentTime().getTime());
         jsonComment.put("likeCount", songComment.getLikeCount());
-
+        jsonComment.put("is_liked",isLiked);
 
         return jsonComment;
     }
@@ -294,7 +300,7 @@ public class PackerController {
         return json;
     }
 
-    public static List<JSONObject> transformDynamicToJson(List<Dynamic> dynamics, List<User> users,int[] follow,int[] fans) {
+    public static List<JSONObject> transformDynamicToJson(List<Dynamic> dynamics, List<User> users,int[] follow,int[] fans,List<String> likeIds,List<String> followIds) {
         List<JSONObject> list = new ArrayList<JSONObject>();
         for(int i = 0; i < dynamics.size(); i++) {
             JSONObject json = new JSONObject();
@@ -305,15 +311,16 @@ public class PackerController {
             json.put("pic_url", dynamic.getDynamicPath());
             json.put("create_time", dynamic.getCreateTime().toString());
             json.put("like_count", dynamic.getLikeCount());
-            json.put("user", transformUserToJson(user,follow[i],fans[i]));
+             json.put("is_liked",likeIds.contains(dynamic.getDynamicId()));
+            json.put("user", transformUserToJson(user,follow[i],fans[i],followIds.contains(user.getUserId())));
             list.add(json);
         }
 
         return list;
     }
-    public static List<JSONObject> transformUserDynamicToJson(List<Dynamic> dynamics,User user,int follow,int fans) {
+    public static List<JSONObject> transformUserDynamicToJson(List<Dynamic> dynamics,User user,int follow,int fans,boolean isFollowed,List<String> likeIds) {
         List<JSONObject> list = new ArrayList<JSONObject>();
-        JSONObject userj=transformUserToJson(user,follow,fans);
+        JSONObject userj=transformUserToJson(user,follow,fans,isFollowed);
         for(int i = 0; i < dynamics.size(); i++) {
             JSONObject json = new JSONObject();
             Dynamic dynamic = dynamics.get(i);
@@ -322,6 +329,7 @@ public class PackerController {
             json.put("pic_url", dynamic.getDynamicPath());
             json.put("create_time", dynamic.getCreateTime().toString());
             json.put("like_count", dynamic.getLikeCount());
+            json.put("is_liked", likeIds.contains(dynamic.getDynamicId()));
             json.put("user",userj );
             list.add(json);
         }
@@ -338,7 +346,7 @@ public class PackerController {
         return json;
     }
 
-    public static List<JSONObject> transformSongsToJson(List<Song> songs, JSONObject jsonAlbum, List<Artist> artists) {
+    public static List<JSONObject> transformSongsToJson(List<Song> songs, JSONObject jsonAlbum, List<Artist> artists, List<Boolean> isCollectioned) {
         List<JSONObject> json = new ArrayList<JSONObject>();
         for(int i = 0; i < songs.size(); i++) {
             Song song = songs.get(i);
@@ -348,6 +356,7 @@ public class PackerController {
             jsonTmp.put("name", song.getSongName());
             jsonTmp.put("artist", artist.getArtistName());
             jsonTmp.put("album", jsonAlbum);
+            jsonTmp.put("is_collected",isCollectioned.get(i));
             json.add(jsonTmp);
         }
 
@@ -388,7 +397,8 @@ public class PackerController {
         json.put("pic_url", dynamic.getDynamicPath());
         json.put("create_time", dynamic.getCreateTime().toString());
         json.put("like_count", dynamic.getLikeCount());
-        json.put("user", transformUserToJson(user,follow,fans));
+        json.put("is_liked",false);
+        json.put("user", transformUserToJson(user,follow,fans,false));
         return json;
     }
 
@@ -409,19 +419,19 @@ public class PackerController {
             jsonSong.put("name", song.getSongName());
             jsonSong.put("artist", artist.getArtistName());
             jsonSong.put("album", jsonAlbum);
-
+            jsonSong.put("is_collected",true);
             json.add(jsonSong);
         }
 
         return json;
     }
 
-    public static List<JSONObject> transformCollectionSheetsToJson(List<Sheet> sheets, List<User> users,int[] follow,int[] fans) {
+    public static List<JSONObject> transformCollectionSheetsToJson(List<Sheet> sheets, List<User> users,int[] follow,int[] fans,List<Boolean> isFollowed) {
         List<JSONObject> json = new ArrayList<JSONObject>();
         for (int i = 0; i < sheets.size(); i++) {
             Sheet sheet = sheets.get(i);
             User user = users.get(i);
-            JSONObject jsonUser = transformUserToJson(user,follow[i],fans[i]);
+            JSONObject jsonUser = transformUserToJson(user,follow[i],fans[i],isFollowed.get(i));
             JSONObject jsonSheet = new JSONObject();
 
             jsonSheet.put("id", sheet.getSheetId());
@@ -429,6 +439,7 @@ public class PackerController {
             jsonSheet.put("picUrl", sheet.getSheetPicUrl());
             jsonSheet.put("playCount", sheet.getPlayCount());
             jsonSheet.put("createTime", sheet.getCreateTime().getTime());
+            jsonSheet.put("is_collected",true);
             jsonSheet.put("creator", jsonUser);
 
             json.add(jsonSheet);

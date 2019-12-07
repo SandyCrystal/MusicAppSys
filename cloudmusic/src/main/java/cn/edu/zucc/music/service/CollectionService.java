@@ -1,6 +1,7 @@
 package cn.edu.zucc.music.service;
 
 import cn.edu.zucc.music.model.Collection;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 

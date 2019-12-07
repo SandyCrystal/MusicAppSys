@@ -7,7 +7,7 @@ public class Like implements Serializable {
 
     private String likeUserId;
 
-    private String likedId;
+    private String tolikedId;
 
     private Integer likeType;
 
@@ -29,12 +29,12 @@ public class Like implements Serializable {
         this.likeUserId = likeUserId == null ? null : likeUserId.trim();
     }
 
-    public String getLikedId() {
-        return likedId;
+    public String getTolikedId() {
+        return tolikedId;
     }
 
-    public void setLikedId(String likedId) {
-        this.likedId = likedId == null ? null : likedId.trim();
+    public void setTolikedId(String tolikedId) {
+        this.tolikedId = tolikedId;
     }
 
     public Integer getLikeType() {
@@ -53,7 +53,7 @@ public class Like implements Serializable {
         sb.append("Hash = ").append(hashCode());
         sb.append(", likeId=").append(likeId);
         sb.append(", likeUserId=").append(likeUserId);
-        sb.append(", likedId=").append(likedId);
+        sb.append(", tolikeId=").append(tolikedId);
         sb.append(", likeType=").append(likeType);
         sb.append(", serialVersionUID=").append(serialVersionUID);
         sb.append("]");

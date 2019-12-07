@@ -14,7 +14,23 @@ public class LikeServiceImpl implements LikeService {
     LikeMapper likeMapper;
 
     @Override
-    public List<Like> findMusicCommentByUserId(String user_id) {
-        return likeMapper.findMusicCommentByUserId(user_id);
+    public List<Like> findMusicCommentByUserId(String user_id,int type) {
+        return likeMapper.findMusicCommentByUserId(user_id,type);
+    }
+
+
+    @Override
+    public int addLike(String userId, String targetId, int type) {
+        Like like =new Like();
+        like.setLikeUserId(userId);
+        like.setTolikedId(targetId);
+        like.setLikeType(type);
+        return likeMapper.insert(like);
+    }
+
+    @Override
+    public int disLiked(String userId, String targetId, int type) {
+
+        return likeMapper.deleteLike(userId,targetId,type);
     }
 }

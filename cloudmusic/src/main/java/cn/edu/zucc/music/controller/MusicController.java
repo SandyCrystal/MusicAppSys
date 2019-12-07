@@ -84,11 +84,11 @@ public class MusicController {
         SheetSong sheetSong = sheetSongService.findBySheetIdSongId(sheetId, songId);
         if (sheetSong == null) {
             jsonObject.put("code", ResultStatus.SHEET_SONG_NOT_EXIST.value());
-            jsonObject.put("data", ResultStatus.SHEET_SONG_NOT_EXIST.getReasonPhrase());
+            jsonObject.put("data", "删除失败");
             return jsonObject;
         } else {
             jsonObject.put("code", ResultStatus.SUCCESS.value());
-            jsonObject.put("data", 1);
+            jsonObject.put("data", "删除成功");
             sheetSongService.deleteSheet(sheetSong);
         }
 
@@ -99,17 +99,32 @@ public class MusicController {
     @Cacheable(value = "getSheetByRecommand")
     @GetMapping(value = "/api/recommandSong")
     @ResponseBody
-    public JSONObject getSheetByRecommand() {
+    public JSONObject getSheetByRecommand(String user_id) {
         JSONObject jsonObject = new JSONObject();
         List<Song> list = new ArrayList<Song>();
         try {
             list = songService.selectTenSongs();
+            List<Collection> collections = collectionService.getSheetsByUserId(user_id);
+            List<String> songIds = new ArrayList<String>();
+            List<Boolean> isCollectioned = new ArrayList<Boolean>();
+            for(Collection collection : collections) {
+                songIds.add(collection.getBeCollectionedId());
+            }
+            for(Song song : list) {
+                if(songIds.contains(song.getSongId())) {
+                    isCollectioned.add(true);
+                } else {
+                    isCollectioned.add(false);
+                }
+            }
             jsonObject.put("code", 200);
             List<JSONObject> data = new ArrayList<JSONObject>();
+            int count=0;
             for (Song song : list) {
                 Album album = albumService.findById(song.getAlbumId());
                 Artist artist = artistService.findById(album.getArtistId());
-                JSONObject tmp = PackerController.transformSongToJson(song, album, artist);
+                JSONObject tmp = PackerController.transformSongToJson(song, album, artist,isCollectioned.get(count));
+                count++;
                 data.add(tmp);
             }
 
@@ -129,7 +144,7 @@ public class MusicController {
         List<Follow> follows = followService.getFollowedUsers(user_id);
         List<String> userIds = new ArrayList<String>();
         List<Boolean> isFollowed = new ArrayList<Boolean>();
-        List<Like> likes = likeService.findMusicCommentByUserId(user_id);
+        List<Like> likes = likeService.findMusicCommentByUserId(user_id,2);
         List<String> commentIds = new ArrayList<String>();
         List<Boolean> isLiked = new ArrayList<Boolean>();
 
@@ -137,7 +152,7 @@ public class MusicController {
             userIds.add(follow.getToUserId());
         }
         for (Like like : likes) {
-            commentIds.add(like.getLikedId());
+            commentIds.add(like.getTolikedId());
         }
         jsonObject.put("more", false);
 
@@ -195,7 +210,7 @@ public class MusicController {
             json.put("code", 200);
             int follow=followService.getFollowedUsers(user.getUserId()).size();
             int fans=followService.getFansUsers(user.getUserId()).size();
-            JSONObject data = PackerController.transformOneSongCommentToJson(user, songComment,follow,fans);
+            JSONObject data = PackerController.transformOneSongCommentToJson(user, songComment,follow,fans,false,false);
             json.put("data", data);
         }
 
@@ -206,7 +221,7 @@ public class MusicController {
     @CrossOrigin
     @GetMapping(value = "/api/getAlbumDetails")
     @ResponseBody
-    public JSONObject getAlbumDetails(String album_id) {
+    public JSONObject getAlbumDetails(String album_id,String user_id) {
         JSONObject json = new JSONObject();
         Album album = albumService.findById(album_id);
         if (album == null) {
@@ -216,7 +231,11 @@ public class MusicController {
             JSONObject jsonData = new JSONObject();
             List<JSONObject> jsonSong = new ArrayList<JSONObject>();
             JSONObject jsonAlbum = new JSONObject();
-
+            List<Collection> songcollections = collectionService.getSongsByUserId(user_id);
+            List<String> songIds =new ArrayList<String>();
+            for(Collection collection : songcollections) {
+                songIds.add(collection.getBeCollectionedId());
+            }
             jsonAlbum.put("id", album.getAlbumId());
             jsonAlbum.put("name", album.getAlbumName());
             jsonAlbum.put("picUrl", album.getAlbumPicUrl());
@@ -227,7 +246,15 @@ public class MusicController {
                 Artist artist = artistService.findById(album.getArtistId());
                 artists.add(artist);
             }
-            jsonSong = PackerController.transformSongsToJson(songs, jsonAlbum, artists);
+            List<Boolean> isCollectioned = new ArrayList<>();
+            for(Song song : songs) {
+                if(songIds.contains(song.getSongId())) {
+                    isCollectioned.add(true);
+                } else {
+                    isCollectioned.add(false);
+                }
+            }
+            jsonSong = PackerController.transformSongsToJson(songs, jsonAlbum, artists,isCollectioned);
 
             jsonData.put("id", album.getAlbumId());
             jsonData.put("name", album.getAlbumName());
@@ -362,18 +389,12 @@ public class MusicController {
         }
         if (flag == 0) {
             json.put("code", 666);
-            JSONObject jsonType = new JSONObject();
-            jsonType.put("type", 0);
-            json.put("data", jsonType);
+            json.put("data", "添加失败");
         } else {
             Collection collection = collectionService.findPrimaryKey(user_id, target_id);
-
             if (collection == null) {
                 json.put("code", 200);
-                JSONObject jsonType = new JSONObject();
-                jsonType.put("type", 1);
-                json.put("data", jsonType);
-
+                json.put("data", "添加成功");
                 Collection c = new Collection();
                 c.setUserId(user_id);
                 c.setBeCollectionedId(target_id);
@@ -381,9 +402,7 @@ public class MusicController {
                 collectionService.addCollection(c);
             } else {
                 json.put("code", 666);
-                JSONObject jsonType = new JSONObject();
-                jsonType.put("type", 0);
-                json.put("data", jsonType);
+                json.put("data", "已收藏");
             }
         }
 
@@ -412,21 +431,15 @@ public class MusicController {
         }
         if (flag == 0) {
             json.put("code", 666);
-            JSONObject jsonType = new JSONObject();
-            jsonType.put("type", 0);
-            json.put("data", jsonType);
+            json.put("data", "取消收藏失败");
         } else {
             Collection collection = collectionService.findPrimaryKey(user_id, target_id);
             if (collection == null) {
                 json.put("code", 666);
-                JSONObject jsonType = new JSONObject();
-                jsonType.put("type", 0);
-                json.put("data", jsonType);
+                json.put("data", "已取消");
             } else {
                 json.put("code", 200);
-                JSONObject jsonType = new JSONObject();
-                jsonType.put("type", 1);
-                json.put("data", jsonType);
+                json.put("data", "取消成功");
             }
         }
 
@@ -470,6 +483,8 @@ public class MusicController {
         List<User> users = new ArrayList<User>();
         int[] follow=new int[collections.size()];
         int[] fans=new int[collections.size()];
+        List<Follow> follows = followService.getFollowedUsers(user_id);
+        List<Boolean> isfollowed=new ArrayList<>();
         if(collections == null) {
             json.put("code", 666);
             json.put("data", null);
@@ -479,11 +494,17 @@ public class MusicController {
                 Sheet sheet = sheetService.findById(collection.getBeCollectionedId());
                 User user = userService.findById(sheet.getUserId());
                 follow[i]=followService.getFollowedUsers(user.getUserId()).size();
-               fans[i]=followService.getFansUsers(user.getUserId()).size();                sheets.add(sheet);
+               fans[i]=followService.getFansUsers(user.getUserId()).size();
+                Boolean isFollow=false;
+                for(Follow followd : follows) {
+                    if (followd.getToUserId().equals(user.getUserId()))isFollow=true;
+                }
+               isfollowed.add(isFollow);
+               sheets.add(sheet);
                 users.add(user);
             }
 
-            List<JSONObject> jsonData = PackerController.transformCollectionSheetsToJson(sheets, users,follow,fans);
+            List<JSONObject> jsonData = PackerController.transformCollectionSheetsToJson(sheets, users,follow,fans,isfollowed);
             json.put("code", 200);
             json.put("data", jsonData);
         }

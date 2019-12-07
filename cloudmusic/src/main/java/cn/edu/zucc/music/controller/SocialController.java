@@ -4,9 +4,11 @@ import cn.edu.zucc.music.Until.Result;
 import cn.edu.zucc.music.Until.ResultStatus;
 import cn.edu.zucc.music.model.Dynamic;
 import cn.edu.zucc.music.model.Follow;
+import cn.edu.zucc.music.model.Like;
 import cn.edu.zucc.music.model.User;
 import cn.edu.zucc.music.service.DynamicService;
 import cn.edu.zucc.music.service.FollowService;
+import cn.edu.zucc.music.service.LikeService;
 import cn.edu.zucc.music.service.UserService;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
@@ -30,7 +32,8 @@ public class SocialController {
     private UserService userService;
     @Autowired
     private FollowService followService;
-
+    @Autowired
+    private LikeService likeService;
 
 
     // 获取歌曲评论
@@ -54,6 +57,7 @@ public class SocialController {
         JSONObject jsonObject = new JSONObject();
         if (type == 1){
             System.out.println("动态 dynamic");
+
         }else if (type == 2){
             System.out.println("音乐评论 song_comment");
         }else if (type == 3){
@@ -61,6 +65,9 @@ public class SocialController {
         }else {
             System.out.println("歌单 sheet");
         }
+        likeService.addLike(userId,targetId, type);
+        jsonObject.put("code",200);
+        jsonObject.put("data","点赞成功");
         return jsonObject;
     }
 
@@ -78,6 +85,9 @@ public class SocialController {
         }else {
             System.out.println("歌单 sheet");
         }
+        likeService.disLiked(userId,targetId, type);
+        jsonObject.put("code",200);
+        jsonObject.put("data","点赞成功");
         return jsonObject;
     }
 
@@ -135,9 +145,18 @@ public class SocialController {
     @CrossOrigin
     @GetMapping(value = "/api/getDynamicData")
     @ResponseBody
-    public JSONObject getDynamicData() {
+    public JSONObject getDynamicData(String user_id) {
         JSONObject jsonObject = new JSONObject();
-
+        List<Follow> follows= followService.getFollowedUsers(user_id);
+        List<Like> likes= likeService.findMusicCommentByUserId(user_id,1);
+        List<String> likeIds = new ArrayList<String>();
+        List<String> followIds = new ArrayList<String>();
+        for (Like like : likes){
+            likeIds.add(like.getTolikedId());
+        }
+        for (Follow follow: follows){
+            followIds.add(follow.getToUserId());
+        }
         List<Dynamic> dynamics = dynamicService.getMostTenDynamic();
         int[] follow=new int[dynamics.size()];
         int[] fans=new int[dynamics.size()];
@@ -150,7 +169,7 @@ public class SocialController {
             users.add(user);
         }
 
-        List<JSONObject> data = PackerController.transformDynamicToJson(dynamics, users,follow,fans);
+        List<JSONObject> data = PackerController.transformDynamicToJson(dynamics, users,follow,fans,likeIds,followIds);
         jsonObject.put("code", 200);
         jsonObject.put("data", data);
         jsonObject.put("total", dynamics.size());
@@ -160,9 +179,19 @@ public class SocialController {
     @CrossOrigin
     @GetMapping(value = "/api/getFollowedDynamic")
     @ResponseBody
-    public JSONObject getDynamicData(String user_id) {
+    public JSONObject getFollowedDynamic(String user_id) {
         JSONObject jsonObject = new JSONObject();
         User user = userService.findById(user_id);
+        List<Follow> follows= followService.getFollowedUsers(user_id);
+        List<Like> likes= likeService.findMusicCommentByUserId(user_id,1);
+        List<String> likeIds = new ArrayList<String>();
+        List<String> followIds = new ArrayList<String>();
+        for (Like like : likes){
+            likeIds.add(like.getTolikedId());
+        }
+        for (Follow follow: follows){
+            followIds.add(follow.getToUserId());
+        }
         if(user==null) {
             jsonObject.put("code", 666);
             jsonObject.put("data", null);
@@ -198,7 +227,7 @@ public class SocialController {
                 fans[i]=followService.getFansUsers(user.getUserId()).size();
                 users.add(tmpUser);
             }
-            List<JSONObject> data = PackerController.transformDynamicToJson(dynamics, users,follow,fans);
+            List<JSONObject> data = PackerController.transformDynamicToJson(dynamics, users,follow,fans,likeIds,followIds);
 
             jsonObject.put("code", 200);
             jsonObject.put("data", data);
@@ -211,9 +240,17 @@ public class SocialController {
     @CrossOrigin
     @GetMapping(value = "/api/getPersonalDynamic")
     @ResponseBody
-    public JSONObject getPersonalDynamic(String user_id) {
+    public JSONObject getPersonalDynamic(String user_id,String cur_user_id) {
         JSONObject jsonObject = new JSONObject();
         User user = userService.findById(user_id);
+        List<Follow> follows = followService.getFollowedUsers(cur_user_id);
+        Boolean isFollowed=false;
+        for(Follow followd : follows) {if (followd.getToUserId().equals(cur_user_id))isFollowed=true;}
+        List<Like> likes=likeService.findMusicCommentByUserId(cur_user_id,1);
+        List<String> likeIds= new ArrayList<String>();
+        for (Like like: likes) {
+            likeIds.add(like.getTolikedId());
+        }
         if(user==null) {
             jsonObject.put("code", 666);
             jsonObject.put("data", null);
@@ -221,7 +258,8 @@ public class SocialController {
             List<Dynamic> dynamics = dynamicService.getDynamicByUserId(user_id);
             int follow=followService.getFollowedUsers(user.getUserId()).size();
             int fans=followService.getFansUsers(user.getUserId()).size();
-            List<JSONObject> data=PackerController.transformUserDynamicToJson(dynamics,user,follow,fans);
+            boolean isliked=false;
+            List<JSONObject> data=PackerController.transformUserDynamicToJson(dynamics,user,follow,fans,isFollowed,likeIds);
             jsonObject.put("code", 200);
             jsonObject.put("data", data);
             jsonObject.put("total", dynamics.size());

@@ -55,8 +55,13 @@ public class SheetController {
         sheetService.addSheet(sheet);
         int follow=followService.getFollowedUsers(user.getUserId()).size();
         int fans=followService.getFansUsers(user.getUserId()).size();
+        List<Follow> follows= followService.getFollowedUsers(user_id);
         jsonObject.put("code", 200);
-        JSONObject data = PackerController.transformCreateSheetToJson(user, sheet,follow,fans);
+        Boolean isFollowed=false;
+        for(Follow followd : follows) {
+            if (followd.getToUserId().equals(user_id))isFollowed=true;
+        }
+        JSONObject data = PackerController.transformCreateSheetToJson(user, sheet,follow,fans,isFollowed);
         jsonObject.put("data", data);
         return jsonObject;
     }
@@ -69,11 +74,11 @@ public class SheetController {
         Sheet sheet = sheetService.findById(sheet_id);
         if(sheet == null) {
             jsonObject.put("code", 666);
-            jsonObject.put("data", 0);
+            jsonObject.put("data", "删除失败");
         } else {
             sheetService.deleteSheet(sheet_id);
             jsonObject.put("code", 200);
-            jsonObject.put("data", 1);
+            jsonObject.put("data", "删除成功");
         }
 
         return jsonObject;
@@ -82,18 +87,31 @@ public class SheetController {
     @CrossOrigin
     @GetMapping(value = "/api/recommandSheet")
     @ResponseBody
-    public JSONObject recommandSheet() {
+    public JSONObject recommandSheet(String user_id) {
         JSONObject jsonObject = new JSONObject();
         List<Sheet> list = new ArrayList<Sheet>();
         try {
             list = sheetService.selectTenSheets();
+            List<Collection> sheetcollections = collectionService.getSheetsByUserId(user_id);
+            List<Follow> follows=followService.getFollowedUsers(user_id);
+            List<String> sheetIds = new ArrayList<String>();
+
+            for(Collection collection : sheetcollections) {
+                sheetIds.add(collection.getBeCollectionedId());
+            }
             jsonObject.put("code", 200);
             List<JSONObject> data = new ArrayList<JSONObject>();
             for(Sheet sheet : list) {
                 User user = userService.findById(sheet.getUserId());
                 int follow=followService.getFollowedUsers(user.getUserId()).size();
                 int fans=followService.getFansUsers(user.getUserId()).size();
-                JSONObject tmp = PackerController.transformSheetToJson(sheet,user,follow,fans);
+                boolean isFollowed=false;
+                for(Follow followd : follows) {
+                    if (followd.getToUserId().equals(user.getUserId()))isFollowed=true;
+                }
+                boolean isCollectioned=false;
+                if (sheetIds.contains(sheet.getSheetId()))isCollectioned=true;
+                JSONObject tmp = PackerController.transformSheetToJson(sheet,user,follow,fans,isFollowed,isCollectioned);
                 data.add(tmp);
             }
 
@@ -107,9 +125,17 @@ public class SheetController {
     @CrossOrigin
     @GetMapping(value = "/api/getSheetDetails")
     @ResponseBody
-    public JSONObject getSheetDetails(String sheet_id){
+    public JSONObject getSheetDetails(String sheet_id, String user_id ){
         JSONObject jsonObject = new JSONObject();
         Sheet sheet = sheetService.findById(sheet_id);
+        boolean sheetisCollected=false;
+        List<Boolean> isCollectioned = new ArrayList<Boolean>();
+        List<Collection> sheetcollections = collectionService.getSheetsByUserId(user_id);
+        List<Collection> songcollections = collectionService.getSongsByUserId(user_id);
+        List<String> songIds =new ArrayList<String>();
+        for(Collection collection : sheetcollections) {
+            if (collection.getBeCollectionedId().equals(sheet_id))sheetisCollected=true;
+        }
         if(sheet.getSheetName().equals("") || sheet.getSheetName()==null) {
             jsonObject.put("code", 666);
             jsonObject.put("data", null);
@@ -121,7 +147,9 @@ public class SheetController {
                 Song tmp = songService.findById(sheet_song.getSongId());
                 old_songs.add(tmp);
             }
-
+            for(Collection collection : songcollections) {
+                songIds.add(collection.getBeCollectionedId());
+            }
             List<Song> songs = new ArrayList<Song>();
             List<Album> albums = new ArrayList<Album>();
             User user = userService.findById(sheet.getUserId());
@@ -132,8 +160,23 @@ public class SheetController {
                 songs.add(song);
                 albums.add(album);
             }
+
+            for(Song song : songs) {
+                if(songIds.contains(song.getSongId())) {
+                    isCollectioned.add(true);
+                } else {
+                    isCollectioned.add(false);
+                }
+            }
+            int fans=followService.getFansUsers(user.getUserId()).size();
+            List<Follow> follows = followService.getFollowedUsers(user_id);
+            int follow=followService.getFollowedUsers(user.getUserId()).size();
+            boolean isFollowed=false;
+            for(Follow followd : follows) {
+                if (followd.getToUserId().equals(user.getUserId()))isFollowed=true;
+            }
             jsonObject.put("code", 200);
-            JSONObject tmp = PackerController.transformSheetDetailsToJson(sheet, user, songs, albums);
+            JSONObject tmp = PackerController.transformSheetDetailsToJson(sheet, user, songs, albums,sheetisCollected,isCollectioned,follow,fans,isFollowed);
             jsonObject.put("data", tmp);
         }
         return jsonObject;

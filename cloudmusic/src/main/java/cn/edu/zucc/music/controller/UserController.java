@@ -59,7 +59,7 @@ public class UserController {
             int follow=followService.getFollowedUsers(user.getUserId()).size();
             int fans=followService.getFansUsers(user.getUserId()).size();
             jsonObject.put("code", ResultStatus.SUCCESS.value());
-            JSONObject tmp = PackerController.transformUserToJson(user,follow,fans);
+            JSONObject tmp = PackerController.transformUserToJson(user,follow,fans,false);
             jsonObject.put("data", tmp);
         }else{
             jsonObject.put("code", ResultStatus.USER_INFO_NOT_CHANGED.value());
@@ -102,7 +102,7 @@ public class UserController {
             int follow=followService.getFollowedUsers(user.getUserId()).size();
             int fans=followService.getFansUsers(user.getUserId()).size();
             jsonObject.put("code", ResultStatus.SUCCESS.value());
-            JSONObject tmp = PackerController.transformUserToJson(user,follow,fans);
+            JSONObject tmp = PackerController.transformUserToJson(user,follow,fans,false);
             jsonObject.put("data", tmp);
         }else {
             jsonObject.put("code", ResultStatus.USER_INFO_NOT_CHANGED.value());

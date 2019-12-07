@@ -50,7 +50,7 @@ public class MainController {
             jsonObject.put("code", ResultStatus.SUCCESS.value());
             int follow=followService.getFollowedUsers(user.getUserId()).size();
             int fans=followService.getFansUsers(user.getUserId()).size();
-            JSONObject tmp = PackerController.transformUserToJson(user,follow,fans);
+            JSONObject tmp = PackerController.transformUserToJson(user,follow,fans,false);
             tmp.put("dynamic_size",dynamicService.getDynamicByUserId(user.getUserId()).size());
             System.out.println(dynamicService.getDynamicByUserId(user.getUserId()).size());
             jsonObject.put("data", tmp);
@@ -99,7 +99,7 @@ public class MainController {
             userService.addUser(userNew);
 
             jsonObject.put("code", ResultStatus.SUCCESS.value());
-            JSONObject tmp = PackerController.transformUserToJson(userNew,0,0);
+            JSONObject tmp = PackerController.transformUserToJson(userNew,0,0,false);
             jsonObject.put("data", tmp);
 
             return jsonObject;

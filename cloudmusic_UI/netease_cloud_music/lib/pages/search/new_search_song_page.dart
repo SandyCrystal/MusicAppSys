@@ -1,8 +1,11 @@
+import 'dart:convert';
+
 import 'package:common_utils/common_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:netease_cloud_music/model/music.dart';
 import 'package:netease_cloud_music/model/search_song.dart';
+import 'package:netease_cloud_music/model/user.dart';
 import 'package:netease_cloud_music/provider/play_songs_model.dart';
 import 'package:netease_cloud_music/utils/net_utils.dart';
 import 'package:netease_cloud_music/utils/number_utils.dart';
@@ -15,6 +18,8 @@ import 'package:netease_cloud_music/widgets/widget_future_builder.dart';
 import 'package:netease_cloud_music/widgets/widget_music_list_item.dart';
 import 'package:provider/provider.dart';
 
+import '../../application.dart';
+
 /// 综合搜索结果页
 class NewSearchSongPage extends StatefulWidget {
   final String keywords;
@@ -25,6 +30,7 @@ class NewSearchSongPage extends StatefulWidget {
 
 class _NewSearchSongPageState extends State<NewSearchSongPage> {
   // 构建模块基础模板
+  User _user = User.fromJson(json.decode(Application.sp.getString('user')));
   Widget _buildModuleTemplate(String title,
       {@required List<Widget> contentWidget,
       Widget titleTrail,
@@ -99,7 +105,7 @@ class _NewSearchSongPageState extends State<NewSearchSongPage> {
   Widget build(BuildContext context) {
     return CustomFutureBuilder<SearchSongs>(
       futureFunc: NetUtils.searchMusic,
-      params: {'keywords': widget.keywords},
+      params: {'keywords': widget.keywords, 'user_id': _user.account.userid},
       builder: (context, data) {
         return ListView(
           padding: EdgeInsets.symmetric(
