@@ -68,7 +68,7 @@ public class PackerController {
             tmp.put("user_type", users.get(i).getUserType());
             tmp.put("create_time", users.get(i).getCreateTime());
             tmp.put("introduction", users.get(i).getIntroduction());
-            tmp.put("is_followed", isMutuals.get(i));
+            tmp.put("isfollowed", isMutuals.get(i));
             lists.add(tmp);
         }
 

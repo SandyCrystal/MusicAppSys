@@ -6,6 +6,7 @@ import cn.edu.zucc.music.Until.ResultStatus;
 import cn.edu.zucc.music.model.Banner;
 import cn.edu.zucc.music.model.User;
 import cn.edu.zucc.music.service.BannerService;
+import cn.edu.zucc.music.service.DynamicService;
 import cn.edu.zucc.music.service.FollowService;
 import cn.edu.zucc.music.service.UserService;
 import com.alibaba.fastjson.JSONObject;
@@ -13,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import java.awt.*;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -26,7 +28,8 @@ public class MainController {
     private BannerService bannerService;
     @Autowired
     private FollowService followService;
-
+    @Autowired
+    private DynamicService dynamicService;
     // 登录
     @CrossOrigin
     @GetMapping(value = "/api/login")
@@ -48,6 +51,8 @@ public class MainController {
             int follow=followService.getFollowedUsers(user.getUserId()).size();
             int fans=followService.getFansUsers(user.getUserId()).size();
             JSONObject tmp = PackerController.transformUserToJson(user,follow,fans);
+            tmp.put("dynamic_size",dynamicService.getDynamicByUserId(user.getUserId()).size());
+            System.out.println(dynamicService.getDynamicByUserId(user.getUserId()).size());
             jsonObject.put("data", tmp);
             return jsonObject;
         } else {

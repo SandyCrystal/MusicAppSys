@@ -149,7 +149,7 @@ public class SheetController {
         }
         if(user.getUserId().equals("") || user.getUserId()==null || list.size()==0) {
             jsonObject.put("code", 666);
-            jsonObject.put("data", null);
+            jsonObject.put("data",null);
         } else {
             int follow=followService.getFollowedUsers(user.getUserId()).size();
             int fans=followService.getFansUsers(user.getUserId()).size();
