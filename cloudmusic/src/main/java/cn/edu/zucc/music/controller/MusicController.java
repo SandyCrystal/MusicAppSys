@@ -93,27 +93,6 @@ public class MusicController {
         return jsonObject;
     }
 
-    // 获得歌曲信息 根据音乐代码获取音乐(用于播放等)
-    @GetMapping(value = "/api/getSong")
-    @ResponseBody
-    public String getSong(String songId) {
-        return "还没做";
-    }
-
-    // 获取专辑信息 根据专辑代码获取专辑
-    @GetMapping(value = "/api/getAlbum")
-    @ResponseBody
-    public String getAlbum() {
-        return "还没做";
-    }
-
-    // 获取类型歌单
-    @GetMapping(value = "/api/getSheetByType")
-    @ResponseBody
-    public String getSheetByType() {
-        return "还没做";
-    }
-
     // 获取推荐歌单
     @Cacheable(value = "getSheetByRecommand")
     @GetMapping(value = "/api/recommandSong")
@@ -142,10 +121,13 @@ public class MusicController {
     // 获取对应歌曲的评论
     @GetMapping(value = "/api/getMusicComment")
     @ResponseBody
-    public JSONObject getMusicComment(String id) {
+    public JSONObject getMusicComment(String id, String user_id) {
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("code", 200);
         Song song = songService.findById(id);
+        List<Collection> collections = collectionService.getSongsByUserId(user_id);
+        List<String> songIds = new ArrayList<String>();
+        List<Boolean> isCollectioned = new ArrayList<Boolean>();
 
         jsonObject.put("more", false);
 
@@ -265,13 +247,21 @@ public class MusicController {
     // 搜索歌曲
     @GetMapping(value = "/api/searchSong")
     @ResponseBody
-    public JSONObject searchSong(String keywords) {
+    public JSONObject searchSong(String keywords, String user_id) {
         JSONObject jsonObject = new JSONObject();
         List<Song> songs = songService.searchSongBySongName("%" + keywords + "%");
         if (songs.size() != 0) {
             jsonObject.put("code", ResultStatus.SUCCESS.value());
             List<Artist> artists = new ArrayList<>();
             List<Album> albums = new ArrayList<>();
+            List<Collection> collections = collectionService.getSongsByUserId(user_id);
+            List<String> songIds = new ArrayList<String>();
+            List<Boolean> isCollectioned = new ArrayList<Boolean>();
+
+            for(Collection collection : collections) {
+                songIds.add(collection.getBeCollectionedId());
+            }
+
             int len;
             if (songs.size() > 10) {
                 len = 10;
@@ -281,8 +271,13 @@ public class MusicController {
                 Album album = albumService.findById(song.getAlbumId());
                 albums.add(album);
                 artists.add(artistService.findById(album.getArtistId()));
+                if(songIds.contains(song.getSongId())) {
+                    isCollectioned.add(true);
+                } else {
+                    isCollectioned.add(false);
+                }
             }
-            List<JSONObject> tmp = PackerController.transfromSongsToJson(songs, albums, artists, len);
+            List<JSONObject> tmp = PackerController.transfromSongsToJson(songs, albums, artists, len, isCollectioned);
             jsonObject.put("data", tmp);
         } else {
             jsonObject.put("code", ResultStatus.SONG_NOT_EXIST.value());

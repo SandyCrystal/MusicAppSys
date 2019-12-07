@@ -211,12 +211,13 @@ public class PackerController {
         return jsonComment;
     }
 
-    public static List<JSONObject> transfromSongsToJson(List<Song> songs,List<Album> albums,List<Artist> artists,int len){
+    public static List<JSONObject> transfromSongsToJson(List<Song> songs,List<Album> albums,List<Artist> artists,int len, List<Boolean> isCollectioned){
         List<JSONObject> list = new ArrayList<JSONObject>();
         for(int i=0;i< len;i++) {
             Song song=songs.get(i);
             Album album=albums.get(i);
             Artist artist=artists.get(i);
+            Boolean flag = isCollectioned.get(i);
             JSONObject tmp = new JSONObject();
             JSONObject albumjson=new JSONObject();
             albumjson.put("id",album.getAlbumId());
@@ -226,6 +227,7 @@ public class PackerController {
             tmp.put("name", song.getSongName());
             tmp.put("album", albumjson);
             tmp.put("artist", artist.getArtistName());
+            tmp.put("is_collected", flag);
             list.add(tmp);
         }
 
