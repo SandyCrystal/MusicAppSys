@@ -13,21 +13,26 @@
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
     select 
     <include refid="Base_Column_List" />
-    from like
+    from user_like
     where like_id = #{likeId,jdbcType=INTEGER}
   </select>
+
+  <select id="findMusicCommentByUserId" resultMap="BaseResultMap" parameterType="java.lang.String">
+    SELECT <include refid="Base_Column_List" /> FROM user_like WHERE like_user_id = #{user_id,jdbcType=VARCHAR} AND like_type = 2
+  </select>
+
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
-    delete from like
+    delete from user_like
     where like_id = #{likeId,jdbcType=INTEGER}
   </delete>
   <insert id="insert" parameterType="cn.edu.zucc.music.model.Like" >
-    insert into like (like_id, like_user_id, liked_id, 
+    insert into user_like (like_id, like_user_id, liked_id,
       like_type)
     values (#{likeId,jdbcType=INTEGER}, #{likeUserId,jdbcType=VARCHAR}, #{likedId,jdbcType=VARCHAR}, 
       #{likeType,jdbcType=INTEGER})
   </insert>
   <insert id="insertSelective" parameterType="cn.edu.zucc.music.model.Like" >
-    insert into like
+    insert into user_like
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="likeId != null" >
         like_id,
@@ -58,7 +63,7 @@
     </trim>
   </insert>
   <update id="updateByPrimaryKeySelective" parameterType="cn.edu.zucc.music.model.Like" >
-    update like
+    update user_like
     <set >
       <if test="likeUserId != null" >
         like_user_id = #{likeUserId,jdbcType=VARCHAR},
@@ -73,7 +78,7 @@
     where like_id = #{likeId,jdbcType=INTEGER}
   </update>
   <update id="updateByPrimaryKey" parameterType="cn.edu.zucc.music.model.Like" >
-    update like
+    update user_like
     set like_user_id = #{likeUserId,jdbcType=VARCHAR},
       liked_id = #{likedId,jdbcType=VARCHAR},
       like_type = #{likeType,jdbcType=INTEGER}

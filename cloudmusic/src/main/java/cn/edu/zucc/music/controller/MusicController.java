@@ -35,6 +35,8 @@ public class MusicController {
     private CollectionService collectionService;
     @Autowired
     private FollowService followService;
+    @Autowired
+    private LikeService likeService;
 
     // 添加歌曲（收藏）
     // 把歌曲加入歌单
@@ -124,13 +126,18 @@ public class MusicController {
     public JSONObject getMusicComment(String id, String user_id) {
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("code", 200);
-        Song song = songService.findById(id);
-        List<Collection> collections = collectionService.getSongsByUserId(user_id);
-        Boolean isCollectioned = null;
-        if(collections.get(0).getBeCollectionedId().equals(id)) {
-            isCollectioned = true;
-        } else {
-            isCollectioned = false;
+        List<Follow> follows = followService.getFollowedUsers(user_id);
+        List<String> userIds = new ArrayList<String>();
+        List<Boolean> isFollowed = new ArrayList<Boolean>();
+        List<Like> likes = likeService.findMusicCommentByUserId(user_id);
+        List<String> commentIds = new ArrayList<String>();
+        List<Boolean> isLiked = new ArrayList<Boolean>();
+
+        for (Follow follow : follows) {
+            userIds.add(follow.getToUserId());
+        }
+        for (Like like : likes) {
+            commentIds.add(like.getLikedId());
         }
         jsonObject.put("more", false);
 
@@ -141,8 +148,18 @@ public class MusicController {
             SongComment songComment = songComments.get(i);
             User user = userService.findById(songComment.getUserId());
             users.add(user);
+            if(userIds.contains(user.getUserId())) {
+                isFollowed.add(true);
+            } else {
+                isFollowed.add(false);
+            }
+            if(commentIds.contains(songComment.getSongCommentId())) {
+                isLiked.add(true);
+            } else {
+                isLiked.add(false);
+            }
         }
-        List<JSONObject> list = PackerController.transformSongCommentToJson(songComments, users);
+        List<JSONObject> list = PackerController.transformSongCommentToJson(songComments, users, isFollowed, isLiked);
         jsonObject.put("comments", list);
 
         return jsonObject;

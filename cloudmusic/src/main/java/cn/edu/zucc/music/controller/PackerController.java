@@ -133,12 +133,14 @@ public class PackerController {
         return json;
     }
 
-    public static List<JSONObject> transformSongCommentToJson(List<SongComment> songComments, List<User> users) {
+    public static List<JSONObject> transformSongCommentToJson(List<SongComment> songComments, List<User> users, List<Boolean> isFollowed, List<Boolean> isLiked) {
         JSONObject json = new JSONObject();
         List<JSONObject> list = new ArrayList<JSONObject>();
         for(int i = 0; i < songComments.size(); i++) {
             SongComment songComment = songComments.get(i);
             User user = users.get(i);
+            Boolean flag1 = isFollowed.get(i);
+            Boolean flag2 = isLiked.get(i);
             JSONObject jsonSongComment = new JSONObject();
             if (user==null) jsonSongComment.put("user", null);
             else{
@@ -154,10 +156,12 @@ public class PackerController {
                     json.put("create_time", user.getCreateTime().getTime());
             jsonUser.put("userId", user.getUserId());
             jsonUser.put("avatarUrl", user.getAvatarUrl());
+            jsonUser.put("is_followed", flag1);
 
             jsonSongComment.put("comment_id", songComment.getSongCommentId());
             jsonSongComment.put("time", songComment.getCommentTime().getTime());
             jsonSongComment.put("content", songComment.getCommentContent());
+            jsonSongComment.put("is_liked", flag2);
             jsonSongComment.put("likeCount", songComment.getLikeCount());
             jsonSongComment.put("user", jsonUser);}
 

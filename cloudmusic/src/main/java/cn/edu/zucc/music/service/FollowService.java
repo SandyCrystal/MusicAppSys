@@ -1,8 +1,6 @@
 package cn.edu.zucc.music.service;
 
-import cn.edu.zucc.music.model.Dynamic;
 import cn.edu.zucc.music.model.Follow;
-import cn.edu.zucc.music.model.User;
 
 import java.util.List;
 
