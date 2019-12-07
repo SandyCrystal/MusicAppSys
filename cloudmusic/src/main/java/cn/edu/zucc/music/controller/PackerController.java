@@ -167,10 +167,12 @@ public class PackerController {
         return list;
     }
 
-    public static List<JSONObject> transformPersonalSheetToJson(List<Sheet> Sheets, User user,int[] trackCount,int follow,int fans) {
+    public static List<JSONObject> transformPersonalSheetToJson(List<Sheet> Sheets, User user,int[] trackCount,int follow,int fans, List<Boolean> isCollectioned) {
         List<JSONObject> list = new ArrayList<JSONObject>();
         int coun=0;
-        for(Sheet sheet : Sheets) {
+        for(int i = 0; i < Sheets.size(); i++) {
+            Sheet sheet = Sheets.get(i);
+            Boolean flag = isCollectioned.get(i);
             JSONObject tmp = new JSONObject();
             tmp.put("id", sheet.getSheetId());
             tmp.put("name", sheet.getSheetName());
@@ -179,6 +181,8 @@ public class PackerController {
             tmp.put("trackCount",trackCount[coun]);
             coun++;
             tmp.put("creator", transformUserToJson(user,follow,fans));
+            tmp.put("is_collected", flag);
+
             list.add(tmp);
         }
 

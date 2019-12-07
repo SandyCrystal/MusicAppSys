@@ -126,9 +126,12 @@ public class MusicController {
         jsonObject.put("code", 200);
         Song song = songService.findById(id);
         List<Collection> collections = collectionService.getSongsByUserId(user_id);
-        List<String> songIds = new ArrayList<String>();
-        List<Boolean> isCollectioned = new ArrayList<Boolean>();
-
+        Boolean isCollectioned = null;
+        if(collections.get(0).getBeCollectionedId().equals(id)) {
+            isCollectioned = true;
+        } else {
+            isCollectioned = false;
+        }
         jsonObject.put("more", false);
 
         List<SongComment> songComments = songCommentService.findBySongId(id);

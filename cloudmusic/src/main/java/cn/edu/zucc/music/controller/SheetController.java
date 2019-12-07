@@ -31,6 +31,9 @@ public class SheetController {
     private AlbumService albumService;
     @Autowired
     private FollowService followService;
+    @Autowired
+    private CollectionService collectionService;
+
     @CrossOrigin
     @GetMapping(value = "/api/createSheet")
     @ResponseBody
@@ -143,17 +146,33 @@ public class SheetController {
         JSONObject jsonObject = new JSONObject();
         User user = userService.findById(user_id);
         List<Sheet> list = sheetService.findByUserID(user_id);
+        List<Collection> collections = collectionService.getSheetsByUserId(user_id);
+        List<String> sheetIds = new ArrayList<String>();
+        List<Boolean> isCollectioned = new ArrayList<Boolean>();
+
+        for(Collection collection : collections) {
+            sheetIds.add(collection.getBeCollectionedId());
+        }
+        for(Sheet sheet : list) {
+            if(sheetIds.contains(sheet.getSheetId())) {
+                isCollectioned.add(true);
+            } else {
+                isCollectioned.add(false);
+            }
+        }
+
         int[] tracksCount=new int[list.size()];
         for (int i=0;i<list.size();i++){
             tracksCount[i]=sheetSongService.getSongsBySheetId(list.get(i).getSheetId()).size();
         }
         if(user.getUserId().equals("") || user.getUserId()==null || list.size()==0) {
             jsonObject.put("code", 666);
-            jsonObject.put("data",null);
+            jsonObject.put("data", null);
         } else {
+
             int follow=followService.getFollowedUsers(user.getUserId()).size();
             int fans=followService.getFansUsers(user.getUserId()).size();
-            List<JSONObject> data = PackerController.transformPersonalSheetToJson(list, user,tracksCount,follow,fans);
+            List<JSONObject> data = PackerController.transformPersonalSheetToJson(list, user,tracksCount,follow,fans, isCollectioned);
             jsonObject.put("code", 200);
             jsonObject.put("data", data);
         }
