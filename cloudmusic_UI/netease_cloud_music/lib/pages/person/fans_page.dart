@@ -16,46 +16,44 @@ class FansPage extends StatefulWidget {
   @override
   _FansPageState createState() => _FansPageState();
 }
+
 class _FansPageState extends State<FansPage> {
-  prefix.User _user = prefix.User.fromJson(json.decode(Application.sp.getString('user')));
+  prefix.User _user =
+      prefix.User.fromJson(json.decode(Application.sp.getString('user')));
   Widget _buildRecommendPlayList() {
     return CustomFutureBuilder<FollowData>(
-        futureFunc: NetUtils.getFans,
-        params: {'toUserId': _user.account.userid},
-        builder: (context, snapshot) {
-          var data = snapshot.users;
-    return Container(
-        height:ScreenUtil().setWidth(1300),
-        width: double.infinity,
-        child: ListView.separated(
-          separatorBuilder: (context, index) {
-            return HEmptyView(ScreenUtil().setWidth(30));
-          },
-          padding: EdgeInsets.symmetric(
-              vertical: ScreenUtil().setWidth(15)),
-          itemBuilder: (context, index) {
-            return WidgetUserItem((User(
-              userid: data[index].userid,
-              userName: data[index].userName,
-              userType: data[index].userType,
-              isfollowed: data[index].isfollowed,
-              introduction: data[index].introduction,
-              fans: data[index].fans,
-              follow: data[index].follow,
-              avatarUrl: data[index].avatarUrl,
-              createTime: data[index].createTime
-            ))
-            );
-          },
-          shrinkWrap: true,
-          scrollDirection: Axis.vertical,
-          itemCount: data.length,
-        ));
-        },
+      futureFunc: NetUtils.getFans,
+      params: {'toUserId': _user.account.userid},
+      builder: (context, snapshot) {
+        var data = snapshot.users;
+        return Container(
+            height: ScreenUtil().setWidth(1300),
+            width: double.infinity,
+            child: ListView.separated(
+              separatorBuilder: (context, index) {
+                return HEmptyView(ScreenUtil().setWidth(30));
+              },
+              padding:
+                  EdgeInsets.symmetric(vertical: ScreenUtil().setWidth(15)),
+              itemBuilder: (context, index) {
+                return WidgetUserItem((User(
+                    userid: data[index].userid,
+                    userName: data[index].userName,
+                    userType: data[index].userType,
+                    isfollowed: data[index].isfollowed,
+                    introduction: data[index].introduction,
+                    fans: data[index].fans,
+                    follow: data[index].follow,
+                    avatarUrl: data[index].avatarUrl,
+                    createTime: data[index].createTime)));
+              },
+              shrinkWrap: true,
+              scrollDirection: Axis.vertical,
+              itemCount: data.length,
+            ));
+      },
     );
   }
-
-
 
   @override
   Widget build(BuildContext context) {
@@ -63,25 +61,36 @@ class _FansPageState extends State<FansPage> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        title: Text('关注',
+        title: Text(
+          '关注',
           style: TextStyle(
             fontSize: 20,
             color: Colors.black,
-          ),),
+          ),
+        ),
         leading: IconButton(
           icon: Icon(Icons.arrow_back),
-          onPressed: (){NavigatorUtil.goHomePage(context);},
+          onPressed: () {
+            Navigator.pop(context);
+          },
         ),
       ),
       body: Column(
         children: <Widget>[
-
-          Container(width: double.infinity, height: 8.0, color: Color(0xFFF3F3F3),),
+          Container(
+            width: double.infinity,
+            height: 8.0,
+            color: Color(0xFFF3F3F3),
+          ),
           Text(
             '全部关注',
-            style: TextStyle(fontSize: 10,color: Colors.black45),
+            style: TextStyle(fontSize: 10, color: Colors.black45),
           ),
-          Container(width: double.infinity, height: 1.0, color: Color(0xFFF3F3F3),),
+          Container(
+            width: double.infinity,
+            height: 1.0,
+            color: Color(0xFFF3F3F3),
+          ),
           _buildRecommendPlayList()
         ],
       ),
@@ -89,5 +98,4 @@ class _FansPageState extends State<FansPage> {
 
     return null;
   }
-
 }

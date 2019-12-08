@@ -29,58 +29,41 @@ class NewSearchSongPage extends StatefulWidget {
 }
 
 class _NewSearchSongPageState extends State<NewSearchSongPage> {
-  // 构建模块基础模板
   User _user = User.fromJson(json.decode(Application.sp.getString('user')));
-  Widget _buildModuleTemplate(String title,
-      {@required List<Widget> contentWidget,
-      Widget titleTrail,
-      String moreText,
-      VoidCallback onMoreTextTap}) {
-    return ListView(
-      shrinkWrap: true,
-      physics: NeverScrollableScrollPhysics(),
-      children: <Widget>[
-        Row(
-          children: <Widget>[
-            Text(
-              title,
-              style: bold18TextStyle,
-            ),
-            Spacer(),
-            titleTrail ?? Container(),
-          ],
-        ),
-      ],
+  // 构建单曲模块
+  Widget _buildSearchSongs(List<Songs> song) {
+    return Container(
+      //height:ScreenUtil().setWidth(900),
+      width: double.infinity,
+      child: new Consumer<PlaySongsModel>(builder: (context, model, child) {
+        return ListView(
+          //physics: NeverScrollableScrollPhysics(),
+          shrinkWrap: true,
+          children: song
+              .map((song) => WidgetMusicListItem(MusicData(
+                  mvid: 1,
+                  picUrl: song.album.picUrl,
+                  //index: model.curIndex,
+                  songName: song.name,
+                  artists: song.artist)))
+              .toList(),
+        );
+      }),
     );
   }
 
-  // 构建单曲模块
-  Widget _buildSearchSongs(List<Songs> song) {
-    return Consumer<PlaySongsModel>(
-      builder: (context, model, child) {
-        return _buildModuleTemplate("单曲",
-            contentWidget: [
-              ListView(
-                physics: NeverScrollableScrollPhysics(),
-                shrinkWrap: true,
-                children: song
-                    .map((song) => WidgetMusicListItem(MusicData(
-                        mvid: 0,
-                        picUrl: song.album.picUrl,
-                        index: model.curIndex,
-                        songName: song.name,
-                        artists: song.artist)))
-                    .toList(),
-              ),
-            ],
-            titleTrail: Container(
-              padding: EdgeInsets.symmetric(
-                  horizontal: ScreenUtil().setWidth(15),
-                  vertical: ScreenUtil().setWidth(5)),
-              decoration: BoxDecoration(
-                  border: Border.all(color: Color(0xfff2f2f2)),
-                  borderRadius: BorderRadius.all(Radius.circular(30))),
-              child: Row(
+  @override
+  Widget build(BuildContext context) {
+    return CustomFutureBuilder<SearchSongs>(
+      futureFunc: NetUtils.searchMusic,
+      params: {'keywords': widget.keywords, 'user_id': _user.account.userid},
+      builder: (context, data) {
+        return Container(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              VEmptyView(10),
+              Row(
                 mainAxisSize: MainAxisSize.min,
                 children: <Widget>[
                   Icon(
@@ -94,27 +77,10 @@ class _NewSearchSongPageState extends State<NewSearchSongPage> {
                   ),
                 ],
               ),
-            ),
-            moreText: "more",
-            onMoreTextTap: () {});
-      },
-    );
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return CustomFutureBuilder<SearchSongs>(
-      futureFunc: NetUtils.searchMusic,
-      params: {'keywords': widget.keywords, 'user_id': _user.account.userid},
-      builder: (context, data) {
-        return ListView(
-          padding: EdgeInsets.symmetric(
-              horizontal: ScreenUtil().setWidth(20),
-              vertical: ScreenUtil().setWidth(20)),
-          children: <Widget>[
-            _buildSearchSongs(data.songs),
-            VEmptyView(20),
-          ],
+              VEmptyView(20),
+              _buildSearchSongs(data.songs)
+            ],
+          ),
         );
       },
     );

@@ -29,6 +29,7 @@ class NavigatorUtil {
   static void goLoginPage(BuildContext context) {
     _navigateTo(context, Routes.login, clearStack: true);
   }
+
   static void goRegister(BuildContext context) {
     _navigateTo(context, Routes.resigter, clearStack: true);
   }
@@ -42,46 +43,52 @@ class NavigatorUtil {
   static void goDailySongsPage(BuildContext context) {
     _navigateTo(context, Routes.dailySongs);
   }
+
   /// 添加歌曲到歌单
-  static void goaddSongPage(BuildContext context,
-  {@required String data}) {
+  static void goaddSongPage(BuildContext context, {@required String data}) {
     _navigateTo(context, "${Routes.addSongs}?data=${data}");
   }
+
   /// 歌单详情
-  static void goPlayListPage(BuildContext context,
-      {@required Recommend data}) {
+  static void goPlayListPage(BuildContext context, {@required Recommend data}) {
     _navigateTo(context,
         "${Routes.playList}?data=${FluroConvertUtils.object2string(data)}");
   }
+
   ///其他个人页面
-  static void goOtherPerson(BuildContext context,
-      {@required User data}){
+  static void goOtherPerson(BuildContext context, {@required User data}) {
     _navigateTo(context,
         "${Routes.otherperson}?data=${FluroConvertUtils.object2string(data)}");
   }
+
   static void goFollowed(BuildContext context) {
-    _navigateTo(context, Routes.followed, clearStack: true);
+    _navigateTo(context, Routes.followed);
   }
+
   static void goFans(BuildContext context) {
-    _navigateTo(context, Routes.fans, clearStack: true);
+    _navigateTo(context, Routes.fans);
   }
 
   ///搜索页面
   static void goCommunityMessagePage(BuildContext context) {
     _navigateTo(context, Routes.commnuitymessage);
   }
+
   /// 排行榜首页
   static void goTopListPage(BuildContext context) {
     _navigateTo(context, Routes.topList);
   }
+
   ///歌单广场
   static void goListSongPage(BuildContext context) {
     _navigateTo(context, Routes.list_song);
   }
+
   ///专辑
   static void goAlbumPage(BuildContext context) {
     _navigateTo(context, Routes.album);
   }
+
   /// 歌单详情
 
   static void goAlbumDetailsPage(BuildContext context,
@@ -95,52 +102,59 @@ class NavigatorUtil {
     _navigateTo(context, Routes.playSongs);
   }
 
-
   /// 评论页面
   static void goCommentPage(BuildContext context,
       {@required CommentHead data}) {
     _navigateTo(context,
         "${Routes.comment}?data=${FluroConvertUtils.object2string(data)}");
   }
-///搜索页面
+
+  ///搜索页面
   static void goSearchPage(BuildContext context) {
     _navigateTo(context, Routes.search);
   }
+
   ///搜索页面
   static void gonewSearchPage(BuildContext context) {
     _navigateTo(context, Routes.newsearch);
   }
+
   ///添加动态页面
   static void goCreate_commnuityPage(BuildContext context,
       {@required String data}) {
     _navigateTo(context,
         "${Routes.create_commnuity}?data=${FluroConvertUtils.object2string(data)}");
   }
+
   //修改资料
-  static void goChange_account(BuildContext context){
+  static void goChange_account(BuildContext context) {
     _navigateTo(context, Routes.change_account);
   }
-  static void goChange_name(BuildContext context){
+
+  static void goChange_name(BuildContext context) {
     _navigateTo(context, Routes.change_name);
   }
-  static void goChange_introduction(BuildContext context){
+
+  static void goChange_introduction(BuildContext context) {
     _navigateTo(context, Routes.change_introduction);
   }
-  static void goChange_pwd(BuildContext context){
+
+  static void goChange_pwd(BuildContext context) {
     _navigateTo(context, Routes.change_pwd);
   }
+
   //个人页面
-  static void goPerson(BuildContext context){
+  static void goPerson(BuildContext context) {
     _navigateTo(context, Routes.person);
   }
+
   //最近播放
-  static void goRecently_song(BuildContext context){
+  static void goRecently_song(BuildContext context) {
     _navigateTo(context, Routes.recently_song);
   }
+
   //我的收藏
-  static void goCollection_song(BuildContext context){
+  static void goCollection_song(BuildContext context) {
     _navigateTo(context, Routes.collection_song);
   }
 }
-
-

@@ -125,7 +125,7 @@ class Playlist {
     _trackCount = json['trackCount'];
     _name = json['name'];
     _id = json['id'];
-    _iscollected = json['iscollected'];
+    _iscollected = json['is_collected'];
   }
 
   Map<String, dynamic> toJson() {
@@ -142,7 +142,7 @@ class Playlist {
     data['tracksCount'] = this._trackCount;
     data['name'] = this._name;
     data['id'] = this._id;
-    data['iscollected'] = this._iscollected;
+    data['is_collected'] = this._iscollected;
     return data;
   }
 }
@@ -175,7 +175,7 @@ class Tracks {
     _name = json['name'];
     _artist = json['artist'];
     _album = Al.fromJson(json['album']);
-    _iscollected = json['iscollected'];
+    _iscollected = json['is_collected'];
   }
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
@@ -183,7 +183,7 @@ class Tracks {
     data['name'] = this._name;
     data['artist'] = this._artist;
     data['album'] = this._album;
-    data['iscollected'] = this._iscollected;
+    data['is_collected'] = this._iscollected;
     return data;
   }
 }
@@ -288,7 +288,7 @@ class Creator {
     _introduction = json['introduction'];
     _follow = json['follow'];
     _fans = json['fans'];
-    _isfollowed = json['isfollowed'];
+    _isfollowed = json['is_followed'];
   }
 
   Map<String, dynamic> toJson() {

@@ -183,7 +183,7 @@ class _PlayListPageState extends State<PlayListPage> {
                               'images/icon_download.png', '下载', () {}),
                           FooterTabWidget(
                               'images/icon_multi_select.png', '多选', () {}),
-                          _data.iscollected
+                          widget.data.iscollected
                               ? FooterTabWidget('images/icon_like.png', '已收藏',
                                   () {
                                   NetUtils.uncollection(context, params: {
@@ -197,10 +197,9 @@ class _PlayListPageState extends State<PlayListPage> {
                                           }))
                                       .catchError(
                                           (m) => Utils.showToast("请求错误"));
-                                  Utils.showToast('取消收藏');
                                 })
-                              : FooterTabWidget('images/icon_liked.png', '收藏',
-                                  () {
+                              : FooterTabWidget(
+                                  'images/icon_disliked.png', '收藏', () {
                                   NetUtils.collection(context, params: {
                                     'user_id': _user.account.userid,
                                     'target_id': _data.id,
@@ -259,12 +258,11 @@ class _PlayListPageState extends State<PlayListPage> {
   void playSongs(PlaySongsModel model, int index) {
     model.playSongs(
       _data.tracks
-          .map((r) => Song(
-                r.id,
-                name: r.name,
-                picUrl: r.album.picUrl,
-                artists: '${r.artist}',
-              ))
+          .map((r) => Song(r.id,
+              name: r.name,
+              picUrl: r.album.picUrl,
+              artists: '${r.artist}',
+              iscollected: r.iscollected))
           .toList(),
       index: index,
     );

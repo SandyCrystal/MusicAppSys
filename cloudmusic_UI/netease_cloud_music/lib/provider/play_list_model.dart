@@ -19,24 +19,32 @@ class PlayListModel with ChangeNotifier {
 
   List<Playlist> get allPlayList => _allPlayList;
 
-
-
   void setPlayList(List<Playlist> value) {
-    if (value!=null)
-      {_allPlayList = value;
+    if (value != null) {
+      _allPlayList = value;
     }
     _splitPlayList();
   }
 
   void _splitPlayList() {
-    _selfCreatePlayList =
-        _allPlayList.where((p) => p.creator.userid ==  User.fromJson(json.decode(Application.sp.getString('user'))).account.userid).toList();
-    _collectPlayList =
-        _allPlayList.where((p) => p.creator.userid !=  User.fromJson(json.decode(Application.sp.getString('user'))).account.userid).toList();
+    _selfCreatePlayList = _allPlayList
+        .where((p) =>
+            p.creator.userid ==
+            User.fromJson(json.decode(Application.sp.getString('user')))
+                .account
+                .userid)
+        .toList();
+    _collectPlayList = _allPlayList
+        .where((p) =>
+            p.creator.userid !=
+            User.fromJson(json.decode(Application.sp.getString('user')))
+                .account
+                .userid)
+        .toList();
     notifyListeners();
   }
 
-  void addPlayList(Playlist playlist){
+  void addPlayList(Playlist playlist) {
     _allPlayList.add(playlist);
     _splitPlayList();
   }
@@ -46,8 +54,21 @@ class PlayListModel with ChangeNotifier {
     _splitPlayList();
   }
 
-  void getSelfPlaylistData(BuildContext context) async{
-    var result = await NetUtils.getSelfPlaylistData(context, params: {'user_id':  User.fromJson(json.decode(Application.sp.getString('user'))).account.userid});
+  void getSelfPlaylistData(BuildContext context) async {
+    var result = await NetUtils.getSelfPlaylistData(context, params: {
+      'user_id': User.fromJson(json.decode(Application.sp.getString('user')))
+          .account
+          .userid
+    });
+    setPlayList(result.playlist);
+  }
+
+  void getCollectionPlaylistData(BuildContext context) async {
+    var result = await NetUtils.getCollectionPlaylistData(context, params: {
+      'user_id': User.fromJson(json.decode(Application.sp.getString('user')))
+          .account
+          .userid
+    });
     setPlayList(result.playlist);
   }
 }

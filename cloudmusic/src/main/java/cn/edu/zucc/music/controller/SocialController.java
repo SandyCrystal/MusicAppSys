@@ -158,6 +158,7 @@ public class SocialController {
             followIds.add(follow.getToUserId());
         }
         List<Dynamic> dynamics = dynamicService.getMostTenDynamic();
+        System.out.println(dynamics.size());
         int[] follow=new int[dynamics.size()];
         int[] fans=new int[dynamics.size()];
          List<User> users = new ArrayList<User>();

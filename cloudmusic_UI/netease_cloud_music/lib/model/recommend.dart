@@ -87,7 +87,7 @@ class Recommend {
     _createTime = json['createTime'];
     _creator =
         json['creator'] != null ? new Creator.fromJson(json['creator']) : null;
-    _iscollected = json['iscollected'];
+    _iscollected = json['is_collected'];
   }
 
   Map<String, dynamic> toJson() {
@@ -100,7 +100,7 @@ class Recommend {
     if (this._creator != null) {
       data['creator'] = this._creator.toJson();
     }
-    data['iscollected'] = this._iscollected;
+    data['is_collected'] = this._iscollected;
     return data;
   }
 }
@@ -177,7 +177,7 @@ class Creator {
 //    _createTime = json['createTime'];
     _follow = json['follow'];
     _fans = json['fans'];
-    _isfollowed = json['isfollowed'];
+    _isfollowed = json['is_followed'];
   }
 
   Map<String, dynamic> toJson() {
@@ -189,7 +189,7 @@ class Creator {
     data['introduction'] = this._introduction;
     data['follow'] = this._follow;
     data['fans'] = this._fans;
-    data['isfollowed'] = this._isfollowed;
+    data['is_followed'] = this._isfollowed;
     return data;
   }
 }

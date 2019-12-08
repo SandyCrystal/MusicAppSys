@@ -1,4 +1,3 @@
-// TODO Implement this library.
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:netease_cloud_music/application.dart';
@@ -18,24 +17,13 @@ class NewSearchPage extends StatefulWidget {
   _NewSearchPageState createState() => _NewSearchPageState();
 }
 
-class _NewSearchPageState extends State<NewSearchPage> with TickerProviderStateMixin{
-  List<String> historySearchList;
+class _NewSearchPageState extends State<NewSearchPage>
+    with TickerProviderStateMixin {
   TextEditingController _searchController = TextEditingController();
+  String searchText;
   FocusNode _blankNode = FocusNode();
   bool _isSearching = false;
-  List<String> _searchingTabKeys = ['单曲'];
-  TabController _searchingTabController;
-  String searchText;
 
-  @override
-  void initState() {
-    super.initState();
-    //historySearchList = Application.sp.getStringList("search_history") ?? [];
-    //_searchingTabKeys.addAll(_searchingTabMap.keys.toList());
-    _searchingTabController =
-        TabController(length: _searchingTabKeys.length, vsync: this);
-  }
-  // 热搜
   void _search() {
     FocusScope.of(context).requestFocus(_blankNode);
     setState(() {
@@ -43,40 +31,11 @@ class _NewSearchPageState extends State<NewSearchPage> with TickerProviderStateM
       _searchController.text = searchText;
     });
   }
-  Widget _buildUnSearchingLayout() {
-    return ListView(
-      padding: EdgeInsets.symmetric(
-          horizontal: ScreenUtil().setWidth(40),
-          vertical: ScreenUtil().setWidth(30)),
-      children: <Widget>[
-        //_buildHistorySearch(),
-        //_buildHotSearch(),
-      ],
-    );
-  }
+
   Widget _buildSearchingLayout() {
-    return Column(
-      children: <Widget>[
-        TabBar(
-          isScrollable: true,
-          indicatorColor: Colors.red,
-          labelColor: Colors.red,
-          unselectedLabelColor: Colors.black87,
-          indicatorSize: TabBarIndicatorSize.label,
-          tabs: _searchingTabKeys.map((key) => Tab(text: key,)).toList(),
-          controller: _searchingTabController,
-        ),
-        Expanded(
-          child: TabBarView(
-            children:[
-              NewSearchSongPage(searchText)
-            ],
-            controller: _searchingTabController,
-          ),
-        ),
-      ],
-    );
+    return Column(children: <Widget>[NewSearchSongPage(searchText)]);
   }
+
   Widget build(BuildContext context) {
     return WillPopScope(
       child: Scaffold(
@@ -116,13 +75,20 @@ class _NewSearchPageState extends State<NewSearchPage> with TickerProviderStateM
           ),
         ),
         body: Listener(
+            onPointerDown: (d) {
+              FocusScope.of(context).requestFocus(_blankNode);
+            },
+            child: SingleChildScrollView(
+              child: _isSearching ? _buildSearchingLayout() : null,
+            )),
+        /*Listener(
           onPointerDown: (d) {
             FocusScope.of(context).requestFocus(_blankNode);
           },
           child: _isSearching
               ? _buildSearchingLayout()
-              : _buildUnSearchingLayout(),
-        ),
+              : null
+        ),*/
       ),
       onWillPop: () async {
         if (_isSearching) {
