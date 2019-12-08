@@ -21,6 +21,6 @@ public interface LikeMapper {
 
     int updateByPrimaryKey(Like record);
 
-    List<Like> findMusicCommentByUserId(@Param("userId")String user_id,@Param("type") int type);
+    List<Like> findMusicCommentByUserId(@Param("userId")String userId,@Param("type") int type);
     int deleteLike(@Param("userId") String userId,@Param("targetId") String targetId,@Param("type") int type);
 }

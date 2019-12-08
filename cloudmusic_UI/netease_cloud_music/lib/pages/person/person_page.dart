@@ -93,7 +93,6 @@ class _PersonPageState extends State<PersonPage> with TickerProviderStateMixin {
       futureFunc: NetUtils.getUserDynamic,
       params: {
         'user_id': _user.account.userid,
-        'cur_user_id': _user.account.userid
       },
       builder: (context, snapshot) {
         var data = snapshot.comdynamics;
@@ -114,6 +113,7 @@ class _PersonPageState extends State<PersonPage> with TickerProviderStateMixin {
                   content: data[index].content,
                   create_time: data[index].createTime,
                   pic_url: data[index].picUrl,
+                  isliked: data[index].isliked,
                 )));
               },
               shrinkWrap: true,

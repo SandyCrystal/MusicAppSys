@@ -18,7 +18,7 @@
   </select>
 
   <select id="findMusicCommentByUserId" resultMap="BaseResultMap" >
-    SELECT <include refid="Base_Column_List" /> FROM user_like WHERE like_user_id = #{user_id,jdbcType=VARCHAR} AND like_type = #{type ,jdbcType=INTEGER}
+    SELECT <include refid="Base_Column_List" /> FROM user_like WHERE like_user_id = #{userId,jdbcType=VARCHAR} AND like_type = #{type ,jdbcType=INTEGER}
   </select>
 
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
@@ -27,7 +27,7 @@
   </delete>
   <delete id="deleteLike" >
     delete from user_like
-    where user_id = #{userId,jdbcType=VARCHAR} and where to_liked_id=#{targetId,jdbcType=VARCHAR} and where like_type=#{type,jdbcType=INTEGER}
+    where like_user_id = #{userId,jdbcType=VARCHAR} and  to_liked_id=#{targetId,jdbcType=VARCHAR} and  like_type=#{type,jdbcType=INTEGER}
   </delete>
   <insert id="insert" parameterType="cn.edu.zucc.music.model.Like" >
     insert into user_like ( like_user_id, to_liked_id,

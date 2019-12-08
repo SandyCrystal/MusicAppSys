@@ -39,7 +39,7 @@ class _DynamicPageState extends State<DynamicPage>
   Widget _buildRecommendPlayList() {
     return CustomFutureBuilder<ComDynamic>(
       futureFunc: NetUtils.getDynamicData,
-      params: {'cur_user_id': _user.account.userid},
+      params: {'user_id': _user.account.userid},
       builder: (context, snapshot) {
         var data = snapshot.comdynamics;
         return Container(

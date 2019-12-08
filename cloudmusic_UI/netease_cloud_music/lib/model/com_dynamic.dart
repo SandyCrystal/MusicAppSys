@@ -154,7 +154,7 @@ class User {
           follow:
               convertValueByType(jsonRes['follow'], int, stack: "User-follow"),
           fans: convertValueByType(jsonRes['fans'], int, stack: "User-fans"),
-          isfollowed: convertValueByType(jsonRes['isfollowed'], bool,
+          isfollowed: convertValueByType(jsonRes['is_followed'], bool,
               stack: "User-isfollowed"),
         );
 

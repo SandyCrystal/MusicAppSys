@@ -53,7 +53,7 @@ public class SocialController {
     // 点赞（动态、音乐评论、音乐、歌单）
     @GetMapping(value = "/api/like")
     @ResponseBody
-    public JSONObject like(String userId, String targetId, int type) {
+    public JSONObject like(String user_id, String targetid, int type) {
         JSONObject jsonObject = new JSONObject();
         if (type == 1){
             System.out.println("动态 dynamic");
@@ -65,16 +65,16 @@ public class SocialController {
         }else {
             System.out.println("歌单 sheet");
         }
-        likeService.addLike(userId,targetId, type);
+        likeService.addLike(user_id,targetid, type);
         jsonObject.put("code",200);
         jsonObject.put("data","点赞成功");
         return jsonObject;
     }
 
     // 取消点赞（动态、歌曲、歌单、评论）
-    @GetMapping(value = "/api/unlike")
+    @GetMapping(value = "/api/dislike")
     @ResponseBody
-    public JSONObject unlike(String userId, String targetId, int type) {
+    public JSONObject unlike(String user_id, String targetid, int type)  {
         JSONObject jsonObject = new JSONObject();
         if (type == 1){
             System.out.println("动态 dynamic");
@@ -85,9 +85,9 @@ public class SocialController {
         }else {
             System.out.println("歌单 sheet");
         }
-        likeService.disLiked(userId,targetId, type);
+        likeService.disLiked(user_id,targetid, type);
         jsonObject.put("code",200);
-        jsonObject.put("data","点赞成功");
+        jsonObject.put("data","取消点赞");
         return jsonObject;
     }
 

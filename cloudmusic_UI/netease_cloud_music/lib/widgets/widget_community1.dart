@@ -17,13 +17,12 @@ import 'h_empty_view.dart';
 import 'widget_new_ima_menu.dart';
 
 class WidgetCommnuity extends StatelessWidget {
-  final CommunityData _data;
+  CommunityData _data;
   final VoidCallback onTap;
   User _user = User.fromJson(json.decode(Application.sp.getString('user')));
 
   WidgetCommnuity(this._data, {this.onTap});
 
-  int count = 1; //标记是否点过赞
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -87,7 +86,7 @@ class WidgetCommnuity extends StatelessWidget {
                             icon: Icon(
                               Icons.thumb_up,
                               size: ScreenUtil().setWidth(30),
-                              color: Colors.black45,
+                              color: Colors.red,
                             ),
                             onPressed: () {
                               NetUtils.dislike(context, params: {
@@ -95,7 +94,10 @@ class WidgetCommnuity extends StatelessWidget {
                                 'targetid': _data.dynamic_id,
                                 'type': 1
                               })
-                                  .then((m) => (Utils.showToast(m.data)))
+                                  .then((m) => ({
+                                        Utils.showToast(m.data),
+                                        _data.isliked = false
+                                      }))
                                   .catchError((m) => Utils.showToast("请求错误"));
                             },
                           )
@@ -103,7 +105,7 @@ class WidgetCommnuity extends StatelessWidget {
                             icon: Icon(
                               Icons.thumb_up,
                               size: ScreenUtil().setWidth(30),
-                              color: Colors.red,
+                              color: Colors.black45,
                             ),
                             onPressed: () {
                               NetUtils.like(context, params: {
@@ -111,7 +113,10 @@ class WidgetCommnuity extends StatelessWidget {
                                 'targetid': _data.dynamic_id,
                                 'type': 1
                               })
-                                  .then((m) => (Utils.showToast(m.data)))
+                                  .then((m) => ({
+                                        Utils.showToast(m.data),
+                                        _data.isliked = true
+                                      }))
                                   .catchError((m) => Utils.showToast("请求错误"));
                             },
                           ),

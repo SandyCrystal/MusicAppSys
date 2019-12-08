@@ -38,7 +38,7 @@ import 'custom_log_interceptor.dart';
 
 class NetUtils {
   static Dio _dio;
-  static final String baseUrl = 'http://139.9.63.6';
+  static final String baseUrl = 'http://127.0.0.1';
 
   static void init() async {
     Directory tempDir = await getTemporaryDirectory();
@@ -214,7 +214,7 @@ class NetUtils {
     BuildContext context, {
     Map<String, dynamic> params,
   }) async {
-    var response = await _get(context, '/api/liked', params: params);
+    var response = await _get(context, '/api/like', params: params);
     return GetData.fromJson(response.data);
   }
 

@@ -311,7 +311,7 @@ public class PackerController {
             json.put("pic_url", dynamic.getDynamicPath());
             json.put("create_time", dynamic.getCreateTime().toString());
             json.put("like_count", dynamic.getLikeCount());
-             json.put("is_liked",likeIds.contains(dynamic.getDynamicId()));
+             json.put("is_liked",likeIds.contains(dynamic.getDynamicId().toString()));
             json.put("user", transformUserToJson(user,follow[i],fans[i],followIds.contains(user.getUserId())));
             list.add(json);
         }

@@ -112,10 +112,7 @@ class _PersonPageState extends State<OtherPersonPage>
   Widget _buildMenu() {
     return CustomFutureBuilder<ComDynamic>(
       futureFunc: NetUtils.getUserDynamic,
-      params: {
-        'user_id': widget.user.userId,
-        'cur_user_id': _user.account.userid
-      },
+      params: {'user_id': widget.user.userId},
       builder: (context, snapshot) {
         var data = snapshot.comdynamics;
         return Container(
@@ -135,6 +132,7 @@ class _PersonPageState extends State<OtherPersonPage>
                   content: data[index].content,
                   create_time: data[index].createTime,
                   pic_url: data[index].picUrl,
+                  isliked: data[index].isliked,
                 )));
               },
               shrinkWrap: true,
