@@ -49,7 +49,7 @@ class _FansPageState extends State<FansPage> {
               },
               shrinkWrap: true,
               scrollDirection: Axis.vertical,
-              itemCount: data.length,
+              itemCount: snapshot.total,
             ));
       },
     );

@@ -174,7 +174,7 @@ class _AlbumDetailsPagePageState extends State<AlbumDetailsPage> {
             futureFunc: NetUtils.getAlbumDetails,
             params: {
               'album_id': widget.data.id,
-              'user_id	': _user.account.userid
+              'user_id': _user.account.userid
             },
             builder: (context, data) {
               setData(data.albumList);

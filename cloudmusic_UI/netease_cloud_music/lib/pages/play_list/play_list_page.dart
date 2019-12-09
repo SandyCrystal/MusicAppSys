@@ -6,11 +6,13 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:netease_cloud_music/model/comment_head.dart';
 import 'package:netease_cloud_music/model/music.dart';
 import 'package:netease_cloud_music/model/play_list.dart';
+import 'package:netease_cloud_music/model/play_list.dart' as prefix0;
 import 'package:netease_cloud_music/model/recommend.dart';
 import 'package:netease_cloud_music/model/song.dart';
 import 'package:netease_cloud_music/model/user.dart';
 import 'package:netease_cloud_music/pages/comment/comment_type.dart';
 import 'package:netease_cloud_music/pages/play_list/play_list_desc_dialog.dart';
+import 'package:netease_cloud_music/provider/play_list_model.dart';
 import 'package:netease_cloud_music/provider/play_songs_model.dart';
 import 'package:netease_cloud_music/utils/navigator_util.dart';
 import 'package:netease_cloud_music/utils/net_utils.dart';
@@ -193,7 +195,21 @@ class _PlayListPageState extends State<PlayListPage> {
                                   })
                                       .then((m) => ({
                                             Utils.showToast(m.data),
-                                            _data.iscollected = false
+                                            widget.data.iscollected = false,
+                                            _data.iscollected = false,
+//                                            _playListModel.addPlayList(Playlist(
+//                                                id: widget.data.id,
+//                                                name: widget.data.name,
+//                                                creator:
+//                                                    prefix0.Creator.fromJson(
+//                                                        widget.data.creator
+//                                                            .toJson()),
+//                                                picurl: widget.data.picUrl,
+//                                                playcount:
+//                                                    widget.data.playcount,
+//                                                subcount: 0,
+//                                                iscollected:
+//                                                    widget.data.iscollected))
                                           }))
                                       .catchError(
                                           (m) => Utils.showToast("请求错误"));
@@ -207,6 +223,7 @@ class _PlayListPageState extends State<PlayListPage> {
                                   })
                                       .then((m) => ({
                                             Utils.showToast(m.data),
+                                            widget.data.iscollected = true,
                                             _data.iscollected = true
                                           }))
                                       .catchError(

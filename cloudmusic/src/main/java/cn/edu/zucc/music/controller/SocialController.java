@@ -57,7 +57,9 @@ public class SocialController {
         JSONObject jsonObject = new JSONObject();
         if (type == 1){
             System.out.println("动态 dynamic");
-
+            Dynamic dynamic =dynamicService.findById(Integer.parseInt(targetid));
+            dynamic.setLikeCount(dynamic.getLikeCount()-1);
+            dynamicService.updateDynamic(dynamic);
         }else if (type == 2){
             System.out.println("音乐评论 song_comment");
         }else if (type == 3){
@@ -78,6 +80,9 @@ public class SocialController {
         JSONObject jsonObject = new JSONObject();
         if (type == 1){
             System.out.println("动态 dynamic");
+            Dynamic dynamic =dynamicService.findById(Integer.parseInt(targetid));
+            dynamic.setLikeCount(dynamic.getLikeCount()-1);
+            dynamicService.updateDynamic(dynamic);
         }else if (type == 2){
             System.out.println("音乐评论 song_comment");
         }else if (type == 3){

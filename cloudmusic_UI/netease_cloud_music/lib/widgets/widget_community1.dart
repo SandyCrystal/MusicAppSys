@@ -16,18 +16,53 @@ import '../application.dart';
 import 'h_empty_view.dart';
 import 'widget_new_ima_menu.dart';
 
-class WidgetCommnuity extends StatelessWidget {
-  CommunityData _data;
+class WidgetCommnuity extends StatefulWidget {
+  final CommunityData _data;
   final VoidCallback onTap;
-  User _user = User.fromJson(json.decode(Application.sp.getString('user')));
 
   WidgetCommnuity(this._data, {this.onTap});
+  @override
+  _WidgetCommnuityState createState() => _WidgetCommnuityState();
+}
+
+class _WidgetCommnuityState extends State<WidgetCommnuity> {
+  User _user = User.fromJson(json.decode(Application.sp.getString('user')));
+
+  void _toggleFavorite() {
+    setState(() {
+      if (widget._data.isliked) {
+        NetUtils.dislike(context, params: {
+          'user_id': _user.account.userid,
+          'targetid': widget._data.dynamic_id,
+          'type': 1
+        })
+            .then((m) => ({
+                  //Utils.showToast(m.data),
+                  widget._data.isliked = false,
+                  widget._data.like_count--
+                }))
+            .catchError((m) => Utils.showToast("请求错误"));
+      } else {
+        NetUtils.like(context, params: {
+          'user_id': _user.account.userid,
+          'targetid': widget._data.dynamic_id,
+          'type': 1
+        })
+            .then((m) => ({
+                  //Utils.showToast(m.data),
+                  widget._data.isliked = true,
+                  widget._data.like_count++
+                }))
+            .catchError((m) => Utils.showToast("请求错误"));
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       behavior: HitTestBehavior.translucent,
-      onTap: onTap,
+      onTap: widget.onTap,
       child: Container(
         width: Application.screenWidth,
         //height: ScreenUtil().setWidth(120),
@@ -35,34 +70,34 @@ class WidgetCommnuity extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           //mainAxisSize: MainAxisSize.min,
           children: <Widget>[
-            newImageMenuWidget(_data.user.avatarUrl, 50, onTap: () {
-              NavigatorUtil.goOtherPerson(context, data: _data.user);
+            newImageMenuWidget(widget._data.user.avatarUrl, 50, onTap: () {
+              NavigatorUtil.goOtherPerson(context, data: widget._data.user);
             }),
             HEmptyView(10),
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 Text(
-                  _data.user.nickname //_data.user.account.userName
+                  widget._data.user.nickname //_data.user.account.userName
                   ,
                   style: TextStyle(fontSize: 10, color: Colors.lightBlueAccent),
                 ),
                 Text(
-                  _data.create_time,
+                  widget._data.create_time,
                   style: TextStyle(fontSize: 8, color: Colors.black54),
                 ),
                 VEmptyView(10),
-                _data.content == null
+                widget._data.content == null
                     ? Container()
                     : Text(
-                        _data.content,
+                        widget._data.content,
                         // maxLines: 2,
                         softWrap: true,
                       ),
-                _data.pic_url == null
+                widget._data.pic_url == null
                     ? Container()
                     : Image.network(
-                        _data.pic_url,
+                        widget._data.pic_url,
                         width: 250,
                         height: 250,
                       ),
@@ -79,9 +114,15 @@ class WidgetCommnuity extends StatelessWidget {
                       },
                     ),
                     HEmptyView(10),
-                    Text(_data.like_count.toString()),
+                    Text(widget._data.like_count.toString()),
                     HEmptyView(100),
-                    _data.isliked
+                    IconButton(
+                      icon: Icon(Icons.thumb_up),
+                      color:
+                          (widget._data.isliked ? Colors.red : Colors.black54),
+                      onPressed: _toggleFavorite,
+                    ),
+                    /*widget._data.isliked
                         ? IconButton(
                             icon: Icon(
                               Icons.thumb_up,
@@ -91,12 +132,12 @@ class WidgetCommnuity extends StatelessWidget {
                             onPressed: () {
                               NetUtils.dislike(context, params: {
                                 'user_id': _user.account.userid,
-                                'targetid': _data.dynamic_id,
+                                'targetid': widget._data.dynamic_id,
                                 'type': 1
                               })
                                   .then((m) => ({
                                         Utils.showToast(m.data),
-                                        _data.isliked = false
+                                      widget._data.isliked = false
                                       }))
                                   .catchError((m) => Utils.showToast("请求错误"));
                             },
@@ -110,18 +151,18 @@ class WidgetCommnuity extends StatelessWidget {
                             onPressed: () {
                               NetUtils.like(context, params: {
                                 'user_id': _user.account.userid,
-                                'targetid': _data.dynamic_id,
+                                'targetid': widget._data.dynamic_id,
                                 'type': 1
                               })
                                   .then((m) => ({
                                         Utils.showToast(m.data),
-                                        _data.isliked = true
+                                widget._data.isliked = true
                                       }))
                                   .catchError((m) => Utils.showToast("请求错误"));
                             },
-                          ),
+                          ),*/
                     HEmptyView(10),
-                    Text(_data.like_count.toString()),
+                    Text(widget._data.like_count.toString()),
                     IconButton(
                         icon: Icon(
                           Icons.more_vert,
@@ -132,7 +173,7 @@ class WidgetCommnuity extends StatelessWidget {
                           showModalBottomSheet<Playlist>(
                               context: context,
                               builder: (context) {
-                                return CommunityMenuWidget(_data);
+                                return CommunityMenuWidget(widget._data);
                               },
                               backgroundColor: Colors.transparent);
                           /* .then((v) {

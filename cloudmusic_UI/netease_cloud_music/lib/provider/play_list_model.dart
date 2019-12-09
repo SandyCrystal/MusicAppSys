@@ -20,8 +20,14 @@ class PlayListModel with ChangeNotifier {
   List<Playlist> get allPlayList => _allPlayList;
 
   void setPlayList(List<Playlist> value) {
-    if (value != null) {
-      _allPlayList = value;
+    if (_allPlayList.length > 0) {
+      if (value != null) {
+        _allPlayList.addAll(value);
+      }
+    } else {
+      if (value != null) {
+        _allPlayList = value;
+      }
     }
     _splitPlayList();
   }

@@ -154,9 +154,9 @@ public class SheetController {
             List<Album> albums = new ArrayList<Album>();
             User user = userService.findById(sheet.getUserId());
             for(Song song : old_songs) {
-                Artist artist = artistService.findById(song.getArtistId());
-                song.setArtistId(artist.getArtistName());
                 Album album = albumService.findById(song.getAlbumId());
+                Artist artist = artistService.findById(album.getArtistId());
+                song.setArtistId(artist.getArtistName());
                 songs.add(song);
                 albums.add(album);
             }

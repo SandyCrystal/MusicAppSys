@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:common_utils/common_utils.dart';
 import 'package:flutter/material.dart';
@@ -7,6 +8,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:netease_cloud_music/model/daily_songs.dart';
 import 'package:netease_cloud_music/model/music.dart';
 import 'package:netease_cloud_music/model/song.dart';
+import 'package:netease_cloud_music/model/user.dart';
 import 'package:netease_cloud_music/provider/play_songs_model.dart';
 import 'package:netease_cloud_music/utils/navigator_util.dart';
 import 'package:netease_cloud_music/utils/net_utils.dart';
@@ -14,6 +16,8 @@ import 'package:netease_cloud_music/widgets/widget_music_list_item.dart';
 import 'package:netease_cloud_music/widgets/widget_play_list_app_bar.dart';
 import 'package:netease_cloud_music/widgets/widget_sliver_future_builder.dart';
 import 'package:provider/provider.dart';
+
+import '../../application.dart';
 
 class DailySongsPage extends StatefulWidget {
   @override
@@ -24,7 +28,7 @@ class _DailySongsPageState extends State<DailySongsPage> {
   double _expandedHeight = ScreenUtil().setWidth(340);
   int _count;
   DailySongsData data;
-
+  User _user = User.fromJson(json.decode(Application.sp.getString('user')));
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -74,6 +78,7 @@ class _DailySongsPageState extends State<DailySongsPage> {
           ),
           CustomSliverFutureBuilder<DailySongsData>(
             futureFunc: NetUtils.getDailySongsData,
+            params: {"user_id": _user.account.userid},
             builder: (context, data) {
               setCount(data.recommend.length);
               return Consumer<PlaySongsModel>(
@@ -88,10 +93,8 @@ class _DailySongsPageState extends State<DailySongsPage> {
                               mvid: d.mvid,
                               picUrl: d.album.picUrl,
                               songName: d.name,
-                              artists:
-                                  "${d.artists} - ${d.album.name}",
-                              iscollected: d.iscollected
-                          ),
+                              artists: "${d.artists} - ${d.album.name}",
+                              iscollected: d.iscollected),
                           onTap: () {
                             playSongs(model, index);
                           },
@@ -112,12 +115,11 @@ class _DailySongsPageState extends State<DailySongsPage> {
   void playSongs(PlaySongsModel model, int index) {
     model.playSongs(
       data.recommend
-          .map((r) => Song(
-                r.id,
-                name: r.name,
-                picUrl: r.album.picUrl,
-                artists: '${r.artists}',
-              ))
+          .map((r) => Song(r.id,
+              name: r.name,
+              picUrl: r.album.picUrl,
+              artists: '${r.artists}',
+              iscollected: r.iscollected))
           .toList(),
       index: index,
     );

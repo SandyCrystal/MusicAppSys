@@ -142,10 +142,8 @@ public class UserController {
             return jsonObject;
         }
 
-        JSONObject tmp = PackerController.transformPicUrl(picURL);
-
         jsonObject.put("code", ResultStatus.SUCCESS.value());
-        jsonObject.put("data", tmp);
+        jsonObject.put("data", picURL);
         return jsonObject;
     }
 
@@ -160,15 +158,13 @@ public class UserController {
             jsonObject.put("data", ResultStatus.USER_ALREADY_FOLLOW_THIS_USER.getReasonPhrase());
             return jsonObject;
         }else {
-            int followId = followService.getMaxFollowId()+1;
             Follow newFollow = new Follow();
-            newFollow.setFollowId(followId);
             newFollow.setFromUserId(fromUserId);
             newFollow.setToUserId(toUserId);
             followService.addFollow(newFollow);
             JSONObject tmp = PackerController.transfromFollowToJson(newFollow);
             jsonObject.put("code", ResultStatus.SUCCESS.value());
-            jsonObject.put("data", tmp);
+            jsonObject.put("data", "关注成功");
         }
 
         return jsonObject;
@@ -188,7 +184,7 @@ public class UserController {
             followService.deleteFollow(follow);
             JSONObject tmp = PackerController.transfromFollowToJson(follow);
             jsonObject.put("code", ResultStatus.SUCCESS.value());
-            jsonObject.put("data", tmp);
+            jsonObject.put("data", "关注失败");
         }
         return jsonObject;
     }
@@ -235,7 +231,7 @@ public class UserController {
         List<Follow> follows = followService.getFansUsers(toUserId);
         if (follows.size()==0){
             jsonObject.put("code", ResultStatus.USER_NEVER_BE_FOLLOWED.value());
-            jsonObject.put("data", ResultStatus.USER_NEVER_BE_FOLLOWED.getReasonPhrase());
+            jsonObject.put("data", null);
             return jsonObject;
         }else{
             List<User> users = new ArrayList<>();

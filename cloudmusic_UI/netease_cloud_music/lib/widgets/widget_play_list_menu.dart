@@ -91,22 +91,44 @@ class _PlayListMenuWidgetState extends State<PlayListMenuWidget> {
           Offstage(
             offstage: widget._playlist.creator.userid !=
                 widget._model.user.account.userid,
-            child: Container(
-              color: Colors.grey,
-              margin: EdgeInsets.only(left: ScreenUtil().setWidth(140)),
-              height: ScreenUtil().setWidth(0.3),
-            ),
+            child: _buildMenuItem('images/icon_del.png', '删除', () async {
+              NetUtils.deletePlaylist(context,
+                  params: {'sheet_id': widget._playlist.id}).then((v) {
+                if (v.code == 200) {
+                  Navigator.pop(context, widget._playlist..type = 1);
+                  Utils.showToast('删除成功');
+                } else
+                  Utils.showToast('删除失败，请重试');
+              });
+            }),
           ),
-          _buildMenuItem('images/icon_del.png', '删除', () async {
-            NetUtils.deletePlaylist(context,
-                params: {'sheet_id': widget._playlist.id}).then((v) {
-              if (v.code == 200) {
-                Navigator.pop(context, widget._playlist..type=1);
-                Utils.showToast('删除成功');
-              } else
-                Utils.showToast('删除失败，请重试');
-            });
-          }),
+          Container(
+            color: Colors.grey,
+            margin: EdgeInsets.only(left: ScreenUtil().setWidth(140)),
+            height: ScreenUtil().setWidth(0.3),
+          ),
+          Offstage(
+            offstage: widget._playlist.creator.userid ==
+                widget._model.user.account.userid,
+            child: _buildMenuItem('images/icon_del.png', '取消收藏', () async {
+              NetUtils.uncollection(context, params: {
+                'user_id': widget._model.user.account.userid,
+                'target_id': widget._playlist.id,
+                'type': 2
+              }).then((v) {
+                if (v.code == 200) {
+                  Navigator.pop(context, widget._playlist..type = 1);
+                  Utils.showToast('取消成功');
+                } else
+                  Utils.showToast('取消失败，请重试');
+              });
+            }),
+          ),
+          Container(
+            color: Colors.grey,
+            margin: EdgeInsets.only(left: ScreenUtil().setWidth(140)),
+            height: ScreenUtil().setWidth(0.3),
+          ),
           Container(
             color: Colors.grey,
             margin: EdgeInsets.only(left: ScreenUtil().setWidth(140)),

@@ -169,12 +169,14 @@ class _MyPageState extends State<MyPage> with AutomaticKeepAliveClientMixin {
             onTap: () {
               NavigatorUtil.goPlayListPage(context,
                   data: Recommend(
-                      picUrl: curPlayList.picurl,
-                      name: curPlayList.name,
-                      playcount: curPlayList.playcount,
-                      id: curPlayList.id,
-                      creator: creator,
-                      type: curPlayList.type));
+                    picUrl: curPlayList.picurl,
+                    name: curPlayList.name,
+                    playcount: curPlayList.playcount,
+                    id: curPlayList.id,
+                    creator: creator,
+                    type: curPlayList.type,
+                    iscollected: curPlayList.iscollected,
+                  ));
             },
             contentPadding: EdgeInsets.zero,
             title: Padding(
@@ -182,7 +184,7 @@ class _MyPageState extends State<MyPage> with AutomaticKeepAliveClientMixin {
               child: Text(curPlayList.name),
             ),
             subtitle: Text(
-              '${curPlayList.trackCount}首',
+              '${curPlayList.trackCount == null ? 0 : curPlayList.trackCount}首',
               style: smallGrayTextStyle,
             ),
             leading: RoundedNetImage(
@@ -295,8 +297,7 @@ class _MyPageState extends State<MyPage> with AutomaticKeepAliveClientMixin {
     }).then((result) {
       Utils.showToast('创建成功');
       Navigator.of(context).pop();
-      _playListModel.addPlayList(result.playlist
-        ..creator = _playListModel.selfCreatePlayList[0].creator);
+      _playListModel.addPlayList(result.playlist);
     });
   }
 

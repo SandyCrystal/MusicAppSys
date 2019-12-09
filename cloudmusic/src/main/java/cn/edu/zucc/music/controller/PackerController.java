@@ -426,7 +426,7 @@ public class PackerController {
         return json;
     }
 
-    public static List<JSONObject> transformCollectionSheetsToJson(List<Sheet> sheets, List<User> users,int[] follow,int[] fans,List<Boolean> isFollowed) {
+    public static List<JSONObject> transformCollectionSheetsToJson(List<Sheet> sheets, List<User> users,int[] follow,int[] fans,List<Boolean> isFollowed,List<Integer> size) {
         List<JSONObject> json = new ArrayList<JSONObject>();
         for (int i = 0; i < sheets.size(); i++) {
             Sheet sheet = sheets.get(i);
@@ -439,6 +439,7 @@ public class PackerController {
             jsonSheet.put("picUrl", sheet.getSheetPicUrl());
             jsonSheet.put("playCount", sheet.getPlayCount());
             jsonSheet.put("createTime", sheet.getCreateTime().getTime());
+            jsonSheet.put("trackCount",size.get(i));
             jsonSheet.put("is_collected",true);
             jsonSheet.put("creator", jsonUser);
 

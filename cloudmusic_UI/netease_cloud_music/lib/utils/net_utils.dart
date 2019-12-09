@@ -160,11 +160,20 @@ class NetUtils {
   }
 
   /// 每日推荐歌曲
-  static Future<DailySongsData> getDailySongsData(BuildContext context) async {
-    var response = await _get(
-      context,
-      '/api/recommandSong',
-    );
+  static Future<DailySongsData> getDailySongsData(
+    BuildContext context, {
+    Map<String, dynamic> params,
+  }) async {
+    var response = await _get(context, '/api/recommandSong', params: params);
+    return DailySongsData.fromJson(response.data);
+  }
+
+  static Future<DailySongsData> getCollectionSong(
+    BuildContext context, {
+    Map<String, dynamic> params,
+  }) async {
+    var response =
+        await _get(context, '/api/getCollectionSong', params: params);
     return DailySongsData.fromJson(response.data);
   }
 
@@ -199,6 +208,22 @@ class NetUtils {
     Map<String, dynamic> params,
   }) async {
     var response = await _get(context, '/api/collection', params: params);
+    return GetData.fromJson(response.data);
+  }
+
+  static Future<GetData> follow(
+    BuildContext context, {
+    Map<String, dynamic> params,
+  }) async {
+    var response = await _get(context, '/api/followUser', params: params);
+    return GetData.fromJson(response.data);
+  }
+
+  static Future<GetData> unfollow(
+    BuildContext context, {
+    Map<String, dynamic> params,
+  }) async {
+    var response = await _get(context, '/api/unfollowUser', params: params);
     return GetData.fromJson(response.data);
   }
 
@@ -294,29 +319,6 @@ class NetUtils {
     int type, {
     @required Map<String, dynamic> params,
   }) async {
-    var funcName;
-    switch (type) {
-      case 0: // song
-        funcName = 'music';
-        break;
-      case 1: // mv
-        funcName = 'mv';
-        break;
-      case 2: // 歌单
-        funcName = 'playlist';
-        break;
-      case 3: // 专辑
-        funcName = 'album';
-        break;
-      case 4: // 电台
-        funcName = 'dj';
-        break;
-      case 5: // 视频
-        funcName = 'video';
-        break;
-      // 动态评论需要threadId，后续再做
-    }
-
     var response = await _get(context, '/api/getMusicComment',
         params: params, isShowLoading: false);
     return SongCommentData.fromJson(response.data);
@@ -336,9 +338,21 @@ class NetUtils {
     BuildContext context, {
     @required Map<String, dynamic> params,
   }) async {
+    var res = await _get(context, '/api/uploadPic',
+        params: {'filepath': params['picUrl']});
+    params['picUrl'] = res.data['data'];
     var response = await _get(context, '/api/createDynamic',
         params: params, isShowLoading: true);
     return prefix1.ComDynamic.fromJson(response.data);
+  }
+
+  static Future<GetData> updatePic(
+    BuildContext context, {
+    @required Map<String, dynamic> params,
+  }) async {
+    var response = await _get(context, '/api/uploadPic',
+        params: params, isShowLoading: true);
+    return GetData.fromJson(response.data);
   }
 
   static Future<GetData> deleteDynamic(
