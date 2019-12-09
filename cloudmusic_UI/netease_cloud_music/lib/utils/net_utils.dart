@@ -38,7 +38,7 @@ import 'custom_log_interceptor.dart';
 
 class NetUtils {
   static Dio _dio;
-  static final String baseUrl = 'http://127.0.0.1';
+  static final String baseUrl = 'http://139.9.63.6';
 
   static void init() async {
     Directory tempDir = await getTemporaryDirectory();
@@ -48,17 +48,45 @@ class NetUtils {
       ..interceptors.add(CookieManager(cj))
       ..interceptors
           .add(CustomLogInterceptor(responseBody: true, requestBody: true));
+    _dio.options.receiveTimeout=100000;
+    _dio.options.connectTimeout=100000;
   }
 
   static Future<Response> _get(
-    BuildContext context,
-    String url, {
-    Map<String, dynamic> params,
-    bool isShowLoading = true,
-  }) async {
+      BuildContext context,
+      String url, {
+        Map<String, dynamic> params,
+        bool isShowLoading = true,
+      }) async {
     if (isShowLoading) Loading.showLoading(context);
     try {
       return await _dio.get(url, queryParameters: params);
+    } on DioError catch (e) {
+      if (e == null) {
+        return Future.error(Response(data: -1));
+      } else if (e.response != null) {
+        if (e.response.statusCode >= 300 && e.response.statusCode < 400) {
+          _reLogin();
+          return Future.error(Response(data: -1));
+        } else {
+          return Future.value(e.response);
+        }
+      } else {
+        return Future.error(Response(data: -1));
+      }
+    } finally {
+      Loading.hideLoading(context);
+    }
+  }
+  static Future<Response> _post(
+      BuildContext context,
+      String url, {
+       FormData formdata,
+        bool isShowLoading = true,
+      }) async {
+    if (isShowLoading) Loading.showLoading(context);
+    try {
+      return await _dio.post(url, data: formdata);
     } on DioError catch (e) {
       if (e == null) {
         return Future.error(Response(data: -1));
@@ -333,16 +361,25 @@ class NetUtils {
         params: params, isShowLoading: true);
     return Comment2.fromJson(response.data);
   }
+  static Future<File> _getLocalFile() async {
+    // get the path to the document directory.
+    String dir = (await getApplicationDocumentsDirectory()).path;
+    return new File('$dir/counter.txt');
+  }
 
   static Future<prefix1.ComDynamic> sendDynamic(
     BuildContext context, {
     @required Map<String, dynamic> params,
   }) async {
-    var res = await _get(context, '/api/uploadPic',
-        params: {'filepath': params['picUrl']});
-    params['picUrl'] = res.data['data'];
-    var response = await _get(context, '/api/createDynamic',
-        params: params, isShowLoading: true);
+    List<int> imageBytes = await params['picUrl'].readAsBytes();
+    var a=base64Encode(imageBytes);
+    FormData formData=new FormData.from({
+      "userId":params['userId'],
+      "picUrl":a,
+      "content":params['content']
+    });
+    var response = await _post(context, '/api/createDynamic',
+        formdata: formData, isShowLoading: true);
     return prefix1.ComDynamic.fromJson(response.data);
   }
 

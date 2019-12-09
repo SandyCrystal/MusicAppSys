@@ -214,7 +214,7 @@ class _MyPageState extends State<MyPage> with AutomaticKeepAliveClientMixin {
                       // 1 为删除
                       if (v.type == 1) {
                         Utils.showToast('删除成功');
-                        _playListModel.delPlayList(curPlayList);
+                        _playListModel.delPlayList(curPlayList.id);
                       }
                     }
                   });

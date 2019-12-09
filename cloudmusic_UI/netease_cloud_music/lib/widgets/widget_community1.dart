@@ -94,7 +94,7 @@ class _WidgetCommnuityState extends State<WidgetCommnuity> {
                         // maxLines: 2,
                         softWrap: true,
                       ),
-                widget._data.pic_url == null
+                widget._data.pic_url == null || widget._data.pic_url.length<5
                     ? Container()
                     : Image.network(
                         widget._data.pic_url,
@@ -114,7 +114,7 @@ class _WidgetCommnuityState extends State<WidgetCommnuity> {
                       },
                     ),
                     HEmptyView(10),
-                    Text(widget._data.like_count.toString()),
+                    Text(0.toString()),
                     HEmptyView(100),
                     IconButton(
                       icon: Icon(Icons.thumb_up),

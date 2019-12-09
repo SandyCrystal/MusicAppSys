@@ -29,10 +29,19 @@ class PlayListModel with ChangeNotifier {
         _allPlayList = value;
       }
     }
+    var index=[];
+    for(int i=0;i<_allPlayList.length;i++){
+      if(index.contains(_allPlayList[i].id)){
+        _allPlayList.removeAt(i);
+      }else{
+        index.add(_allPlayList[i].id);
+      }
+    }
     _splitPlayList();
   }
 
   void _splitPlayList() {
+
     _selfCreatePlayList = _allPlayList
         .where((p) =>
             p.creator.userid ==
@@ -47,16 +56,49 @@ class PlayListModel with ChangeNotifier {
                 .account
                 .userid)
         .toList();
+    var index=[];
+    for(int i=0;i<_selfCreatePlayList.length;i++){
+      if(index.contains(_selfCreatePlayList[i].id)){
+        _selfCreatePlayList.removeAt(i);
+      }else{
+        index.add(_selfCreatePlayList[i].id);
+      }
+    }
+    index=[];
+    for(int i=0;i<_collectPlayList.length;i++){
+      if(index.contains(_collectPlayList[i].id)){
+        _collectPlayList.removeAt(i);
+      }else{
+        index.add(_collectPlayList[i].id);
+      }
+    }
     notifyListeners();
   }
 
   void addPlayList(Playlist playlist) {
     _allPlayList.add(playlist);
+    var index=[];
+    for(int i=0;i<_allPlayList.length;i++){
+      if(index.contains(_allPlayList[i].id)){
+        _allPlayList.removeAt(i);
+      }else{
+        index.add(_allPlayList[i].id);
+      }
+    }
     _splitPlayList();
   }
 
-  void delPlayList(Playlist playlist) {
-    _allPlayList.remove(playlist);
+  void delPlayList(String id) {
+
+    var index=[];
+    for(int i=0;i<_allPlayList.length;i++){
+      if(_allPlayList[i].id==id)_allPlayList.removeAt(i);
+      if(index.contains(_allPlayList[i].id)){
+        _allPlayList.removeAt(i);
+      }else{
+        index.add(_allPlayList[i].id);
+      }
+    }
     _splitPlayList();
   }
 
