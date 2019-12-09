@@ -6,7 +6,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:netease_cloud_music/model/comment_head.dart';
 import 'package:netease_cloud_music/model/song_comment.dart';
-import 'package:netease_cloud_music/pages/comment/comment_type.dart';
+import 'package:netease_cloud_music/model/user.dart' as prefix0;
 import 'package:netease_cloud_music/provider/play_list_model.dart';
 import 'package:netease_cloud_music/utils/net_utils.dart';
 import 'package:netease_cloud_music/utils/number_utils.dart';
@@ -21,6 +21,7 @@ import 'package:netease_cloud_music/widgets/widget_ovar_img.dart';
 import 'package:netease_cloud_music/application.dart';
 
 import 'comment_input_widget.dart';
+
 class CommentPage extends StatefulWidget {
   final CommentHead commentHead;
 
@@ -28,26 +29,30 @@ class CommentPage extends StatefulWidget {
   @override
   _CommentPageState createState() => _CommentPageState();
 }
+
 class _CommentPageState extends State<CommentPage> {
   Map<String, dynamic> params;
   List<Comments> commentData = [];
   EasyRefreshController _controller;
   FocusNode _blankNode = FocusNode();
-  String userId = json.decode(Application.sp.getString('user'))['data']['userId'];
+  String userId =
+      json.decode(Application.sp.getString('user'))['data']['user_id'];
+  prefix0.User _user =
+      prefix0.User.fromJson(json.decode(Application.sp.getString('user')));
   @override
   void initState() {
     super.initState();
     _controller = EasyRefreshController();
     WidgetsBinding.instance.addPostFrameCallback((d) {
-      params = {'id': widget.commentHead.id};
+      params = {'id': widget.commentHead.id, 'user_id': _user.account.userid};
       _request();
     });
   }
 
   void _request() async {
-    var r = await NetUtils.getCommentData(context, widget.commentHead.type, params: params);
+    var r = await NetUtils.getCommentData(context, widget.commentHead.type,
+        params: params);
     setState(() {
-
       if (commentData.where((d) => d.title == "最新评论").isEmpty) {
         commentData.add(Comments(isTitle: true, title: "最新评论"));
       }
@@ -66,7 +71,7 @@ class _CommentPageState extends State<CommentPage> {
         body: Stack(
           children: <Widget>[
             Listener(
-              onPointerDown: (d){
+              onPointerDown: (d) {
                 FocusScope.of(context).requestFocus(_blankNode);
               },
               child: EasyRefresh(
@@ -119,17 +124,30 @@ class _CommentPageState extends State<CommentPage> {
               ),
             ),
             Align(
-              child: CommentInputWidget((content){
+              child: CommentInputWidget((content) {
                 // 提交评论
-                NetUtils.sendComment(context, params:  {
+                NetUtils.sendComment(context, params: {
                   'user_id': userId,
                   'song_id': widget.commentHead.id,
                   'content': content
-                }).then((r){
+                }).then((r) {
                   Utils.showToast('评论成功！');
                   setState(() {
-                    Comments a=new Comments(user: r.user,commentId: r.commentId,content: r.content,time: r.time,likedCount: r.likedCount,isTitle: false,title: '');
-                    commentData.insert(commentData.map((c) => c.title).toList().indexOf('最新评论')+1,a );
+                    Comments a = new Comments(
+                        user: r.user,
+                        commentId: r.commentId,
+                        content: r.content,
+                        time: r.time,
+                        likedCount: r.likedCount,
+                        isTitle: false,
+                        title: '');
+                    commentData.insert(
+                        commentData
+                                .map((c) => c.title)
+                                .toList()
+                                .indexOf('最新评论') +
+                            1,
+                        a);
                   });
                 });
               }),

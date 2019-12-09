@@ -164,7 +164,7 @@ class User {
         'avatar_url': avatarUrl,
         'follow': follow,
         'fans': fans,
-        "isfollowed": isfollowed
+        "is_followed": isfollowed
       };
 
   @override

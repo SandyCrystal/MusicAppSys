@@ -38,7 +38,7 @@ import 'custom_log_interceptor.dart';
 
 class NetUtils {
   static Dio _dio;
-  static final String baseUrl = 'http://127.0.0.1';
+  static final String baseUrl = 'http://139.9.63.6';
 
   static void init() async {
     Directory tempDir = await getTemporaryDirectory();
@@ -48,17 +48,45 @@ class NetUtils {
       ..interceptors.add(CookieManager(cj))
       ..interceptors
           .add(CustomLogInterceptor(responseBody: true, requestBody: true));
+    _dio.options.receiveTimeout=100000;
+    _dio.options.connectTimeout=100000;
   }
 
   static Future<Response> _get(
-    BuildContext context,
-    String url, {
-    Map<String, dynamic> params,
-    bool isShowLoading = true,
-  }) async {
+      BuildContext context,
+      String url, {
+        Map<String, dynamic> params,
+        bool isShowLoading = true,
+      }) async {
     if (isShowLoading) Loading.showLoading(context);
     try {
       return await _dio.get(url, queryParameters: params);
+    } on DioError catch (e) {
+      if (e == null) {
+        return Future.error(Response(data: -1));
+      } else if (e.response != null) {
+        if (e.response.statusCode >= 300 && e.response.statusCode < 400) {
+          _reLogin();
+          return Future.error(Response(data: -1));
+        } else {
+          return Future.value(e.response);
+        }
+      } else {
+        return Future.error(Response(data: -1));
+      }
+    } finally {
+      Loading.hideLoading(context);
+    }
+  }
+  static Future<Response> _post(
+      BuildContext context,
+      String url, {
+       FormData formdata,
+        bool isShowLoading = true,
+      }) async {
+    if (isShowLoading) Loading.showLoading(context);
+    try {
+      return await _dio.post(url, data: formdata);
     } on DioError catch (e) {
       if (e == null) {
         return Future.error(Response(data: -1));
@@ -160,11 +188,20 @@ class NetUtils {
   }
 
   /// 每日推荐歌曲
-  static Future<DailySongsData> getDailySongsData(BuildContext context) async {
-    var response = await _get(
-      context,
-      '/api/recommandSong',
-    );
+  static Future<DailySongsData> getDailySongsData(
+    BuildContext context, {
+    Map<String, dynamic> params,
+  }) async {
+    var response = await _get(context, '/api/recommandSong', params: params);
+    return DailySongsData.fromJson(response.data);
+  }
+
+  static Future<DailySongsData> getCollectionSong(
+    BuildContext context, {
+    Map<String, dynamic> params,
+  }) async {
+    var response =
+        await _get(context, '/api/getCollectionSong', params: params);
     return DailySongsData.fromJson(response.data);
   }
 
@@ -199,6 +236,22 @@ class NetUtils {
     Map<String, dynamic> params,
   }) async {
     var response = await _get(context, '/api/collection', params: params);
+    return GetData.fromJson(response.data);
+  }
+
+  static Future<GetData> follow(
+    BuildContext context, {
+    Map<String, dynamic> params,
+  }) async {
+    var response = await _get(context, '/api/followUser', params: params);
+    return GetData.fromJson(response.data);
+  }
+
+  static Future<GetData> unfollow(
+    BuildContext context, {
+    Map<String, dynamic> params,
+  }) async {
+    var response = await _get(context, '/api/unfollowUser', params: params);
     return GetData.fromJson(response.data);
   }
 
@@ -294,29 +347,6 @@ class NetUtils {
     int type, {
     @required Map<String, dynamic> params,
   }) async {
-    var funcName;
-    switch (type) {
-      case 0: // song
-        funcName = 'music';
-        break;
-      case 1: // mv
-        funcName = 'mv';
-        break;
-      case 2: // 歌单
-        funcName = 'playlist';
-        break;
-      case 3: // 专辑
-        funcName = 'album';
-        break;
-      case 4: // 电台
-        funcName = 'dj';
-        break;
-      case 5: // 视频
-        funcName = 'video';
-        break;
-      // 动态评论需要threadId，后续再做
-    }
-
     var response = await _get(context, '/api/getMusicComment',
         params: params, isShowLoading: false);
     return SongCommentData.fromJson(response.data);
@@ -331,14 +361,35 @@ class NetUtils {
         params: params, isShowLoading: true);
     return Comment2.fromJson(response.data);
   }
+  static Future<File> _getLocalFile() async {
+    // get the path to the document directory.
+    String dir = (await getApplicationDocumentsDirectory()).path;
+    return new File('$dir/counter.txt');
+  }
 
   static Future<prefix1.ComDynamic> sendDynamic(
     BuildContext context, {
     @required Map<String, dynamic> params,
   }) async {
-    var response = await _get(context, '/api/createDynamic',
-        params: params, isShowLoading: true);
+    List<int> imageBytes = await params['picUrl'].readAsBytes();
+    var a=base64Encode(imageBytes);
+    FormData formData=new FormData.from({
+      "userId":params['userId'],
+      "picUrl":a,
+      "content":params['content']
+    });
+    var response = await _post(context, '/api/createDynamic',
+        formdata: formData, isShowLoading: true);
     return prefix1.ComDynamic.fromJson(response.data);
+  }
+
+  static Future<GetData> updatePic(
+    BuildContext context, {
+    @required Map<String, dynamic> params,
+  }) async {
+    var response = await _get(context, '/api/uploadPic',
+        params: params, isShowLoading: true);
+    return GetData.fromJson(response.data);
   }
 
   static Future<GetData> deleteDynamic(

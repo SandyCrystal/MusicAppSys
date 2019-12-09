@@ -16,7 +16,7 @@ public class FollowServiceImpl implements FollowService {
     private FollowMapper followMapper;
     @Override
     public int addFollow(Follow follow) {
-        return followMapper.insert(follow);
+        return followMapper.insertSelective(follow);
     }
 
     @Override

@@ -198,32 +198,30 @@ class _PlaySongsPageState extends State<PlaySongsPage>
   }
 
   var count = 1; //count用于标记该歌曲是否已经添加到我的收藏中
-  var pic = 'images/icon_dislike.png';
+  var pic;
 
   Widget buildSongsHandle(PlaySongsModel model) {
+    void _toggleFavorite() {
+      setState(() {
+        if (model.curSong.iscollected) {
+          model.curSong.iscollected = false;
+        } else {
+          model.curSong.iscollected = true;
+        }
+      });
+    }
+
     return Container(
       height: ScreenUtil().setWidth(100),
       child: Row(
         children: <Widget>[
+          /*ImageMenuWidget(
+              model.curSong.iscollected ? 'images/icon_liked.png':'images/icon_dislike.png',80,onTap: (){_toggleFavorite();},
+          ),*/
+
           model.curSong.iscollected
               ? ImageMenuWidget(
                   'images/icon_liked.png',
-                  80,
-                  onTap: () {
-                    NetUtils.collection(context, params: {
-                      'user_id': _user.account.userid,
-                      'target_id': model.curSong.id,
-                      'type': 1
-                    })
-                        .then((m) => ({
-                              Utils.showToast(m.data),
-                              model.curSong.iscollected = false
-                            }))
-                        .catchError((m) => Utils.showToast("请求错误"));
-                  },
-                )
-              : ImageMenuWidget(
-                  'images/icon_dislike.png',
                   80,
                   onTap: () {
                     NetUtils.uncollection(context, params: {
@@ -233,7 +231,25 @@ class _PlaySongsPageState extends State<PlaySongsPage>
                     })
                         .then((m) => ({
                               Utils.showToast(m.data),
-                              model.curSong.iscollected = true
+                              _toggleFavorite(),
+                              // model.curSong.iscollected = false
+                            }))
+                        .catchError((m) => Utils.showToast("请求错误"));
+                  },
+                )
+              : ImageMenuWidget(
+                  'images/icon_dislike.png',
+                  80,
+                  onTap: () {
+                    NetUtils.collection(context, params: {
+                      'user_id': _user.account.userid,
+                      'target_id': model.curSong.id,
+                      'type': 1
+                    })
+                        .then((m) => ({
+                              Utils.showToast(m.data),
+                              _toggleFavorite(),
+                              //model.curSong.iscollected = true
                             }))
                         .catchError((m) => Utils.showToast("请求错误"));
                   },

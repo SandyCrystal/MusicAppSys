@@ -1,17 +1,20 @@
 class DailySongsData {
   num _code;
   List<Recommend> _recommend;
+  num _total;
 
-  DailySongsData({num code, List<Recommend> recommend}) {
+  DailySongsData({num code, List<Recommend> recommend, num total}) {
     this._code = code;
     this._recommend = recommend;
+    this._total = total;
   }
 
   num get code => _code;
   set code(num code) => _code = code;
   List<Recommend> get recommend => _recommend;
   set recommend(List<Recommend> recommend) => _recommend = recommend;
-
+  num get total => _total;
+  set total(num total) => _total = total;
   DailySongsData.fromJson(Map<String, dynamic> json) {
     _code = json['code'];
     if (json['data'] != null) {
@@ -20,6 +23,7 @@ class DailySongsData {
         _recommend.add(new Recommend.fromJson(v));
       });
     }
+    _total = json['total'];
   }
 
   Map<String, dynamic> toJson() {
@@ -28,6 +32,7 @@ class DailySongsData {
     if (this._recommend != null) {
       data['data'] = this._recommend.map((v) => v.toJson()).toList();
     }
+    data['total'] = this._total;
     return data;
   }
 }
@@ -77,7 +82,7 @@ class Recommend {
       _artists = "";
     }
     _album = json['album'] != null ? new Album.fromJson(json['album']) : null;
-    _iscollected = json['iscollected'];
+    _iscollected = json['is_collected'];
   }
 
   Map<String, dynamic> toJson() {
@@ -90,7 +95,7 @@ class Recommend {
     if (this._album != null) {
       data['album'] = this._album.toJson();
     }
-    data['iscollected'] = this._iscollected;
+    data['is_collected'] = this._iscollected;
   }
 }
 

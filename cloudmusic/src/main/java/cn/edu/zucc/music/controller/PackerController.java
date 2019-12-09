@@ -1,6 +1,8 @@
 package cn.edu.zucc.music.controller;
 
+import cn.edu.zucc.music.Until.HttpRequestUtil;
 import cn.edu.zucc.music.Until.JsonUtil;
+import cn.edu.zucc.music.Until.ResultStatus;
 import cn.edu.zucc.music.model.*;
 import cn.edu.zucc.music.service.AlbumService;
 import cn.edu.zucc.music.service.SheetSongService;
@@ -18,7 +20,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import java.io.IOException;
 import java.io.Reader;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class PackerController {
     @Autowired
@@ -41,6 +45,38 @@ public class PackerController {
             e.printStackTrace();
         }
         return json;
+    }
+
+    static public JSONObject uploadPic(String filepath) {
+        JSONObject jsonObject = new JSONObject();
+
+        Map textMap = new HashMap<String, String>();
+        Map fileMap = new HashMap<String, String>();
+        String url = "https://sm.ms/api/upload";
+        fileMap.put("smfile", filepath);
+        String str = HttpRequestUtil.formUpload(url, textMap, fileMap);
+        org.json.simple.JSONObject res = JsonUtil.stringToJson(str);
+        String code = (String) res.get("code");
+        String picURL = new String();
+
+        if (code == null) {
+            jsonObject.put("code", ResultStatus.UPLOAD_PIC_ERROR.value());
+            jsonObject.put("data", ResultStatus.UPLOAD_PIC_ERROR.getReasonPhrase());
+            return jsonObject;
+        } else if (code.equals("success")) {
+            org.json.simple.JSONObject data = (org.json.simple.JSONObject) res.get("data");
+            picURL = (String) data.get("url");
+        } else if (code.equals("image_repeated")) {
+            picURL = (String) res.get("images");
+        } else {
+            jsonObject.put("code", ResultStatus.UPLOAD_PIC_ERROR.value());
+            jsonObject.put("data", ResultStatus.UPLOAD_PIC_ERROR.getReasonPhrase());
+            return jsonObject;
+        }
+
+        jsonObject.put("code", ResultStatus.SUCCESS.value());
+        jsonObject.put("data", picURL);
+        return jsonObject;
     }
 
     public static JSONObject transformUserToJson(User user,int follow,int fans,boolean isFollowed) {
@@ -69,7 +105,7 @@ public class PackerController {
             tmp.put("user_type", users.get(i).getUserType());
             tmp.put("create_time", users.get(i).getCreateTime());
             tmp.put("introduction", users.get(i).getIntroduction());
-            tmp.put("isfollowed", isMutuals.get(i));
+            tmp.put("is_followed", true);
             lists.add(tmp);
         }
 
@@ -426,7 +462,7 @@ public class PackerController {
         return json;
     }
 
-    public static List<JSONObject> transformCollectionSheetsToJson(List<Sheet> sheets, List<User> users,int[] follow,int[] fans,List<Boolean> isFollowed) {
+    public static List<JSONObject> transformCollectionSheetsToJson(List<Sheet> sheets, List<User> users,int[] follow,int[] fans,List<Boolean> isFollowed,List<Integer> size) {
         List<JSONObject> json = new ArrayList<JSONObject>();
         for (int i = 0; i < sheets.size(); i++) {
             Sheet sheet = sheets.get(i);
@@ -439,6 +475,7 @@ public class PackerController {
             jsonSheet.put("picUrl", sheet.getSheetPicUrl());
             jsonSheet.put("playCount", sheet.getPlayCount());
             jsonSheet.put("createTime", sheet.getCreateTime().getTime());
+            jsonSheet.put("trackCount",size.get(i));
             jsonSheet.put("is_collected",true);
             jsonSheet.put("creator", jsonUser);
 

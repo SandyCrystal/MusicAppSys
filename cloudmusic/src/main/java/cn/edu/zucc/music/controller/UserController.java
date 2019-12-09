@@ -113,41 +113,7 @@ public class UserController {
     }
 
     // 上传图片
-    @GetMapping(value = "/api/uploadPic")
-    @ResponseBody
-    public JSONObject uploadPic(String filepath){
-        JSONObject jsonObject = new JSONObject();
 
-        Map textMap = new HashMap<String, String>();
-        Map fileMap = new HashMap<String, String>();
-        String url = "https://sm.ms/api/upload";
-        fileMap.put("smfile", filepath);
-        String str = HttpRequestUtil.formUpload(url, textMap, fileMap);
-        org.json.simple.JSONObject res = JsonUtil.stringToJson(str);
-        String code = (String) res.get("code");
-        String picURL = new String();
-
-        if (code == null){
-            jsonObject.put("code", ResultStatus.UPLOAD_PIC_ERROR.value());
-            jsonObject.put("data", ResultStatus.UPLOAD_PIC_ERROR.getReasonPhrase());
-            return jsonObject;
-        } else if (code.equals("success")){
-            org.json.simple.JSONObject data = (org.json.simple.JSONObject) res.get("data");
-            picURL = (String) data.get("url");
-        }else if (code.equals("image_repeated")){
-            picURL = (String) res.get("images");
-        }else{
-            jsonObject.put("code", ResultStatus.UPLOAD_PIC_ERROR.value());
-            jsonObject.put("data", ResultStatus.UPLOAD_PIC_ERROR.getReasonPhrase());
-            return jsonObject;
-        }
-
-        JSONObject tmp = PackerController.transformPicUrl(picURL);
-
-        jsonObject.put("code", ResultStatus.SUCCESS.value());
-        jsonObject.put("data", tmp);
-        return jsonObject;
-    }
 
     // 关注用户
     @GetMapping(value = "/api/followUser")
@@ -160,15 +126,13 @@ public class UserController {
             jsonObject.put("data", ResultStatus.USER_ALREADY_FOLLOW_THIS_USER.getReasonPhrase());
             return jsonObject;
         }else {
-            int followId = followService.getMaxFollowId()+1;
             Follow newFollow = new Follow();
-            newFollow.setFollowId(followId);
             newFollow.setFromUserId(fromUserId);
             newFollow.setToUserId(toUserId);
             followService.addFollow(newFollow);
             JSONObject tmp = PackerController.transfromFollowToJson(newFollow);
             jsonObject.put("code", ResultStatus.SUCCESS.value());
-            jsonObject.put("data", tmp);
+            jsonObject.put("data", "关注成功");
         }
 
         return jsonObject;
@@ -188,7 +152,7 @@ public class UserController {
             followService.deleteFollow(follow);
             JSONObject tmp = PackerController.transfromFollowToJson(follow);
             jsonObject.put("code", ResultStatus.SUCCESS.value());
-            jsonObject.put("data", tmp);
+            jsonObject.put("data", "关注失败");
         }
         return jsonObject;
     }
@@ -201,7 +165,7 @@ public class UserController {
         List<Follow> follows = followService.getFollowedUsers(fromUserId);
         if (follows.size()==0){
             jsonObject.put("code", ResultStatus.USER_NEVER_FOLLOW.value());
-            jsonObject.put("data", "[]");
+            jsonObject.put("data", null);
             return jsonObject;
         }else{
             List<User> users = new ArrayList<>();
@@ -235,7 +199,7 @@ public class UserController {
         List<Follow> follows = followService.getFansUsers(toUserId);
         if (follows.size()==0){
             jsonObject.put("code", ResultStatus.USER_NEVER_BE_FOLLOWED.value());
-            jsonObject.put("data", ResultStatus.USER_NEVER_BE_FOLLOWED.getReasonPhrase());
+            jsonObject.put("data", null);
             return jsonObject;
         }else{
             List<User> users = new ArrayList<>();

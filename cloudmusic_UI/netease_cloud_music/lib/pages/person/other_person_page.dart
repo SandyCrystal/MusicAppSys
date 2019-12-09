@@ -6,6 +6,7 @@ import 'package:netease_cloud_music/model/com_dynamic.dart';
 import 'package:netease_cloud_music/model/community.dart';
 import 'package:netease_cloud_music/model/user.dart' as prefix;
 import 'package:netease_cloud_music/utils/net_utils.dart';
+import 'package:netease_cloud_music/utils/utils.dart';
 import 'package:netease_cloud_music/widgets/h_empty_view.dart';
 import 'package:netease_cloud_music/widgets/v_empty_view.dart';
 import 'package:netease_cloud_music/widgets/widget_community1.dart';
@@ -46,19 +47,40 @@ class _PersonPageState extends State<OtherPersonPage>
                 ],
               ),
             ),
-            widget.user.isfollowed
-                ? MaterialButton(
-                    color: Colors.blue,
-                    textColor: Colors.white,
-                    child: new Text('取消关注'),
-                    onPressed: () {},
-                  )
-                : MaterialButton(
-                    color: Colors.red,
-                    textColor: Colors.white,
-                    child: new Text('+ 关注'),
-                    onPressed: () {},
-                  )
+            if (_user.account.userid != widget.user.userId)
+              widget.user.isfollowed
+                  ? MaterialButton(
+                      color: Colors.blue,
+                      textColor: Colors.white,
+                      child: new Text('取消关注'),
+                      onPressed: () {
+                        NetUtils.unfollow(context, params: {
+                          "fromUserId": _user.account.userid,
+                          "toUserId": widget.user.userId
+                        })
+                            .then((m) => ({
+                                  Utils.showToast(m.data),
+                                  widget.user.isfollowed = false
+                                }))
+                            .catchError((m) => Utils.showToast("请求错误"));
+                      },
+                    )
+                  : MaterialButton(
+                      color: Colors.red,
+                      textColor: Colors.white,
+                      child: new Text('+ 关注'),
+                      onPressed: () {
+                        NetUtils.follow(context, params: {
+                          "fromUserId": _user.account.userid,
+                          "toUserId": widget.user.userId
+                        })
+                            .then((m) => ({
+                                  Utils.showToast(m.data),
+                                  widget.user.isfollowed = true
+                                }))
+                            .catchError((m) => Utils.showToast("请求错误"));
+                      },
+                    )
           ],
         ),
         VEmptyView(20),
@@ -112,7 +134,10 @@ class _PersonPageState extends State<OtherPersonPage>
   Widget _buildMenu() {
     return CustomFutureBuilder<ComDynamic>(
       futureFunc: NetUtils.getUserDynamic,
-      params: {'user_id': widget.user.userId},
+      params: {
+        'user_id': widget.user.userId,
+        'cur_user_id': _user.account.userid
+      },
       builder: (context, snapshot) {
         var data = snapshot.comdynamics;
         return Container(

@@ -158,26 +158,28 @@ public class MusicController {
         jsonObject.put("more", false);
 
         List<SongComment> songComments = songCommentService.findBySongId(id);
-        List<User> users = new ArrayList<User>();
         jsonObject.put("total", songComments.size());
-        for (int i = 0; i < songComments.size(); i++) {
-            SongComment songComment = songComments.get(i);
-            User user = userService.findById(songComment.getUserId());
-            users.add(user);
-            if(userIds.contains(user.getUserId())) {
-                isFollowed.add(true);
-            } else {
-                isFollowed.add(false);
+        if (songComments.size()==0)   jsonObject.put("comments", null);
+        else {
+            List<User> users = new ArrayList<User>();
+            for (int i = 0; i < songComments.size(); i++) {
+                SongComment songComment = songComments.get(i);
+                User user = userService.findById(songComment.getUserId());
+                users.add(user);
+                if (userIds.contains(user.getUserId())) {
+                    isFollowed.add(true);
+                } else {
+                    isFollowed.add(false);
+                }
+                if (commentIds.contains(songComment.getSongCommentId())) {
+                    isLiked.add(true);
+                } else {
+                    isLiked.add(false);
+                }
             }
-            if(commentIds.contains(songComment.getSongCommentId())) {
-                isLiked.add(true);
-            } else {
-                isLiked.add(false);
-            }
+            List<JSONObject> list = PackerController.transformSongCommentToJson(songComments, users, isFollowed, isLiked);
+            jsonObject.put("comments", list);
         }
-        List<JSONObject> list = PackerController.transformSongCommentToJson(songComments, users, isFollowed, isLiked);
-        jsonObject.put("comments", list);
-
         return jsonObject;
     }
 
@@ -392,7 +394,7 @@ public class MusicController {
             json.put("code", 666);
             json.put("data", "添加失败");
         } else {
-            Collection collection = collectionService.findPrimaryKey(user_id, target_id);
+            Collection collection = collectionService.findPrimaryKey(user_id, target_id, type);
             if (collection == null) {
                 json.put("code", 200);
                 json.put("data", "添加成功");
@@ -434,7 +436,7 @@ public class MusicController {
             json.put("code", 666);
             json.put("data", "取消收藏失败");
         } else {
-            Collection collection = collectionService.findPrimaryKey(user_id, target_id);
+            Collection collection = collectionService.findPrimaryKey(user_id, target_id, type);
             if (collection == null) {
                 json.put("code", 666);
                 json.put("data", "已取消");
@@ -461,8 +463,8 @@ public class MusicController {
             List<Artist> artists = new ArrayList<Artist>();
             for (Collection collection : collections) {
                 Song song = songService.findById(collection.getBeCollectionedId());
-                Artist artist = artistService.findById(song.getArtistId());
                 Album album = albumService.findById(song.getAlbumId());
+                Artist artist = artistService.findById(album.getArtistId());
                 songs.add(song);
                 albums.add(album);
                 artists.add(artist);
@@ -470,6 +472,7 @@ public class MusicController {
             List<JSONObject> jsonData = PackerController.transformCollectionSongsToJson(songs, albums, artists);
             json.put("code", 200);
             json.put("data", jsonData);
+            json.put("total",songs.size());
         }
 
         return json;
@@ -504,8 +507,11 @@ public class MusicController {
                sheets.add(sheet);
                 users.add(user);
             }
-
-            List<JSONObject> jsonData = PackerController.transformCollectionSheetsToJson(sheets, users,follow,fans,isfollowed);
+            List<Integer> size=new ArrayList<>();
+            for (Sheet sheet:sheets){
+                size.add(sheetSongService.getSongsBySheetId(sheet.getSheetId()).size());
+            }
+            List<JSONObject> jsonData = PackerController.transformCollectionSheetsToJson(sheets, users,follow,fans,isfollowed,size);
             json.put("code", 200);
             json.put("data", jsonData);
         }

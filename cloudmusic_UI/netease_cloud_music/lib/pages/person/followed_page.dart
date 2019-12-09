@@ -52,7 +52,7 @@ class _FollowedPageState extends State<FollowedPage> {
               },
               shrinkWrap: true,
               scrollDirection: Axis.vertical,
-              itemCount: data.length,
+              itemCount: snapshot.total,
             ));
       },
     );

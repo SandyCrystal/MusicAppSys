@@ -15,7 +15,7 @@ public class DynamicServiceImpl implements DynamicService {
     private DynamicMapper dynamicMapper;
     @Override
     public int addDynamic(Dynamic dynamic) {
-        return dynamicMapper.insert(dynamic);
+        return dynamicMapper.insertSelective(dynamic);
     }
 
     @Override
@@ -25,7 +25,7 @@ public class DynamicServiceImpl implements DynamicService {
 
     @Override
     public int updateDynamic(Dynamic comment) {
-        return 0;
+        return dynamicMapper.updateByPrimaryKey(comment);
     }
 
     @Override

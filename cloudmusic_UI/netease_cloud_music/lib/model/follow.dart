@@ -121,7 +121,7 @@ class User{
         stack: "User-follow"),
     fans: convertValueByType(jsonRes['fans'], int,
         stack: "User-fans"),
-    isfollowed: convertValueByType(jsonRes['isfollowed'], bool,
+    isfollowed: convertValueByType(jsonRes['is_followed'], bool,
         stack: "User-isfollowed"),
 
   );
@@ -133,6 +133,6 @@ class User{
     'avatar_url': avatarUrl,
     'follow':follow,
     'fans':fans,
-    "isfollowed":isfollowed
+    "is_followed":isfollowed
   };
 }

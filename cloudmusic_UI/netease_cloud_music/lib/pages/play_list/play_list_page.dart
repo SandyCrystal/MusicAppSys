@@ -6,11 +6,13 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:netease_cloud_music/model/comment_head.dart';
 import 'package:netease_cloud_music/model/music.dart';
 import 'package:netease_cloud_music/model/play_list.dart';
+import 'package:netease_cloud_music/model/play_list.dart' as prefix0;
 import 'package:netease_cloud_music/model/recommend.dart';
 import 'package:netease_cloud_music/model/song.dart';
 import 'package:netease_cloud_music/model/user.dart';
 import 'package:netease_cloud_music/pages/comment/comment_type.dart';
 import 'package:netease_cloud_music/pages/play_list/play_list_desc_dialog.dart';
+import 'package:netease_cloud_music/provider/play_list_model.dart';
 import 'package:netease_cloud_music/provider/play_songs_model.dart';
 import 'package:netease_cloud_music/utils/navigator_util.dart';
 import 'package:netease_cloud_music/utils/net_utils.dart';
@@ -29,7 +31,7 @@ import 'package:provider/provider.dart';
 import '../../application.dart';
 
 class PlayListPage extends StatefulWidget {
-  final Recommend data;
+  Recommend data;
 
   PlayListPage(this.data);
 
@@ -37,11 +39,20 @@ class PlayListPage extends StatefulWidget {
   _PlayListPageState createState() => _PlayListPageState();
 }
 
-class _PlayListPageState extends State<PlayListPage> {
+class _PlayListPageState extends State<PlayListPage> with AutomaticKeepAliveClientMixin  {
   double _expandedHeight = ScreenUtil().setWidth(630);
   Playlist _data;
   User _user = User.fromJson(json.decode(Application.sp.getString('user')));
-
+  PlayListModel _playListModel;
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((d) {
+      _playListModel = Provider.of<PlayListModel>(context);
+      _playListModel.getSelfPlaylistData(context);
+      _playListModel.getCollectionPlaylistData(context);
+    });
+  }
   /// 构建歌单简介
   Widget buildDescription() {
     return GestureDetector(
@@ -164,7 +175,7 @@ class _PlayListPageState extends State<PlayListPage> {
                       child: Row(
                         children: <Widget>[
                           FooterTabWidget('images/icon_comment.png',
-                              '${_data == null ? "评论" : _data.trackCount}', () {
+                              '${_data == null ? "评论" : _data.trackCount==null?0:_data.trackCount}', () {
                             NavigatorUtil.goCommentPage(context,
                                 data: CommentHead(
                                   _data.picurl,
@@ -177,14 +188,14 @@ class _PlayListPageState extends State<PlayListPage> {
                           }),
                           FooterTabWidget(
                               'images/icon_share.png',
-                              '${_data == null ? "分享" : _data.trackCount}',
+                              '${_data == null ? "分享" : _data.trackCount==null?0:_data.trackCount}',
                               () {}),
                           FooterTabWidget(
                               'images/icon_download.png', '下载', () {}),
                           FooterTabWidget(
                               'images/icon_multi_select.png', '多选', () {}),
                           widget.data.iscollected
-                              ? FooterTabWidget('images/icon_like.png', '已收藏',
+                              ? FooterTabWidget('images/icon_liked.png', '已收藏',
                                   () {
                                   NetUtils.uncollection(context, params: {
                                     'user_id': _user.account.userid,
@@ -193,13 +204,15 @@ class _PlayListPageState extends State<PlayListPage> {
                                   })
                                       .then((m) => ({
                                             Utils.showToast(m.data),
-                                            _data.iscollected = false
+                                            widget.data.iscollected = false,
+                                            _data.iscollected = false,
+                                            _playListModel.delPlayList(widget.data.id)
                                           }))
                                       .catchError(
                                           (m) => Utils.showToast("请求错误"));
                                 })
                               : FooterTabWidget(
-                                  'images/icon_disliked.png', '收藏', () {
+                                  'images/icon_dislike.png', '收藏', () {
                                   NetUtils.collection(context, params: {
                                     'user_id': _user.account.userid,
                                     'target_id': _data.id,
@@ -207,7 +220,21 @@ class _PlayListPageState extends State<PlayListPage> {
                                   })
                                       .then((m) => ({
                                             Utils.showToast(m.data),
-                                            _data.iscollected = true
+                                            widget.data.iscollected = true,
+                                            _data.iscollected = true,
+                                    _playListModel.addPlayList(Playlist(
+                                        id: widget.data.id,
+                                        name: widget.data.name,
+                                        creator:
+                                        prefix0.Creator.fromJson(
+                                            widget.data.creator
+                                                .toJson()),
+                                        picurl: widget.data.picUrl,
+                                        playcount:
+                                        widget.data.playcount,
+                                        subcount: 0,
+                                        iscollected:
+                                        widget.data.iscollected))
                                           }))
                                       .catchError(
                                           (m) => Utils.showToast("请求错误"));
@@ -292,4 +319,8 @@ class _PlayListPageState extends State<PlayListPage> {
       child: child,
     );
   }
+
+  @override
+  // TODO: implement wantKeepAlive
+  bool get wantKeepAlive => true;
 }
