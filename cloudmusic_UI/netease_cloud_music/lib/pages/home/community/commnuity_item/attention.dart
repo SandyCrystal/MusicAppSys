@@ -32,8 +32,10 @@ class _AttentionPageState extends State<AttentionPage>
   @override
   Widget _buildRecommendPlayList() {
     return CustomFutureBuilder<ComDynamic>(
-      futureFunc: NetUtils.getDynamicData,
-      params: {"user_id": _user.account.userid},
+      futureFunc: NetUtils.getFollowedDynamicData,
+      params: {
+        "user_id": _user.account.userid,
+      },
       builder: (context, snapshot) {
         var data = snapshot.comdynamics;
         return Container(

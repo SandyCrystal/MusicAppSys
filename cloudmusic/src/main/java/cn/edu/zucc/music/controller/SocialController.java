@@ -1,5 +1,6 @@
 package cn.edu.zucc.music.controller;
 
+import cn.edu.zucc.music.Until.HttpRequestUtil;
 import cn.edu.zucc.music.Until.Result;
 import cn.edu.zucc.music.Until.ResultStatus;
 import cn.edu.zucc.music.model.Dynamic;
@@ -14,10 +15,13 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
+import sun.misc.BASE64Decoder;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -36,19 +40,6 @@ public class SocialController {
     private LikeService likeService;
 
 
-    // 获取歌曲评论
-    @GetMapping(value = "/api/getSongComment")
-    @ResponseBody
-    public String getSongComment() {
-        return "还没做";
-    }
-
-    // 评论歌曲
-    @GetMapping(value = "/api/commentSong")
-    @ResponseBody
-    public String commentSong() {
-        return "还没做";
-    }
 
     // 点赞（动态、音乐评论、音乐、歌单）
     @GetMapping(value = "/api/like")
@@ -58,7 +49,7 @@ public class SocialController {
         if (type == 1){
             System.out.println("动态 dynamic");
             Dynamic dynamic =dynamicService.findById(Integer.parseInt(targetid));
-            dynamic.setLikeCount(dynamic.getLikeCount()-1);
+            dynamic.setLikeCount(dynamic.getLikeCount() + 1);
             dynamicService.updateDynamic(dynamic);
         }else if (type == 2){
             System.out.println("音乐评论 song_comment");
@@ -97,12 +88,35 @@ public class SocialController {
     }
 
     // 发表动态
-    @GetMapping(value = "/api/createDynamic")
+    @PostMapping(value = "/api/createDynamic")
     @ResponseBody
-    public JSONObject createDynamic(String userId, String content, String picUrl) throws ParseException {
+    public JSONObject createDynamic(@RequestParam("userId") String userId, @RequestParam("content") String content, @RequestParam("picUrl") String picUrl) throws ParseException, IOException {
         JSONObject jsonObject = new JSONObject();
         Dynamic dynamic = new Dynamic();
         User user = userService.findById(userId);
+        if (picUrl.length() < 5) {
+            picUrl = null;
+        } else {
+            BASE64Decoder decoder = new BASE64Decoder();
+            byte[] b = decoder.decodeBuffer(picUrl);
+            String imgFilePath = "./upload/test.png";// 新生成的图片
+            File file = new File(imgFilePath);
+            FileOutputStream out = null;
+            if (!file.exists()) {
+                // 先得到文件的上级目录，并创建上级目录，在创建文件
+                file.getParentFile().mkdir();
+                file.createNewFile();
+            }
+            //创建文件输出流
+            out = new FileOutputStream(file);
+            //将字符串转化为字节
+            out.write(b);
+            out.close();
+
+            JSONObject a = PackerController.uploadPic(imgFilePath);
+            System.out.println(a);
+            picUrl = a.getString("data");
+        }
 
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         sdf.setTimeZone(TimeZone.getTimeZone("Asia/Shanghai"));
@@ -110,8 +124,6 @@ public class SocialController {
         String dateStr = sdf.format(date);
         Date dateSql = sdf.parse(dateStr);
 
-        int maxDynamicId = dynamicService.getMaxDynamicId() + 1;
-        dynamic.setDynamicId(maxDynamicId);
         dynamic.setUserId(userId);
         dynamic.setIntroducion(content);
         dynamic.setDynamicPath(picUrl);
@@ -251,7 +263,9 @@ public class SocialController {
         User user = userService.findById(user_id);
         List<Follow> follows = followService.getFollowedUsers(cur_user_id);
         Boolean isFollowed=false;
-        for(Follow followd : follows) {if (followd.getToUserId().equals(cur_user_id))isFollowed=true;}
+        for (Follow followd : follows) {
+            if (followd.getFromUserId().equals(cur_user_id)) isFollowed = true;
+        }
         List<Like> likes=likeService.findMusicCommentByUserId(cur_user_id,1);
         List<String> likeIds= new ArrayList<String>();
         for (Like like: likes) {

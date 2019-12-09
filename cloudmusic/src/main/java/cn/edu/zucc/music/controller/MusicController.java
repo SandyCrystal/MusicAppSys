@@ -393,7 +393,7 @@ public class MusicController {
             json.put("code", 666);
             json.put("data", "添加失败");
         } else {
-            Collection collection = collectionService.findPrimaryKey(user_id, target_id);
+            Collection collection = collectionService.findPrimaryKey(user_id, target_id, type);
             if (collection == null) {
                 json.put("code", 200);
                 json.put("data", "添加成功");
@@ -435,7 +435,7 @@ public class MusicController {
             json.put("code", 666);
             json.put("data", "取消收藏失败");
         } else {
-            Collection collection = collectionService.findPrimaryKey(user_id, target_id);
+            Collection collection = collectionService.findPrimaryKey(user_id, target_id, type);
             if (collection == null) {
                 json.put("code", 666);
                 json.put("data", "已取消");
@@ -462,8 +462,8 @@ public class MusicController {
             List<Artist> artists = new ArrayList<Artist>();
             for (Collection collection : collections) {
                 Song song = songService.findById(collection.getBeCollectionedId());
-                Artist artist = artistService.findById(song.getArtistId());
                 Album album = albumService.findById(song.getAlbumId());
+                Artist artist = artistService.findById(album.getArtistId());
                 songs.add(song);
                 albums.add(album);
                 artists.add(artist);

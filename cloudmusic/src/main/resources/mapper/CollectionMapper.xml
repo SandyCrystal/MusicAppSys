@@ -17,8 +17,11 @@
     where collection_id = #{collectionId,jdbcType=INTEGER}
   </select>
 
-  <select id="findPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String">
-    SELECT <include refid="Base_Column_List" /> from collection WHERE user_id = #{user_id,jdbcType=VARCHAR} AND be_collectioned_id = #{be_collectioned_id, jdbcType=VARCHAR}
+    <select id="findPrimaryKey" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        from collection a WHERE user_id = #{user_id,jdbcType=VARCHAR} AND be_collectioned_id =
+        #{be_collectioned_id, jdbcType=VARCHAR} and collection_type =#{utype,jdbcType=INTEGER}
   </select>
 
   <select id="getSongsByUserId" resultMap="BaseResultMap" parameterType="java.lang.String">

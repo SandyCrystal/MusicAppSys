@@ -2,6 +2,7 @@ package cn.edu.zucc.music.dao;
 
 import cn.edu.zucc.music.model.Collection;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -20,7 +21,7 @@ public interface CollectionMapper {
 
     int updateByPrimaryKey(Collection record);
 
-    Collection findPrimaryKey(String user_id, String be_collectioned_id);
+    Collection findPrimaryKey(@Param("user_id") String user_id, @Param("be_collectioned_id") String be_collectioned_id, @Param("utype") int utype);
 
     List<Collection> getSongsByUserId(String user_id);
 

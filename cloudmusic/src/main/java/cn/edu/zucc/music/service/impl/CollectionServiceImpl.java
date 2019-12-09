@@ -40,8 +40,8 @@ public class CollectionServiceImpl implements CollectionService {
     }
 
     @Override
-    public Collection findPrimaryKey(String user_id, String be_collectioned_id) {
-        return collectionMapper.findPrimaryKey(user_id, be_collectioned_id);
+    public Collection findPrimaryKey(String user_id, String be_collectioned_id, int type) {
+        return collectionMapper.findPrimaryKey(user_id, be_collectioned_id, type);
     }
 
     @Override
