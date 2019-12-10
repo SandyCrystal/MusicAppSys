@@ -8,10 +8,11 @@
     <result column="dynamic_path" property="dynamicPath" jdbcType="VARCHAR" />
     <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
     <result column="like_count" property="likeCount" jdbcType="INTEGER" />
+    <result column="dynamic_type" property="dynamicType" jdbcType="INTEGER" />
   </resultMap>
 
   <sql id="Base_Column_List" >
-    dynamic_id, user_id, introducion, dynamic_path, create_time, like_count
+    dynamic_id, user_id, introducion, dynamic_path, create_time, like_count, dynamic_type
   </sql>
 
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
@@ -41,10 +42,10 @@
 
   <insert id="insert" parameterType="cn.edu.zucc.music.model.Dynamic" >
     insert into dynamic (dynamic_id, user_id, introducion, 
-      dynamic_path, create_time, like_count
+      dynamic_path, create_time, like_count, dynamic_type
       )
     values (#{dynamicId,jdbcType=INTEGER}, #{userId,jdbcType=VARCHAR}, #{introducion,jdbcType=VARCHAR}, 
-      #{dynamicPath,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{likeCount,jdbcType=INTEGER}
+      #{dynamicPath,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{likeCount,jdbcType=INTEGER}, #{dynamicType, jdbcType=INTEGER}
       )
   </insert>
 

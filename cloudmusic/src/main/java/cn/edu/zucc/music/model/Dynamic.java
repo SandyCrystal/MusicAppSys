@@ -16,6 +16,16 @@ public class Dynamic implements Serializable {
 
     private Integer likeCount;
 
+    private Integer dynamicType;
+
+    public Integer getDynamicType() {
+        return dynamicType;
+    }
+
+    public void setDynamicType(Integer dynamicType) {
+        this.dynamicType = dynamicType;
+    }
+
     private static final long serialVersionUID = 1L;
 
     public Integer getDynamicId() {
