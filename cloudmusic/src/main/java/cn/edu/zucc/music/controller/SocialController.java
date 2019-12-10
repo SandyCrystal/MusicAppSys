@@ -90,7 +90,7 @@ public class SocialController {
     // 发表动态
     @PostMapping(value = "/api/createDynamic")
     @ResponseBody
-    public JSONObject createDynamic(@RequestParam("userId") String userId, @RequestParam("content") String content, @RequestParam("picUrl") String picUrl, @RequestParam("dynamicType") Integer dynamicType) throws ParseException, IOException {
+    public JSONObject createDynamic(@RequestParam("userId") String userId, @RequestParam("content") String content, @RequestParam("picUrl") String picUrl, @RequestParam("dynamicType") Boolean dynamicType) throws ParseException, IOException {
         JSONObject jsonObject = new JSONObject();
         Dynamic dynamic = new Dynamic();
         User user = userService.findById(userId);
@@ -124,13 +124,21 @@ public class SocialController {
         String dateStr = sdf.format(date);
         Date dateSql = sdf.parse(dateStr);
 
+        System.out.println("running..........");
+
         dynamic.setUserId(userId);
         dynamic.setIntroducion(content);
         dynamic.setDynamicPath(picUrl);
         dynamic.setCreateTime(dateSql);
-        if(dynamicType == null)
-            dynamicType = 0;
-        dynamic.setDynamicType(dynamicType);
+        int tmpp = 0;
+        if(dynamicType == null) {
+            tmpp = 0;
+        } else if(dynamicType == true) {
+            tmpp = 1;
+        } else {
+            tmpp = 0;
+        }
+        dynamic.setDynamicType(tmpp);
         dynamic.setLikeCount(0);
         int follow=followService.getFollowedUsers(user.getUserId()).size();
         int fans=followService.getFansUsers(user.getUserId()).size();
