@@ -3,6 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/MusicRecommendSys_Spring.iml" filepath="$PROJECT_DIR$/.idea/MusicRecommendSys_Spring.iml" />
+      <module fileurl="file://$PROJECT_DIR$/gateway/gateway.iml" filepath="$PROJECT_DIR$/gateway/gateway.iml" />
       <module fileurl="file://$PROJECT_DIR$/cloudmusic/music.iml" filepath="$PROJECT_DIR$/cloudmusic/music.iml" />
     </modules>
   </component>
